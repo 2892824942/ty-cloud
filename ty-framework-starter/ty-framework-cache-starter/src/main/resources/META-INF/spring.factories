@@ -1,0 +1,10 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.ty.mid.framework.autoconfigure.MultiCacheAutoConfiguration,\
+  com.ty.mid.framework.cache.configration.CaffeineCacheConfiguration,\
+  com.ty.mid.framework.cache.configration.GenericCacheConfiguration,\
+  com.ty.mid.framework.cache.configration.JCacheCacheConfiguration,\
+  com.ty.mid.framework.cache.configration.NoOpCacheConfiguration,\
+  com.ty.mid.framework.cache.configration.RedisCacheConfiguration,\
+  com.ty.mid.framework.cache.configration.RedissonCustomizeCacheConfiguration,\
+  com.ty.mid.framework.cache.configration.RedissonDefaultCacheConfiguration,\
+  com.ty.mid.framework.cache.configration.SimpleCacheConfiguration

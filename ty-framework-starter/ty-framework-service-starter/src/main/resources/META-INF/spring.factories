@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.ty.mid.framework.mybatisplus.service.config.ServiceAutoConfiguration,\
+  com.ty.mid.framework.core.config.ApplicationConfiguration
