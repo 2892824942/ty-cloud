@@ -41,9 +41,9 @@ public abstract class AbstractGenericService<T extends AbstractDO<ID>, ID extend
      * 对字段添加时效条件查询
      * <p>
      * 开始时间字段名称: from_date
-     * 结束时间字段名称： thru_date
+     * 结束时间字段名称： to_date
      * <p>
-     * 查询条件举例:  from_date >= now() and (col_name <= thru_date or thru_date is null )
+     * 查询条件举例:  from_date >= now() and (col_name <= to_date or to_date is null )
      *
      * @param query
      * @return
@@ -56,9 +56,9 @@ public abstract class AbstractGenericService<T extends AbstractDO<ID>, ID extend
      * 对字段添加时效条件查询
      * <p>
      * 开始时间字段名称: from_date
-     * 结束时间字段名称：thru_date
+     * 结束时间字段名称：to_date
      * <p>
-     * 查询条件举例:  from_date >= date and (col_name <= thru_date or thru_date is null )
+     * 查询条件举例:  from_date >= date and (col_name <= to_date or to_date is null )
      *
      * @param query
      * @return
@@ -70,17 +70,17 @@ public abstract class AbstractGenericService<T extends AbstractDO<ID>, ID extend
     /**
      * 对字段添加时效条件查询
      * <p>
-     * 查询条件举例:  from_date >= date and (fromDateColName <= thruDateColName or thru_date is null)
+     * 查询条件举例:  from_date >= date and (fromDateColName <= toDateColName or to_date is null)
      *
      * @param query
      * @param fromDateColName 开始时间字段名称
-     * @param thruDateColName 结束时间字段名称
+     * @param toDateColName 结束时间字段名称
      * @return
      */
-    public QueryWrapper<T> addTimelinessQuery(QueryWrapper<T> query, String fromDateColName, String thruDateColName, Date date) {
+    public QueryWrapper<T> addTimelinessQuery(QueryWrapper<T> query, String fromDateColName, String toDateColName, Date date) {
         query.le(fromDateColName, date);
         query.and(
-                a -> a.ge(thruDateColName, date).or().isNull(thruDateColName)
+                a -> a.ge(toDateColName, date).or().isNull(toDateColName)
         );
 
         return query;
