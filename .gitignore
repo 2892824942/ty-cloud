@@ -345,6 +345,7 @@ hs_err_pid*
 .idea/**/dictionaries
 .idea/**/shelf
 
+
 # Generated files
 .idea/**/contentModel.xml
 
