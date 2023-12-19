@@ -1,0 +1,41 @@
+package com.ty.mid.framework.cache.configration;
+
+import com.ty.mid.framework.cache.condition.CachePlusCondition;
+import com.ty.mid.framework.cache.config.CachePlusConfig;
+import com.ty.mid.framework.cache.constant.CachePlusType;
+import org.redisson.api.RedissonClient;
+import org.redisson.spring.cache.CacheConfig;
+import org.redisson.spring.cache.RedissonSpringCacheManager;
+import org.redisson.spring.starter.RedissonAutoConfiguration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
+import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Conditional;
+import org.springframework.context.annotation.Import;
+
+import java.util.Map;
+
+@AutoConfigureBefore({CacheAutoConfiguration.class})
+@AutoConfigureAfter(RedissonAutoConfiguration.class)
+@Import({CachePlusConfig.class, CacheConfig.class})
+@Conditional(CachePlusCondition.class)
+public class RedissonDefaultCacheConfiguration {
+
+    @Autowired
+    CachePlusConfig multiCacheConfig;
+
+    /**
+     * Redisson 官方提供的CacheManager
+     */
+    @Bean
+    RedissonSpringCacheManager redissonDefaultCacheManage(RedissonClient redissonClient, CacheManagerCustomizers cacheManagerCustomizers) {
+        Map<String, CacheConfig> redisConfig = multiCacheConfig.getRedisConfig(CachePlusType.REDISSION_DEFALUT);
+        RedissonSpringCacheManager redissonSpringCacheManager = new RedissonSpringCacheManager(redissonClient, redisConfig);
+        cacheManagerCustomizers.customize(redissonSpringCacheManager);
+        return redissonSpringCacheManager;
+    }
+
+}

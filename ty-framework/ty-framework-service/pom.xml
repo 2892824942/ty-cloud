@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>ty-framework</artifactId>
+        <groupId>com.ty</groupId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>ty-framework-service</artifactId>
+
+    <dependencies>
+        <!--基础框架依赖-->
+        <dependency>
+            <groupId>com.ty</groupId>
+            <artifactId>ty-framework-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.ty</groupId>
+            <artifactId>ty-framework-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--组件核心依赖-->
+        <dependency>
+            <groupId>com.ty</groupId>
+            <artifactId>ty-framework-mybatis-plus</artifactId>
+        </dependency>
+
+
+        <!--组件扩展依赖-->
+
+        <dependency>
+            <groupId>javax.cache</groupId>
+            <artifactId>cache-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.redisson</groupId>
+            <artifactId>redisson</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+</project>

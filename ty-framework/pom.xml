@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.ty</groupId>
+        <artifactId>ty-cloud</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <artifactId>ty-framework</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>ty-framework-core</module>
+        <module>ty-framework-idempotent</module>
+        <module>ty-framework-api-switcher</module>
+        <module>ty-framework-application-runner</module>
+        <module>ty-framework-security</module>
+        <module>ty-framework-common</module>
+        <module>ty-framework-web</module>
+        <module>ty-framework-mybatis-plus</module>
+        <module>ty-framework-service</module>
+        <module>ty-framework-lock</module>
+        <module>ty-framework-cache</module>
+        <module>ty-framework-autoconfigure</module>
+
+    </modules>
+
+    <scm>
+        <connection>scm:git@git.kanzhun-inc.com:ghost/dianzhang-usl-framework.git</connection>
+        <developerConnection>scm:git@git.kanzhun-inc.com:ghost/dianzhang-usl-framework.git</developerConnection>
+        <url>git@git.kanzhun-inc.com:ghost/dianzhang-usl-framework.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+</project>
