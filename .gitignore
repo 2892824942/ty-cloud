@@ -371,13 +371,12 @@ hs_err_pid*
 # .idea/modules
 *.iml
 *.ipr
-ty-framework-starter/.idea
+/.idea
 
 # CMake
 cmake-build-*/
 
 # Mongo Explorer plugin
-.idea/**/mongoSettings.xml
 
 # File-based project format
 *.iws
