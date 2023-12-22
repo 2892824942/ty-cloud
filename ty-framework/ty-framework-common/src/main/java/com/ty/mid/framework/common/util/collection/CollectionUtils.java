@@ -15,7 +15,7 @@ import static java.util.Arrays.asList;
 /**
  * Collection 工具类
  *
- * @author 芋道源码
+ * @author suyoulinag
  */
 public class CollectionUtils {
 

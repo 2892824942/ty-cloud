@@ -14,7 +14,7 @@ import static com.ty.mid.framework.common.util.collection.CollectionUtils.conver
 /**
  * Array 工具类
  *
- * @author 芋道源码
+ * @author suyoulinag
  */
 public class ArrayUtils {
 

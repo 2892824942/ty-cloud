@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.alias;
+package com.ty.mid.framework.mybatisplus.core.alias;
 
 import org.apache.ibatis.type.Alias;
 
