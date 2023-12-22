@@ -1,9 +1,8 @@
 package com.ty.mid.framework.mybatisplus.core.dataobject;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableLogic;
+import com.baomidou.mybatisplus.annotation.*;
 import com.ty.mid.framework.common.entity.Auditable;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.apache.ibatis.type.JdbcType;
 
@@ -21,35 +20,42 @@ public abstract class BaseDO implements Auditable<Long>, Serializable {
     /**
      * 用户id
      */
-    @TableField(fill = FieldFill.INSERT)
+
+    @Schema(description = "主键ID")
+    @TableId(type = IdType.AUTO)
     private Long id;
+
+    /**
+     * 创建者
+     */
+    @Schema(description = "创建者")
+    @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.VARCHAR)
+    private Long creator;
+    /**
+     * 更新者
+     */
+    @Schema(description = " 更新者")
+    @TableField(fill = FieldFill.INSERT_UPDATE, jdbcType = JdbcType.VARCHAR)
+    private Long updater;
 
     /**
      * 创建时间
      */
+    @Schema(description = "创建时间")
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
     /**
      * 最后更新时间
      */
+    @Schema(description = "最后更新时间")
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
-    /**
-     * 创建者
-     * <p>
-     */
-    @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.VARCHAR)
-    private Long creator;
-    /**
-     * 更新者
-     * <p>
-     */
-    @TableField(fill = FieldFill.INSERT_UPDATE, jdbcType = JdbcType.VARCHAR)
-    private Long updater;
 
     /**
-     * 是否删除
+     * 是否删除 0:未删除 1:已删除
+     * @see com.ty.mid.framework.common.constant.DeletedEnum
      */
+    @Schema(description = "是否删除 0:未删除 1:已删除")
     @TableLogic
     private Boolean deleted;
 

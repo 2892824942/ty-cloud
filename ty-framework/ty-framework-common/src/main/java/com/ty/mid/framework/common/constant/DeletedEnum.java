@@ -6,8 +6,17 @@ import java.util.Objects;
 
 @Getter
 public enum DeletedEnum {
+    /**
+     * 未删除
+     */
     NO_DELETE(Boolean.FALSE, 0),
+    /**
+     * 已删除
+     */
     DELETED(Boolean.TRUE, 1),
+    /**
+     * 未知
+     */
     UNKNOWN(null, -99),
     ;
     private final Boolean booleanValue;

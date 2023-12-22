@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Slf4j
@@ -26,7 +27,7 @@ public class AuditorMetaObjectHandler<T extends Serializable> implements MetaObj
     public void insertFill(MetaObject metaObject) {
         Auditable info = this.getAuditorInfo();
 
-        Date now = this.getCurrentDate();
+        LocalDateTime now = this.getCurrentDate();
 
         this.setFieldValByName("creator", info.getId(), metaObject);
         this.setFieldValByName("updater", info.getId(), metaObject);
@@ -50,8 +51,8 @@ public class AuditorMetaObjectHandler<T extends Serializable> implements MetaObj
      *
      * @return
      */
-    protected Date getCurrentDate() {
-        return new Date();
+    protected LocalDateTime getCurrentDate() {
+        return LocalDateTime.now();
     }
 
     /**

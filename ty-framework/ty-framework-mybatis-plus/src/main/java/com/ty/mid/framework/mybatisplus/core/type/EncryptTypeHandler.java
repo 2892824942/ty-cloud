@@ -4,6 +4,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
+import com.ty.mid.framework.core.util.StringUtils;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
@@ -25,8 +26,9 @@ public class EncryptTypeHandler extends BaseTypeHandler<String> {
     private static AES aes;
 
     private static String decrypt(String value) {
-        if (value == null) {
-            return null;
+        //兼容数据库默认值""字符
+        if (!StringUtils.hasText(value)) {
+            return value;
         }
         return getEncryptor().decryptStr(value);
     }
