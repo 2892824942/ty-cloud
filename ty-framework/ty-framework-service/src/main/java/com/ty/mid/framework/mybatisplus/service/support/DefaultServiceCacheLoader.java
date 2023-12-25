@@ -1,7 +1,7 @@
 package com.ty.mid.framework.mybatisplus.service.support;
 
 import com.ty.mid.framework.common.dto.AbstractDTO;
-import com.ty.mid.framework.common.entity.AbstractDO;
+import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.config.ApplicationConfiguration;
 import com.ty.mid.framework.mybatisplus.service.ServiceCacheLoader;
@@ -28,7 +28,7 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
     private ApplicationConfiguration configuration;
 
     @Autowired(required = false)
-    private List<CacheService<? extends AbstractDO<?>, ? extends Serializable, ? extends AbstractDTO>> cacheServices = new ArrayList<>();
+    private List<CacheService<? extends BaseIdDO<?>, ? extends Serializable, ? extends AbstractDTO>> cacheServices = new ArrayList<>();
 
     @Override
     public void init() {
@@ -52,8 +52,8 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
         log.info("successfully clear cache: {}", cacheName);
     }
 
-    protected CacheService<? extends AbstractDO<?>, ? extends Serializable, ? extends AbstractDTO> resolveService(String cacheName) {
-        CacheService<? extends AbstractDO<?>, ? extends Serializable, ? extends AbstractDTO> service = cacheServices.stream().filter(c -> c.getCacheName().equals(cacheName)).findFirst().orElse(null);
+    protected CacheService<? extends BaseIdDO<?>, ? extends Serializable, ? extends AbstractDTO> resolveService(String cacheName) {
+        CacheService<? extends BaseIdDO<?>, ? extends Serializable, ? extends AbstractDTO> service = cacheServices.stream().filter(c -> c.getCacheName().equals(cacheName)).findFirst().orElse(null);
         Validator.requireNonNull(cacheName, Validator.formatMessage("缓存 [%s] 不存在", cacheName));
         return service;
     }

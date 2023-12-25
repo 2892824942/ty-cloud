@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ty.mid.framework.common.constant.DomainConstant;
 import com.ty.mid.framework.common.dto.AbstractDTO;
-import com.ty.mid.framework.common.entity.AbstractDO;
+import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.DateUtils;
 import com.ty.mid.framework.common.util.UtilGenerics;
@@ -17,7 +17,6 @@ import com.ty.mid.framework.core.Converter;
 import com.ty.mid.framework.core.util.CollectionUtils;
 import com.ty.mid.framework.core.util.StringUtils;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
-import com.ty.mid.framework.mybatisplus.util.QueryUtils;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -25,17 +24,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractGenericService<T extends AbstractDO<ID>, ID extends Serializable, M extends BaseMapperX<T>, D extends AbstractDTO> extends ServiceImpl<M, T> implements IService<T>, Converter<T, D> {
+public abstract class AbstractGenericService<T extends BaseIdDO<ID>, ID extends Serializable, M extends BaseMapperX<T>, D extends AbstractDTO> extends ServiceImpl<M, T> implements IService<T>, Converter<T, D> {
 
-    /**
-     * 创建一个查询包装器
-     *
-     * @return
-     */
-    public QueryWrapper<T> createQuery() {
-        return QueryUtils.createQuery(currentModelClass());
-
-    }
 
     /**
      * 对字段添加时效条件查询

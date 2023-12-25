@@ -1,5 +1,6 @@
 package com.ty.mid.framework.common.entity;
 
+import com.ty.mid.framework.common.constant.DefaultTypeConstants;
 import com.ty.mid.framework.common.constant.DeletedEnum;
 
 import java.io.Serializable;
@@ -8,9 +9,40 @@ import java.time.LocalDateTime;
 /**
  * 审计参数
  */
-public interface Auditable<T> extends Serializable {
+public interface Auditable<T extends Serializable> extends BaseIdDO<T> {
 
-    Long DEFAULT_USER_ID = -1L;
+    /**
+     * 获取创建人
+     *
+     * @return
+     */
+    T getCreator();
+
+    /**
+     * 获取更新人
+     *
+     * @return
+     */
+    T getUpdater();
+
+    /**
+     * 获取创建时间
+     *
+     * @return
+     */
+    LocalDateTime getCreateTime();
+
+    /**
+     * 获取更新时间
+     */
+    LocalDateTime getUpdateTime();
+
+    /**
+     * 是否删除
+     */
+    Boolean getDeleted();
+
+    Long DEFAULT_USER_ID = DefaultTypeConstants.DEFAULT_LONG;
     /**
      * 默认审计信息
      */
@@ -45,42 +77,4 @@ public interface Auditable<T> extends Serializable {
             return DeletedEnum.NO_DELETE.getBooleanValue();
         }
     };
-
-    /**
-     * 获取用户id
-     *
-     * @return
-     */
-    T getId();
-
-    /**
-     * 获取创建人
-     *
-     * @return
-     */
-    T getCreator();
-
-    /**
-     * 获取更新人
-     *
-     * @return
-     */
-    T getUpdater();
-
-    /**
-     * 获取创建时间
-     *
-     * @return
-     */
-    LocalDateTime getCreateTime();
-
-    /**
-     * 获取更新时间
-     */
-    LocalDateTime getUpdateTime();
-
-    /**
-     * 是否删除
-     */
-    Boolean getDeleted();
 }

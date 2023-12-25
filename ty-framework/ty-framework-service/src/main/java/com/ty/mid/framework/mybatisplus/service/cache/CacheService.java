@@ -1,7 +1,7 @@
 package com.ty.mid.framework.mybatisplus.service.cache;
 
 import com.ty.mid.framework.common.dto.AbstractDTO;
-import com.ty.mid.framework.common.entity.AbstractDO;
+import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.mybatisplus.service.cache.generic.BaseCacheService;
 
 import java.io.Serializable;
@@ -13,6 +13,6 @@ import java.io.Serializable;
  * @param <ID>
  * @param <D>
  */
-public interface CacheService<T extends AbstractDO<ID>, ID extends Serializable, D extends AbstractDTO> extends BaseCacheService<T, D> {
+public interface CacheService<T extends BaseIdDO<ID>, ID extends Serializable, D extends AbstractDTO> extends BaseCacheService<T, D> {
 
 }
