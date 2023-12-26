@@ -35,7 +35,7 @@
         <mybatis-spring.version>2.1.1</mybatis-spring.version>
 
         <dynamic-datasource.version>3.6.1</dynamic-datasource.version>
-        <mybatis-plus-join-boot-starter.version>1.4.6</mybatis-plus-join-boot-starter.version>
+        <mybatis-plus-join-boot-starter.version>1.4.8.1</mybatis-plus-join-boot-starter.version>
         <redisson.version>3.18.0</redisson.version>
         <dm8.jdbc.version>8.1.2.141</dm8.jdbc.version>
         <!-- 消息队列 -->

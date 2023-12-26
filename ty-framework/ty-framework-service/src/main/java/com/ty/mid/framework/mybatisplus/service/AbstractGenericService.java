@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractGenericService<T extends BaseIdDO<ID>, ID extends Serializable, M extends BaseMapperX<T>, D extends AbstractDTO> extends ServiceImpl<M, T> implements IService<T>, Converter<T, D> {
+public abstract class AbstractGenericService<T extends BaseIdDO<ID>, ID extends Serializable, M extends BaseMapperX<T,ID>, D extends AbstractDTO> extends ServiceImpl<M, T> implements IService<T>, Converter<T, D> {
 
 
     /**

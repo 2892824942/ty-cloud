@@ -28,7 +28,7 @@ import java.util.List;
  * @param <D>
  */
 @Slf4j
-public abstract class AbstractMpAllCacheService<T extends BaseIdDO<ID>, ID extends Serializable, M extends BaseMapperX<T>, D extends AbstractDTO> extends AbstractGenericService<T, ID, M, D> implements CacheService<T, ID, D> {
+public abstract class AbstractMpAllCacheService<T extends BaseIdDO<ID>, ID extends Serializable, M extends BaseMapperX<T,ID>, D extends AbstractDTO> extends AbstractGenericService<T, ID, M, D> implements CacheService<T, ID, D> {
     @Resource(name = "jCacheCacheManager")
     protected CacheManager jCacheCacheManager;
     @Resource(name = "configuration")

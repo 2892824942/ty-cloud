@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.*;
 import com.ty.mid.framework.common.entity.Auditable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.Setter;
 import org.apache.ibatis.type.JdbcType;
 
 import java.io.Serializable;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
  *
  * @author suyoulinag
  */
-@Data
+@Setter
 public abstract class BaseDO implements Auditable<Long>, Serializable {
 
     /**
@@ -59,5 +60,33 @@ public abstract class BaseDO implements Auditable<Long>, Serializable {
     @TableLogic
     private Boolean deleted;
 
+    @Override
+    public Long getCreator() {
+        return creator;
+    }
 
+    @Override
+    public Long getUpdater() {
+        return updater;
+    }
+
+    @Override
+    public LocalDateTime getCreateTime() {
+        return createTime;
+    }
+
+    @Override
+    public LocalDateTime getUpdateTime() {
+        return updateTime;
+    }
+
+    @Override
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    @Override
+    public Long getId() {
+        return id;
+    }
 }
