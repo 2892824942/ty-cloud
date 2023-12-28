@@ -1,7 +1,7 @@
 package com.ty.mid.framework.cache.util;
 
+import cn.hutool.core.collection.CollUtil;
 import com.ty.mid.framework.cache.model.NullValue;
-import com.ty.mid.framework.core.util.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.NamedThreadLocal;
 
@@ -36,7 +36,7 @@ public class ThreadResourceUtil {
             map = new HashMap<>();
         }
         Map<Object, Object> resourceMap = map.get(name);
-        if (!CollectionUtils.isEmpty(resourceMap)) {
+        if (!CollUtil.isEmpty(resourceMap)) {
             resourceMap.entrySet().forEach(entry -> entry.setValue(NullValue.INSTANCE));
         }
     }

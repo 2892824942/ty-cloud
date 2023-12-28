@@ -1,6 +1,7 @@
 package com.ty.mid.framework.core.util;
 
 
+import cn.hutool.core.collection.CollUtil;
 import com.ty.mid.framework.common.constant.EncryptConstant;
 
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.Set;
 public class DatabaseEncryptUtil {
 
     private static final String ENCRYPT_PREFIX = "$:#";
-    private static List<String> ENCRYPT_TYPE_NO = new ArrayList<>();
+    private static final List<String> ENCRYPT_TYPE_NO = new ArrayList<>();
 
     static {
         for (int i = 0; i < 10; i++) {
@@ -52,7 +53,7 @@ public class DatabaseEncryptUtil {
     }
 
     public static List<String> encryptRC4List(Collection<String> sourceValues, String key) {
-        if (CollectionUtils.isEmpty(sourceValues)) {
+        if (CollUtil.isEmpty(sourceValues)) {
             return new ArrayList<>();
         }
         List<String> result = new ArrayList<>();
@@ -72,7 +73,7 @@ public class DatabaseEncryptUtil {
     }
 
     public static List<String> decryptRC4List(Collection<String> encryptValues, String key) {
-        if (CollectionUtils.isEmpty(encryptValues)) {
+        if (CollUtil.isEmpty(encryptValues)) {
             return new ArrayList<>();
         }
         List<String> result = new ArrayList<>();

@@ -1,10 +1,10 @@
 package com.ty.mid.framework.core;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.impl.BeanConverter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.Validator;
-import com.ty.mid.framework.core.util.CollectionUtils;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -12,14 +12,14 @@ import java.util.stream.Collectors;
 
 public interface Converter<S, T> {
     default Collection<T> convert(Collection<S> entities) {
-        if (CollectionUtils.isEmpty(entities)) {
+        if (CollUtil.isEmpty(entities)) {
             return Collections.emptyList();
         }
         return entities.stream().map(this::convert).collect(Collectors.toList());
     }
 
     default Collection<S> rConvert(Collection<T> entities) {
-        if (CollectionUtils.isEmpty(entities)) {
+        if (CollUtil.isEmpty(entities)) {
             return Collections.emptyList();
         }
         return entities.stream().map(this::rConvert).collect(Collectors.toList());

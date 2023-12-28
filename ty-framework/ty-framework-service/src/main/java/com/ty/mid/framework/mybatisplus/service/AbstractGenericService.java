@@ -1,5 +1,6 @@
 package com.ty.mid.framework.mybatisplus.service;
 
+import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.ReflectionKit;
@@ -14,7 +15,6 @@ import com.ty.mid.framework.common.util.DateUtils;
 import com.ty.mid.framework.common.util.UtilGenerics;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
 import com.ty.mid.framework.core.Converter;
-import com.ty.mid.framework.core.util.CollectionUtils;
 import com.ty.mid.framework.core.util.StringUtils;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
 
@@ -87,7 +87,7 @@ public abstract class AbstractGenericService<T extends BaseIdDO<ID>, ID extends 
      * @return
      */
     public QueryWrapper<T> addCollectionQuery(QueryWrapper<T> query, String colName, Collection<?> collection) {
-        if (!CollectionUtils.isEmpty(collection)) {
+        if (!CollUtil.isEmpty(collection)) {
             if (collection.size() == 1) {
                 query.eq(colName, collection.iterator().next());
             } else {

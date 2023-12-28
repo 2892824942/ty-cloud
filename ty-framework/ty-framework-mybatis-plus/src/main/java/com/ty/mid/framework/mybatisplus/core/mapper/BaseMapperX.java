@@ -21,7 +21,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 /**
  * 在 MyBatis Plus 的 BaseMapper 的基础上拓展，提供更多的能力
@@ -33,6 +32,7 @@ import java.util.function.Function;
 public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> extends MPJBaseMapper<T> {
     /**
      * 普通分页
+     *
      * @param pageParam
      * @param queryWrapper
      * @return
@@ -50,23 +50,25 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
         // 转换返回
         return new PageResult<>(mpPage.getRecords(), mpPage.getTotal());
     }
+
     /**
      * 连表分页
      * 其他连表能力,直接调用父级方法
+     *
      * @param pageParam
      * @param queryWrapper
      * @return
      */
-    default <DTO> PageResult<DTO> selectJoinPage(Class<DTO> dtoClass,PageParam pageParam, @Param("ew") MPJBaseJoin<T> queryWrapper) {
+    default <DTO> PageResult<DTO> selectJoinPage(Class<DTO> dtoClass, PageParam pageParam, @Param("ew") MPJBaseJoin<T> queryWrapper) {
         // 特殊：不分页，直接查询全部
         if (PageParam.PAGE_SIZE_NONE.equals(pageParam.getPageNo())) {
-            List<DTO> list = selectJoinList(dtoClass,queryWrapper);
+            List<DTO> list = selectJoinList(dtoClass, queryWrapper);
             return new PageResult<>(list, (long) list.size());
         }
 
         // MyBatis Plus 查询
         IPage<DTO> mpPage = MyBatisUtils.buildPage(pageParam);
-        selectJoinPage(mpPage,dtoClass, queryWrapper);
+        selectJoinPage(mpPage, dtoClass, queryWrapper);
         // 转换返回
         return new PageResult<>(mpPage.getRecords(), mpPage.getTotal());
     }
@@ -119,15 +121,15 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
     }
 
 
-
     default List<T> selectList(SFunction<T, ?> field, Object value) {
         return selectList(new LambdaQueryWrapper<T>().eq(field, value));
     }
+
     default Map<ID, T> selectMap(SFunction<T, ?> field, Object value) {
         return IterUtil.toMap(selectList(field, value), BaseIdDO::getId);
     }
 
-    default <K> Map<K, T> selectMap(SFunction<T, ?> field, Object value,SFunction<T, K> keyField) {
+    default <K> Map<K, T> selectMap(SFunction<T, ?> field, Object value, SFunction<T, K> keyField) {
         return IterUtil.toMap(selectList(field, value), keyField);
     }
 
@@ -142,7 +144,7 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
         return IterUtil.toMap(selectList(field, values), BaseIdDO::getId);
     }
 
-    default <K> Map<K, T> selectMap(SFunction<T, ?> field, Collection<?> values,SFunction<T, K> keyField) {
+    default <K> Map<K, T> selectMap(SFunction<T, ?> field, Collection<?> values, SFunction<T, K> keyField) {
         return IterUtil.toMap(selectList(field, values), keyField);
     }
 
@@ -151,24 +153,24 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
         return selectList(new LambdaQueryWrapper<T>().le(leField, value).ge(geField, value));
     }
 
-    default Map<ID, T> selectMap(SFunction<T, ?> leField, SFunction<T, ?> geField, Object value){
-        return IterUtil.toMap(selectList(leField, geField,value), BaseIdDO::getId);
+    default Map<ID, T> selectMap(SFunction<T, ?> leField, SFunction<T, ?> geField, Object value) {
+        return IterUtil.toMap(selectList(leField, geField, value), BaseIdDO::getId);
     }
 
-    default <K> Map<K, T> selectMap(SFunction<T, ?> leField, SFunction<T, ?> geField, Object value,SFunction<T, K> keyField){
-        return IterUtil.toMap(selectList(leField, geField,value), keyField);
+    default <K> Map<K, T> selectMap(SFunction<T, ?> leField, SFunction<T, ?> geField, Object value, SFunction<T, K> keyField) {
+        return IterUtil.toMap(selectList(leField, geField, value), keyField);
     }
 
     default List<T> selectList(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
         return selectList(new LambdaQueryWrapper<T>().eq(field1, value1).eq(field2, value2));
     }
 
-    default Map<ID, T> selectMap(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2){
-        return IterUtil.toMap(selectList(field1, value1,field2,value2), BaseIdDO::getId);
+    default Map<ID, T> selectMap(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
+        return IterUtil.toMap(selectList(field1, value1, field2, value2), BaseIdDO::getId);
     }
 
-    default <K> Map<K, T> selectMap(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2,SFunction<T, K> keyField){
-        return IterUtil.toMap(selectList(field1, value1,field2,value2), keyField);
+    default <K> Map<K, T> selectMap(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2, SFunction<T, K> keyField) {
+        return IterUtil.toMap(selectList(field1, value1, field2, value2), keyField);
     }
 
     /**

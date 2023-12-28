@@ -1,8 +1,8 @@
 package com.ty.mid.framework.mybatisplus.service.cache.generic;
 
+import cn.hutool.core.collection.CollUtil;
 import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.Converter;
-import com.ty.mid.framework.core.util.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,7 +45,7 @@ public interface BaseCacheService<T, D> extends Converter<T, D> {
         log.info("reloading cache {}, with cache class: {}", getCacheName(), this.getClass().getSimpleName());
 
         List<T> list = this.listFromDbNeedCache();
-        if (CollectionUtils.isEmpty(list)) {
+        if (CollUtil.isEmpty(list)) {
             log.warn("cache data is empty");
         }
 
