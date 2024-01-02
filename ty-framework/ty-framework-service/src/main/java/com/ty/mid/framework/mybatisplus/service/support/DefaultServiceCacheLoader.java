@@ -32,7 +32,7 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
 
     @Override
     public void init() {
-        // do nothing here, each cache service will reload cache theme self
+        // do nothing here, each cache service will reload cache themselves
     }
 
     @Override
