@@ -32,11 +32,11 @@ import java.util.*;
  * 泛型工具类
  */
 @ThreadSafe
-public final class UtilGenerics {
+public final class GenericsUtil {
 
     public static final String module = MiscUtils.class.getName();
 
-    private UtilGenerics() {
+    private GenericsUtil() {
     }
 
     @SuppressWarnings("unchecked")
@@ -44,7 +44,11 @@ public final class UtilGenerics {
         return (V) object;
     }
 
-    private static <C extends Collection<?>> C checkCollectionCast(Object object, Class<C> clz) {
+    public static <V> Class<V> cast2Class(Class<?> classObj) {
+        return cast(classObj);
+    }
+
+    private static <C extends Collection<?>> C cast2Collection(Object object, Class<C> clz) {
         return clz.cast(object);
     }
 
@@ -62,32 +66,32 @@ public final class UtilGenerics {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Collection<T> checkCollection(Object object) {
-        return (Collection<T>) checkCollectionCast(object, Collection.class);
+    public static <T> Collection<T> check2Collection(Object object) {
+        return (Collection<T>) cast2Collection(object, Collection.class);
     }
 
-    public static <T> Collection<T> checkCollection(Object object, Class<T> type) {
+    public static <T> Collection<T> check2Collection(Object object, Class<T> type) {
         checkCollectionContainment(object, Collection.class, type);
-        return checkCollection(object);
+        return check2Collection(object);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> List<T> checkList(Object object) {
-        return (List<T>) checkCollectionCast(object, List.class);
+    public static <T> List<T> check2List(Object object) {
+        return (List<T>) cast2Collection(object, List.class);
     }
 
-    public static <T> List<T> checkList(Object object, Class<T> type) {
+    public static <T> List<T> check2List(Object object, Class<T> type) {
         checkCollectionContainment(object, List.class, type);
-        return checkList(object);
+        return check2List(object);
     }
 
     @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, V> checkMap(Object object) {
+    public static <K, V> Map<K, V> check2Map(Object object) {
         if (object != null && !(object instanceof Map)) throw new ClassCastException("Not a map");
         return (Map<K, V>) object;
     }
 
-    public static <K, V> Map<K, V> checkMap(Object object, Class<K> keyType, Class<V> valueType) {
+    public static <K, V> Map<K, V> check2Map(Object object, Class<K> keyType, Class<V> valueType) {
         if (object != null) {
             if (!(object instanceof Map<?, ?>)) throw new ClassCastException("Not a map");
             Map<?, ?> map = (Map<?, ?>) object;
@@ -102,27 +106,27 @@ public final class UtilGenerics {
                 i++;
             }
         }
-        return checkMap(object);
+        return check2Map(object);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Stack<T> checkStack(Object object) {
-        return (Stack<T>) checkCollectionCast(object, Stack.class);
+    public static <T> Stack<T> check2Stack(Object object) {
+        return (Stack<T>) cast2Collection(object, Stack.class);
     }
 
-    public static <T> Stack<T> checkStack(Object object, Class<T> type) {
+    public static <T> Stack<T> check2Stack(Object object, Class<T> type) {
         checkCollectionContainment(object, Stack.class, type);
-        return checkStack(object);
+        return check2Stack(object);
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Set<T> checkSet(Object object) {
-        return (Set<T>) checkCollectionCast(object, Set.class);
+    public static <T> Set<T> check2Set(Object object) {
+        return (Set<T>) cast2Collection(object, Set.class);
     }
 
-    public static <T> Set<T> checkSet(Object object, Class<T> type) {
+    public static <T> Set<T> check2Set(Object object, Class<T> type) {
         checkCollectionContainment(object, Set.class, type);
-        return checkSet(object);
+        return check2Set(object);
     }
 
     /**
@@ -186,8 +190,22 @@ public final class UtilGenerics {
         }
         return map;
     }
+    public static Class<?> getGenericTypeByIndex(Class<?> targetClass, int index) {
+        Type superclass = targetClass.getGenericSuperclass();
 
-    public static List<Class<?>> getTypeArgumentClassList(Class<?> genericClass) {
+        if (superclass instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) superclass;
+            Type[] typeArguments = parameterizedType.getActualTypeArguments();
+
+            if (typeArguments.length > 0 && typeArguments[index] instanceof Class) {
+                return (Class<?>) typeArguments[index];
+            }
+        }
+
+        throw new IllegalStateException("Unable to determine the generic type.");
+    }
+
+    public static List<Class<?>> getGenericTypeList(Class<?> genericClass) {
         Type rawType = genericClass.getGenericSuperclass();
         if (rawType instanceof Class<?>) {
             return Collections.emptyList();
@@ -199,21 +217,21 @@ public final class UtilGenerics {
         List<Class<?>> typeArgumentClassList = new ArrayList<Class<?>>();
 
         for (Type typeArgument : typeArguments) {
-            typeArgumentClassList.add(getTypeArgumentClass(typeArgument));
+            typeArgumentClassList.add(getGenericType(typeArgument));
         }
 
         return typeArgumentClassList;
     }
 
-    public static Class<?> getTypeArgumentClass(Type typeArgument) {
+    public static Class<?> getGenericType(Type typeArgument) {
         if (typeArgument instanceof Class<?>) {
             return (Class<?>) typeArgument;
         } else if (typeArgument instanceof ParameterizedType) {
             Type innerType = ((ParameterizedType) typeArgument).getRawType();
-            return getTypeArgumentClass(innerType);
+            return getGenericType(innerType);
         } else if (typeArgument instanceof GenericArrayType) {
             Type compType = ((GenericArrayType) typeArgument).getGenericComponentType();
-            Class<?> compClazz = getTypeArgumentClass(compType);
+            Class<?> compClazz = getGenericType(compType);
 
             if (compClazz != null) {
                 return Array.newInstance(compClazz, 0).getClass();

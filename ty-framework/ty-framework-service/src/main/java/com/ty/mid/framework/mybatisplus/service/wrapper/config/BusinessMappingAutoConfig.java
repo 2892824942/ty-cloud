@@ -1,6 +1,7 @@
-package com.ty.mid.framework.mybatisplus.service.wrapper.core;
+package com.ty.mid.framework.mybatisplus.service.wrapper.config;
 
 import lombok.extern.slf4j.Slf4j;
+
 //TODO
 @Slf4j
 public class BusinessMappingAutoConfig {

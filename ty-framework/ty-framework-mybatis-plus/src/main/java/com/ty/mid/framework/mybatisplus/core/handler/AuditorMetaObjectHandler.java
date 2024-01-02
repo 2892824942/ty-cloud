@@ -10,7 +10,6 @@ import org.apache.ibatis.reflection.MetaObject;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Slf4j
 public class AuditorMetaObjectHandler<T extends Serializable> implements MetaObjectHandler {

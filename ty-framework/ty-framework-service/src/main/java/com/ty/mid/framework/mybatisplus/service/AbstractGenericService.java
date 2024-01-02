@@ -8,14 +8,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ty.mid.framework.common.constant.DomainConstant;
-import com.ty.mid.framework.common.dto.AbstractDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.DateUtils;
-import com.ty.mid.framework.common.util.UtilGenerics;
+import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
-import com.ty.mid.framework.core.Converter;
 import com.ty.mid.framework.core.util.StringUtils;
+import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
 
 import java.io.Serializable;
@@ -24,7 +23,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-public abstract class AbstractGenericService<T extends BaseIdDO<ID>, ID extends Serializable, M extends BaseMapperX<T,ID>, D extends AbstractDTO> extends ServiceImpl<M, T> implements IService<T>, Converter<T, D> {
+public abstract class AbstractGenericService<T extends BaseDO, M extends BaseMapperX<T, Long>> extends ServiceImpl<M, T> implements IService<T> {
 
 
     /**
@@ -64,7 +63,7 @@ public abstract class AbstractGenericService<T extends BaseIdDO<ID>, ID extends 
      *
      * @param query
      * @param fromDateColName 开始时间字段名称
-     * @param toDateColName 结束时间字段名称
+     * @param toDateColName   结束时间字段名称
      * @return
      */
     public QueryWrapper<T> addTimelinessQuery(QueryWrapper<T> query, String fromDateColName, String toDateColName, Date date) {
@@ -147,7 +146,7 @@ public abstract class AbstractGenericService<T extends BaseIdDO<ID>, ID extends 
 
     @Override
     protected Class<T> currentModelClass() {
-        return UtilGenerics.cast(ReflectionKit.getSuperClassGenericType(getClass(), IService.class, 0));
+        return GenericsUtil.cast(ReflectionKit.getSuperClassGenericType(getClass(), IService.class, 0));
     }
 
 

@@ -5,11 +5,10 @@ import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.config.ApplicationConfiguration;
 import com.ty.mid.framework.mybatisplus.service.ServiceCacheLoader;
-import com.ty.mid.framework.mybatisplus.service.cache.CacheService;
+import com.ty.mid.framework.mybatisplus.service.cache.generic.BaseCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +27,7 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
     private ApplicationConfiguration configuration;
 
     @Autowired(required = false)
-    private List<CacheService<? extends BaseIdDO<?>, ? extends Serializable, ? extends AbstractDTO>> cacheServices = new ArrayList<>();
+    private List<BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO>> cacheServices = new ArrayList<>();
 
     @Override
     public void init() {
@@ -37,7 +36,7 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
 
     @Override
     public Set<String> getCacheNames() {
-        return cacheServices.stream().map(CacheService::getCacheName).collect(Collectors.toSet());
+        return cacheServices.stream().map(BaseCacheService::getCacheName).collect(Collectors.toSet());
     }
 
     @Override
@@ -52,8 +51,8 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
         log.info("successfully clear cache: {}", cacheName);
     }
 
-    protected CacheService<? extends BaseIdDO<?>, ? extends Serializable, ? extends AbstractDTO> resolveService(String cacheName) {
-        CacheService<? extends BaseIdDO<?>, ? extends Serializable, ? extends AbstractDTO> service = cacheServices.stream().filter(c -> c.getCacheName().equals(cacheName)).findFirst().orElse(null);
+    protected BaseCacheService<? extends BaseIdDO<?>,  ? extends AbstractDTO> resolveService(String cacheName) {
+        BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO> service = cacheServices.stream().filter(c -> c.getCacheName().equals(cacheName)).findFirst().orElse(null);
         Validator.requireNonNull(cacheName, Validator.formatMessage("缓存 [%s] 不存在", cacheName));
         return service;
     }

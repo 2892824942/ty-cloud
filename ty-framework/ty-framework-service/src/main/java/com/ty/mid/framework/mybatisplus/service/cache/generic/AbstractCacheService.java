@@ -2,8 +2,6 @@ package com.ty.mid.framework.mybatisplus.service.cache.generic;
 
 import com.ty.mid.framework.common.dto.AbstractDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
-import com.ty.mid.framework.core.Converter;
-import com.ty.mid.framework.mybatisplus.service.cache.CacheService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
@@ -22,7 +20,7 @@ import java.io.Serializable;
  * @param <D>
  */
 @Slf4j
-public abstract class AbstractCacheService<T extends BaseIdDO<ID>, ID extends Serializable, D extends AbstractDTO> implements CacheService<T, ID, D>, Converter<T, D> {
+public abstract class AbstractCacheService<T extends BaseIdDO<ID>, ID extends Serializable, D extends AbstractDTO> implements BaseCacheService<T, D> {
 
     @Resource(name = "jCacheCacheManager")
     protected CacheManager jCacheCacheManager;

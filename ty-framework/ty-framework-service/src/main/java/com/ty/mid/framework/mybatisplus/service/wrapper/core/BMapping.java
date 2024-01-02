@@ -13,7 +13,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface BMapping {
     /**
-     * 业务字段装载器
+     * 映射的字段Class类型
      *
      * @return name
      */

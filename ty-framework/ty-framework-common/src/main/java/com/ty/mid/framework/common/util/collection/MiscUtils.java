@@ -2,7 +2,7 @@ package com.ty.mid.framework.common.util.collection;
 
 
 import com.ty.mid.framework.common.lang.ThreadSafe;
-import com.ty.mid.framework.common.util.UtilGenerics;
+import com.ty.mid.framework.common.util.GenericsUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -153,7 +153,7 @@ public final class MiscUtils {
     @SuppressWarnings("unchecked")
     public static <K, V> Map<String, V> toMap(Object... data) {
         if (data.length == 1 && data[0] instanceof Map) {
-            return UtilGenerics.<String, V>checkMap(data[0]);
+            return GenericsUtil.<String, V>check2Map(data[0]);
         }
         if (data.length % 2 == 1) {
             IllegalArgumentException e = new IllegalArgumentException("You must pass an even sized array to the toMap method (size = " + data.length + ")");
@@ -169,7 +169,7 @@ public final class MiscUtils {
 
     public static <K, V> Map<String, V> toLinkedHashMap(Object... data) {
         if (data.length == 1 && data[0] instanceof Map) {
-            return UtilGenerics.<String, V>checkMap(data[0]);
+            return GenericsUtil.<String, V>check2Map(data[0]);
         }
         if (data.length % 2 == 1) {
             IllegalArgumentException e = new IllegalArgumentException("You must pass an even sized array to the toMap method (size = " + data.length + ")");
@@ -270,7 +270,7 @@ public final class MiscUtils {
      * Assuming outerMap not null; if null will throw a NullPointerException
      */
     public static <K, IK, V> Map<IK, V> getMapFromMap(Map<K, Object> outerMap, K key) {
-        Map<IK, V> innerMap = UtilGenerics.<IK, V>checkMap(outerMap.get(key));
+        Map<IK, V> innerMap = GenericsUtil.<IK, V>check2Map(outerMap.get(key));
         if (innerMap == null) {
             innerMap = new HashMap<IK, V>();
             outerMap.put(key, innerMap);
@@ -282,7 +282,7 @@ public final class MiscUtils {
      * Assuming outerMap not null; if null will throw a NullPointerException
      */
     public static <K, V> List<V> getListFromMap(Map<K, Object> outerMap, K key) {
-        List<V> innerList = UtilGenerics.<V>checkList(outerMap.get(key));
+        List<V> innerList = GenericsUtil.<V>check2List(outerMap.get(key));
         if (innerList == null) {
             innerList = new LinkedList<V>();
             outerMap.put(key, innerList);
@@ -594,7 +594,7 @@ public final class MiscUtils {
     }
 
     public static <K, V> void addToListInMap(V element, Map<K, Object> theMap, K listKey) {
-        List<V> theList = UtilGenerics.checkList(theMap.get(listKey));
+        List<V> theList = GenericsUtil.check2List(theMap.get(listKey));
         if (theList == null) {
             theList = new LinkedList<V>();
             theMap.put(listKey, theList);
@@ -603,7 +603,7 @@ public final class MiscUtils {
     }
 
     public static <K, V> void addToSetInMap(V element, Map<K, Set<V>> theMap, K setKey) {
-        Set<V> theSet = UtilGenerics.checkSet(theMap.get(setKey));
+        Set<V> theSet = GenericsUtil.check2Set(theMap.get(setKey));
         if (theSet == null) {
             theSet = new LinkedHashSet<V>();
             theMap.put(setKey, theSet);
@@ -612,7 +612,7 @@ public final class MiscUtils {
     }
 
     public static <K, V> void addToSortedSetInMap(V element, Map<K, Set<V>> theMap, K setKey) {
-        Set<V> theSet = UtilGenerics.checkSet(theMap.get(setKey));
+        Set<V> theSet = GenericsUtil.check2Set(theMap.get(setKey));
         if (theSet == null) {
             theSet = new TreeSet<V>();
             theMap.put(setKey, theSet);

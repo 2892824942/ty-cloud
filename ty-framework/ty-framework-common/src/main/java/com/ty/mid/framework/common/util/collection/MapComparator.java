@@ -1,6 +1,6 @@
 package com.ty.mid.framework.common.util.collection;
 
-import com.ty.mid.framework.common.util.UtilGenerics;
+import com.ty.mid.framework.common.util.GenericsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +79,7 @@ public class MapComparator implements Comparator<Map<Object, Object>> {
             if (compareResult == 0) {
                 try {
                     // the map values in question MUST implement the Comparable interface, if not we'll throw an exception
-                    Comparable<Object> comp1 = UtilGenerics.cast(o1);
+                    Comparable<Object> comp1 = GenericsUtil.cast(o1);
                     compareResult = comp1.compareTo(o2);
                 } catch (Exception e) {
                     String errorMessage = "Error sorting list of Maps: " + e.toString();

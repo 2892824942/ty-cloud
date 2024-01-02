@@ -152,6 +152,18 @@ public class JsonUtils {
         }
     }
 
+    public static <T> List<T> parseArray(String text, TypeReference<T> typeReference) {
+        if (StrUtil.isEmpty(text)) {
+            return new ArrayList<>();
+        }
+        try {
+            return om.readValue(text, om.getTypeFactory().constructCollectionType(List.class, typeReference.getClass()));
+        } catch (IOException e) {
+            log.error("json parse err,json:{}", text, e);
+            throw new RuntimeException(e);
+        }
+    }
+
     public static <T> List<T> parseArray(String text, Class<T> clazz) {
         if (StrUtil.isEmpty(text)) {
             return new ArrayList<>();

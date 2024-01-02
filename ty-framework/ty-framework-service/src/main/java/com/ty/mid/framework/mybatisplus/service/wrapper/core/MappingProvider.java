@@ -1,14 +1,18 @@
 package com.ty.mid.framework.mybatisplus.service.wrapper.core;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
+import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.Validator;
+import com.ty.mid.framework.core.spring.SpringContextHelper;
+import com.ty.mid.framework.mybatisplus.service.wrapper.AutoWrapService;
+import com.ty.mid.framework.mybatisplus.service.wrapper.AbstractAutoWrapper;
+import com.ty.mid.framework.mybatisplus.service.wrapper.AutoWrapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
@@ -20,70 +24,66 @@ import java.util.stream.Collectors;
 /**
  * 业务常用实体自动装载器
  * 使用说明:
- * <p>
+ * 0.常用实体转换方法需在AbstractWrapperFactory中定义
  * 1.mapstruct中禁止定义常用实体转换,主要此类转换内部执行sql并将数据填充,而mapstruct会自动识别单一的A->B,当调用List<A>->List<B>时,会自动调用A->B,导致多次执行sql
- * 2.需要自动转换的实体,需要实现AutoWrapper<Object, ? extends BaseIdDO<L>>接口,并实现其中的方法
+ * 2.转换的source以及target必须继承BaseIdDO<Long>
+ * 3.暂时只支持单一入参.多入参完全可以拆分变成多个单一入参
  * <p>
  * 注意:不频繁的实体转换推荐手动查询sql转换,此类的自动转换的价值在于CLassWrapperEnum定义的实体频繁使用,减少在对应实体转换时,手动查询sql(或调用已有方法赋值)的步骤.
  * 同样的,由于反射引入会降低此部分的性能.与带来的价值对比,可以接受
  */
 @Slf4j
-@Component
 public class MappingProvider {
-    @Resource
-    private List<AutoWrapper<Object, ? extends BaseIdDO<Long>, Long>> autoWrapperList;
-    Map<? extends Class<?>, BMapperDefinition> bMapperDefinitionMap;
-    @PostConstruct
-    public void init() {
-        //校验,AutoWrapper中,一个返回值只能有一个wrapper实现,多个报错
-        if (CollUtil.isEmpty(autoWrapperList)) {
-            return;
-        }
-        bMapperDefinitionMap = autoWrapperList.stream().map(wrapper -> {
-            try {
-                Method covertMethod = wrapper.getClass().getMethod("covert", Collection.class);
-                BMapperDefinition bMapperDefinition = new BMapperDefinition();
-                bMapperDefinition.setParamTypeClass(covertMethod.getParameters()[0].getType());
-                bMapperDefinition.setReturnTypeClass(covertMethod.getReturnType());
-                bMapperDefinition.setAutoWrapper(wrapper);
-                return bMapperDefinition;
-            } catch (NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-        }).collect(Collectors.toMap(BMapperDefinition::getReturnTypeClass, Function.identity()
-                , (a, b) -> {
-                    throw new FrameworkException("AutoWrapper中,一个返回值只能有一个wrapper实现,当前实体类型:" + a.getReturnTypeClass() + ",重复定义:");
-                }));
+    private static final Map<Class<?>, Method> CONTAINER = new HashMap<>();
+
+    public static Map<Class<?>, Method> getContainer() {
+        return MappingProvider.CONTAINER;
     }
 
-    private  final Map<Class<?>, Method> CONTAINER = new HashMap<>();
-
-    public  Map<Class<?>, Method> getContainer() {
-        return this.CONTAINER;
-    }
-
-    public  <T extends BaseIdDO<Long>> void autoWrapper(T source, T target) {
+    public static <T extends BaseIdDO<Long>> void autoWrapper(T source, T target) {
         autoWrapper(Collections.singletonList(source), Collections.singletonList(target));
     }
 
-    public  <S extends BaseIdDO<Long>, T extends BaseIdDO<Long>> void autoWrapper(Collection<S> sourceList, Collection<T> targetList) {
+    @SuppressWarnings("unchecked")
+    public static <S extends BaseIdDO<Long>, T extends BaseIdDO<Long>> void autoWrapper(Collection<S> sourceList, Collection<T> targetList) {
         if (CollUtil.isEmpty(sourceList) || CollUtil.isEmpty(targetList)) {
             return;
         }
-        S source = sourceList.iterator().next();
-        List<Field> bMappingFieldList = this.getBMappingField(source);
+        //获取AbstractMappingFactory定义的AutoWrapper,转化为  Map<可自动装载Class,AutoWrapper.Field>
+        AbstractMappingFactory mappingFactory = SpringContextHelper.getBean(AbstractMappingFactory.class);
+        Map<Class<?>, Field> autoWrapperMap = getAutoWrapperMap(mappingFactory);
+
+        //获取定义的AbstractAutoWrapService,转化为  Map<可自动装载Class,AutoWrapper.Field>
+        Map<String, AutoWrapService> wrapServiceMap = SpringContextHelper.getBeansOfType(AutoWrapService.class);
+        Map<Class<?>, AutoWrapService> autoWrapServiceMap = getAbstractAutoWrapService(wrapServiceMap);
+
+
+        T targetFirst = targetList.iterator().next();
+
+        S sourceFirst = sourceList.iterator().next();
+        List<Field> bMappingFieldList = MappingProvider.getBMappingField(sourceFirst);
         if (CollUtil.isEmpty(bMappingFieldList)) {
             return;
         }
+        Field wrapperField = null;
         for (Field sourceField : bMappingFieldList) {
             BMapping annotation = sourceField.getAnnotation(BMapping.class);
             //1.校验
-            Class<?> targetClass = annotation.value();
-            T targetFirst = targetList.iterator().next();
-            Field targetField = this.getFieldByClass(targetFirst, targetClass);
+            Class<?> autoWrapperClass = annotation.value();
+            AutoWrapService autoWrapService = autoWrapServiceMap.get(autoWrapperClass);
+            if (Objects.isNull(autoWrapService)) {
+                wrapperField = autoWrapperMap.get(autoWrapperClass);
+                if (Objects.isNull(wrapperField)) {
+                    log.warn("target class not found field when auto covert process.check out you target:{} whether forgot define {}" +
+                            ",or make a mistake value Class on  @BMapping in source:{} ", targetFirst.getClass(), autoWrapperClass, sourceList.iterator().next().getClass());
+
+                    continue;
+                }
+            }
+
+            Field targetField = MappingProvider.getFieldByClass(targetFirst, autoWrapperClass);
             if (Objects.isNull(targetField)) {
-                log.warn("target class not found field when auto covert process.check out you target:{} " +
-                        ",or make a mistake on  @BMapping in source:{} ", targetFirst.getClass(), sourceList.iterator().next().getClass());
+                //当前目标类中没有指定的需要映射的对象
                 continue;
             }
             //2.组装映射
@@ -112,13 +112,26 @@ public class MappingProvider {
                 isCollection = true;
                 values = values.stream().map(val -> (Collection<?>) val).flatMap(Collection::stream).distinct().collect(Collectors.toList());
             }
-            BMapperDefinition bMapperDefinition = bMapperDefinitionMap.get(targetClass);
-            Validator.requireNonNull(bMapperDefinition, "未找到对应的映射关系");
-            AutoWrapper<Object, ? extends BaseIdDO<Long>, Long> autoWrapper = bMapperDefinition.getAutoWrapper();
-            Map<Object, ? extends BaseIdDO<Long>> dataMap = autoWrapper.covert(values);
+            //4.转换
+            Map<Object, Object> dataMap;
+            try {
+                if (Objects.nonNull(autoWrapService)) {
+                    dataMap = autoWrapService.autoWrap(values);
+                } else {
+                    AbstractAutoWrapper autoWrapper = (AbstractAutoWrapper) wrapperField.get(mappingFactory);
+                    dataMap = autoWrapper.autoWrap(values);
+                }
+
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+
+            if (MapUtil.isEmpty(dataMap)) {
+                continue;
+            }
             for (T target : targetList) {
                 if (!isCollection) {
-                    this.setTargetField(target, targetField, dataMap.get(idKeyMap.get(target.getId())));
+                    MappingProvider.setTargetField(target, targetField, dataMap.get(idKeyMap.get(target.getId())));
                 } else {
                     //Collection兼容
                     Object val = idKeyMap.get(target.getId());
@@ -127,7 +140,7 @@ public class MappingProvider {
                         continue;
                     }
                     List<Object> realDate = keyCollection.stream().map(dataMap::get).filter(Objects::nonNull).collect(Collectors.toList());
-                    this.setTargetField(target, targetField, realDate);
+                    MappingProvider.setTargetField(target, targetField, realDate);
                 }
 
             }
@@ -136,29 +149,75 @@ public class MappingProvider {
     }
 
     /**
-     * 解析实体中标注了@BMapping注解的属性
+     * 解析AbstractMappingFactory中的所有AutoWrapper属性
      */
 
-    public  <T extends BaseIdDO<Long>> List<Field> getBMappingField(T source) {
+    public static Map<Class<?>, Field> getAutoWrapperMap(AbstractMappingFactory abstractMappingFactory) {
+        Field[] fields = getAllFields(abstractMappingFactory.getClass(), AbstractMappingFactory.class);
+        if (ArrayUtils.isEmpty(fields)){
+            return Collections.emptyMap();
+        }
+        //这里的key是第三个泛型类型,Field为AutoWrapper属性
+        return Arrays.stream(fields)
+                .filter(field -> AutoWrapper.class.isAssignableFrom(field.getType()))
+                .collect(Collectors.toMap(field -> MappingProvider.getGenericClass(field, 2), Function.identity(), (a, b) -> {
+                    throw new FrameworkException("AutoWrapper中,一个自动装载类型只能有一个wrapper实现,当前实体属性类型:" + a.getType() + ",重复定义,请检查:" + abstractMappingFactory.getClass());
+                }));
+
+    }
+
+    /**
+     * 解析AbstractMappingFactory中的所有AutoWrapper属性
+     */
+
+    public static Map<Class<?>, AutoWrapService> getAbstractAutoWrapService(Map<String, AutoWrapService> autoWrapServiceMap) {
+        if (CollUtil.isEmpty(autoWrapServiceMap)) {
+            return Collections.emptyMap();
+        }
+        //这里的key是第2个泛型类型,Field为AutoWrapper属性
+        return autoWrapServiceMap.values().stream().collect(Collectors.toMap(wrapService -> GenericTypeUtils.resolveTypeArguments(wrapService.getClass(), AutoWrapService.class)[1], Function.identity(), (a, b) -> {
+            throw new FrameworkException("AutoWrapper中,一个自动装载类型只能有一个wrapper实现,当前实体属性类型:" + a.getClass() + ",重复定义,请检查:" + b.getClass());
+        }));
+    }
+
+    /**
+     * 使用递归获某个类及其所有父类所有字段
+     *
+     * @param clazz
+     * @return
+     */
+    private static Field[] getAllFields(Class<?> clazz, Class<?> stopClass) {
+        // 使用递归获取所有字段
+        if (clazz == null) {
+            return null;
+        }
+
+        // 获取当前类声明的字段
+        Field[] declaredFields = clazz.getDeclaredFields();
+        if (clazz.equals(stopClass)) {
+            return declaredFields;
+        }
+        // 获取父类的字段
+        Field[] parentFields = getAllFields(clazz.getSuperclass(), stopClass);
+        if (ArrayUtils.isEmpty(parentFields)){
+            return null;
+        }
+        // 合并当前类和父类的字段
+        Field[] allFields = new Field[declaredFields.length + parentFields.length];
+        System.arraycopy(declaredFields, 0, allFields, 0, declaredFields.length);
+        System.arraycopy(parentFields, 0, allFields, declaredFields.length, parentFields.length);
+
+        return allFields;
+    }
+
+    public static <T extends BaseIdDO<Long>> List<Field> getBMappingField(T source) {
         Field[] fields = source.getClass().getDeclaredFields();
         return Arrays.stream(fields)
                 .filter(field -> Objects.nonNull(field.getAnnotation(BMapping.class)))
                 .collect(Collectors.toList());
-
     }
 
-
-    /**
-     * 解析目标中标注为特定类型的属性
-     *
-     * @param target
-     * @param mClass
-     * @param <S>
-     * @param <M>
-     * @return
-     */
-
-    public  <S extends BaseIdDO<Long>, M> Field getFieldByClass(S target, Class<M> mClass) {
+    public static <S extends BaseIdDO<Long>, M> Field getFieldByClass(S target, Class<M> mClass) {
         Field[] fields = target.getClass().getDeclaredFields();
         List<Field> fieldList = Arrays.stream(fields)
                 .filter(field -> {
@@ -166,20 +225,7 @@ public class MappingProvider {
                         return true;
                     }
                     if (field.getType().equals(List.class)) {
-                        Type genericType = field.getGenericType();
-                        if (genericType instanceof ParameterizedType) {
-                            ParameterizedType parameterizedType = (ParameterizedType) genericType;
-                            Type[] typeArguments = parameterizedType.getActualTypeArguments();
-
-                            if (typeArguments.length == 0) {
-                                return false;
-                            }
-                            Class<?> genericClass = (Class<?>) typeArguments[0];
-                            return genericClass.equals(mClass);
-                        } else {
-                            return false;
-                        }
-
+                        return getGenericClass(field, 0).equals(mClass);
                     }
                     //暂时不支持Map
                     return false;
@@ -189,6 +235,20 @@ public class MappingProvider {
         }
         Validator.requireTrue(fieldList.size() == 1, "目标中存在多个标注为特定类型的属性");
         return fieldList.get(0);
+    }
+
+    private static Class<?> getGenericClass(Field field, int index) {
+        Type genericType = field.getGenericType();
+        if (genericType instanceof ParameterizedType) {
+            ParameterizedType parameterizedType = (ParameterizedType) genericType;
+            Type[] typeArguments = parameterizedType.getActualTypeArguments();
+
+            if (typeArguments.length == 0) {
+                return null;
+            }
+            return (Class<?>) typeArguments[index];
+        }
+        return null;
     }
 
 
@@ -201,7 +261,7 @@ public class MappingProvider {
      * @return
      */
 
-    public  <S extends BaseIdDO<Long>, M> void setTargetField(S target, Field targetField, M value) {
+    public static <S extends BaseIdDO<Long>, M> void setTargetField(S target, Field targetField, M value) {
         if (Objects.isNull(targetField) || Objects.isNull(value)) {
             return;
         }
