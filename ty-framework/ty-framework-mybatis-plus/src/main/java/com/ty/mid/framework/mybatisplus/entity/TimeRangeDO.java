@@ -7,16 +7,17 @@ import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public abstract class AbstractTimeRangeDO extends BaseDO implements Timeliness {
+public class TimeRangeDO extends BaseDO implements Timeliness {
 
     @TableField(DomainConstant.Columns.FROM_DATE)
-    private Date fromDate = new Date();
+    private LocalDateTime fromDate = LocalDateTime.now();
 
     @TableField(DomainConstant.Columns.TO_DATE)
-    private Date toDate;
+    private LocalDateTime toDate;
 
 }

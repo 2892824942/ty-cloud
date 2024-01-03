@@ -11,12 +11,18 @@ import com.baomidou.mybatisplus.core.metadata.TableInfoHelper;
 import com.baomidou.mybatisplus.core.toolkit.Assert;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
+import com.ty.mid.framework.common.constant.DefaultTypeEnum;
+import com.ty.mid.framework.common.exception.FrameworkException;
+import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.common.util.collection.ArrayUtils;
+import com.ty.mid.framework.mybatisplus.entity.TimeRangeDO;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
@@ -113,6 +119,47 @@ public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQuery
         Object val2 = ArrayUtils.get(values, 1);
         return betweenIfPresent(column, val1, val2);
     }
+
+    /**
+     * 对字段添加时效条件查询
+     * <p>
+     * 开始时间字段名称: from_date
+     * 结束时间字段名称： to_date
+     * <p>
+     * 查询条件举例:  from_date >= now() and (to_date <= to_date)
+     *
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
+    public LambdaQueryWrapperX<T> addTimelinessQuery(LocalDateTime fromDate, LocalDateTime toDate) {
+        Class<?> genericType = GenericsUtil.getGenericTypeByIndex(this.getClass(), 0);
+        if (TimeRangeDO.class.isAssignableFrom(genericType)) {
+            SFunction<TimeRangeDO, ?> fromFunction = TimeRangeDO::getFromDate;
+            SFunction<TimeRangeDO, ?> toFunction = TimeRangeDO::getFromDate;
+            SFunction<T, ?> tFromFunction = (SFunction<T, ?>) fromFunction;
+            SFunction<T, ?> tToFunction = (SFunction<T, ?>) toFunction;
+            this.geIfPresent(tFromFunction, fromDate);
+            super.and(Objects.nonNull(toDate), q -> q.leIfPresent(tToFunction, toDate).or().eq(tToFunction, DefaultTypeEnum.LOCAL_DATE_TIME.defaultValue()));
+            return this;
+        }
+        throw new FrameworkException("必须继承自TimeRangeDO的实体才可调用此方法");
+    }
+
+    /**
+     * 对字段添加时效条件查询
+     * <p>
+     * 开始时间字段名称: from_date
+     * 结束时间字段名称：to_date
+     * <p>
+     * 查询条件举例:  from_date >= now
+     *
+     * @return
+     */
+    public LambdaQueryWrapperX<T> addDefaultTimelinessQuery() {
+        return this.addTimelinessQuery(LocalDateTime.now(), null);
+    }
+
 
     /****************************************原类的方法******************************************/
     /**

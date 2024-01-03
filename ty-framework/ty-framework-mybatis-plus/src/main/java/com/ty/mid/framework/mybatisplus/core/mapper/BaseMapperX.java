@@ -148,19 +148,6 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
         return IterUtil.toMap(selectList(field, values), keyField);
     }
 
-    @Deprecated
-    default List<T> selectList(SFunction<T, ?> leField, SFunction<T, ?> geField, Object value) {
-        return selectList(new LambdaQueryWrapper<T>().le(leField, value).ge(geField, value));
-    }
-
-    default Map<ID, T> selectMap(SFunction<T, ?> leField, SFunction<T, ?> geField, Object value) {
-        return IterUtil.toMap(selectList(leField, geField, value), BaseIdDO::getId);
-    }
-
-    default <K> Map<K, T> selectMap(SFunction<T, ?> leField, SFunction<T, ?> geField, Object value, SFunction<T, K> keyField) {
-        return IterUtil.toMap(selectList(leField, geField, value), keyField);
-    }
-
     default List<T> selectList(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
         return selectList(new LambdaQueryWrapper<T>().eq(field1, value1).eq(field2, value2));
     }

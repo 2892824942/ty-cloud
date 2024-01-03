@@ -54,9 +54,9 @@ public interface DomainConstant {
 
         String VERSION = "version";
 
-        String FROM_DATE = "FROM_DATE";
+        String FROM_DATE = "from_date";
 
-        String TO_DATE = "TO_DATE";
+        String TO_DATE = "to_date";
 
         String PARTY_ID = "party_id";
 

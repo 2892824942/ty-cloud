@@ -20,8 +20,13 @@ import com.github.yulichang.wrapper.interfaces.QueryLabel;
 import com.github.yulichang.wrapper.interfaces.SelectWrapper;
 import com.github.yulichang.wrapper.resultmap.Label;
 import com.github.yulichang.wrapper.segments.*;
+import com.ty.mid.framework.common.constant.DefaultTypeEnum;
+import com.ty.mid.framework.common.exception.FrameworkException;
+import com.ty.mid.framework.common.util.GenericsUtil;
+import com.ty.mid.framework.mybatisplus.entity.TimeRangeDO;
 import lombok.Getter;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
@@ -121,6 +126,46 @@ public class MPJLambdaWrapperX<T> extends MPJAbstractLambdaWrapper<T, MPJLambdaW
         Object val1 = com.ty.mid.framework.common.util.collection.ArrayUtils.get(values, 0);
         Object val2 = com.ty.mid.framework.common.util.collection.ArrayUtils.get(values, 1);
         return betweenIfPresent(column, val1, val2);
+    }
+
+    /**
+     * 对字段添加时效条件查询
+     * <p>
+     * 开始时间字段名称: from_date
+     * 结束时间字段名称： to_date
+     * <p>
+     * 查询条件举例:  from_date >= now() and (to_date <= to_date)
+     *
+     * @param fromDate
+     * @param toDate
+     * @return
+     */
+    public MPJLambdaWrapperX<T> addTimelinessQuery(LocalDateTime fromDate, LocalDateTime toDate) {
+        Class<?> genericType = GenericsUtil.getGenericTypeByIndex(this.getClass(), 0);
+        if (TimeRangeDO.class.isAssignableFrom(genericType)) {
+            SFunction<TimeRangeDO, ?> fromFunction = TimeRangeDO::getFromDate;
+            SFunction<TimeRangeDO, ?> toFunction = TimeRangeDO::getFromDate;
+            SFunction<T, ?> tFromFunction = (SFunction<T, ?>) fromFunction;
+            SFunction<T, ?> tToFunction = (SFunction<T, ?>) toFunction;
+            this.geIfPresent(tFromFunction, fromDate);
+            super.and(Objects.nonNull(toDate), q -> q.leIfPresent(tToFunction, toDate).or().eq(tToFunction, DefaultTypeEnum.LOCAL_DATE_TIME.defaultValue()));
+            return this;
+        }
+        throw new FrameworkException("必须继承自TimeRangeDO的实体才可调用此方法");
+    }
+
+    /**
+     * 对字段添加时效条件查询
+     * <p>
+     * 开始时间字段名称: from_date
+     * 结束时间字段名称：to_date
+     * <p>
+     * 查询条件举例:  from_date >= now
+     *
+     * @return
+     */
+    public MPJLambdaWrapperX<T> addDefaultTimelinessQuery() {
+        return this.addTimelinessQuery(LocalDateTime.now(), null);
     }
 
     /****************************************原类的方法******************************************/
