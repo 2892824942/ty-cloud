@@ -1,7 +1,6 @@
 package com.ty.mid.framework.mybatisplus.service.cache.mybatisplus;
 
 import com.ty.mid.framework.common.dto.AbstractDTO;
-import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
 import com.ty.mid.framework.mybatisplus.service.AbstractGenericService;
@@ -12,7 +11,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
-import java.io.Serializable;
 import java.util.List;
 
 /**

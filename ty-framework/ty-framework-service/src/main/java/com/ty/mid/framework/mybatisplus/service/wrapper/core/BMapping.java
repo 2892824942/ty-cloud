@@ -13,11 +13,11 @@ import java.lang.annotation.*;
 @Documented
 public @interface BMapping {
     /**
-     * 映射的字段Class类型
+     * 映射的字段Class类型,可多个
      *
      * @return name
      */
-    Class<?> value();
+    Class<?>[] values() ;
 
 
 }

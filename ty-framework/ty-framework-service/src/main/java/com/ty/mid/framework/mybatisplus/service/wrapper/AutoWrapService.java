@@ -16,13 +16,22 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends AbstractGenericService<S, M> {
+public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends AbstractGenericService<S, M> implements AutoWrapper<S,T,M> {
 
-    protected final Class<?> targetGenericClass = GenericsUtil.getGenericTypeByIndex(this.getClass(),1);
+    protected final Class<?> targetGenericClass = GenericsUtil.getGenericTypeByIndex(this.getClass(), 1);
 
-    public Map<?, T> autoWrap(Collection<?> collection){
+    public Map<?, T> autoWrap(Collection<?> collection) {
 
         return idAutoWrap(GenericsUtil.cast(collection));
+    }
+
+    public <CT extends BaseIdDO<Long>> AbstractAutoWrapper<S, CT, M> registerAutoWrapper(Function<Collection<?>,Map<?, CT>> function) {
+        return new AbstractAutoWrapper<S, CT, M>() {
+            @Override
+            public Map<?, CT> autoWrap(Collection<?> collection) {
+                return function.apply(collection);
+            }
+        };
     }
 
     public Map<Long, T> idAutoWrap(Collection<Long> collection) {
@@ -44,7 +53,6 @@ public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>
     }
 
 
-
     /**
      * 1.使用Id查询并使用Id作为返回Map的Key
      * 适用于简单字段复制
@@ -53,11 +61,10 @@ public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>
      * @return
      */
     @SuppressWarnings("unchecked")
-    public final <DS> Map<DS, T> convert(Collection<DS> collection, Function<S, T> function) {
+    public final <DS> Map<DS, T> convert(Collection<DS> collection, Function<List<S>, List<T>> function) {
         Function<T, DS> tFunction = ds -> (DS) ds.getId();
         return convert(collection, S::getId, tFunction, function);
     }
-
     /**
      * 使用BeanUtils 复制完成S->T的映射
      * 适用于简单字段复制
@@ -68,10 +75,12 @@ public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>
      * @return
      */
     public final <DS> Map<DS, T> convert(Collection<DS> collection, SFunction<S, ?> sFunction, Function<T, DS> tFunction) {
-        Function<S, T> targetFunction = target -> JsonUtils.parseObject(JsonUtils.toJson(target), GenericsUtil.cast2Class(targetGenericClass));
+        Function<List<S>, List<T>> targetFunction = target -> JsonUtils.parseArray(JsonUtils.toJson(target), GenericsUtil.cast2Class(targetGenericClass));
 
         return convert(collection, sFunction, tFunction, targetFunction);
     }
+
+
 
     /**
      * 使用给定的Function<S, T> function 完成复制
@@ -81,9 +90,9 @@ public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>
      * @param collection
      * @return
      */
-    public final <DS> Map<DS, T> convert(Collection<DS> collection, SFunction<S, ?> sFunction, Function<T, DS> tFunction, Function<S, T> function) {
+    public final <DS> Map<DS, T> convert(Collection<DS> collection, SFunction<S, ?> sFunction, Function<T, DS> tFunction,Function<List<S>, List<T>> function) {
         List<S> mDo = this.getBaseMapper().selectList(sFunction, collection);
-        List<T> targetList = mDo.stream().map(function).collect(Collectors.toList());
+        List<T> targetList = function.apply(mDo);
         if (CollUtil.isEmpty(targetList)) {
             return Collections.emptyMap();
         }

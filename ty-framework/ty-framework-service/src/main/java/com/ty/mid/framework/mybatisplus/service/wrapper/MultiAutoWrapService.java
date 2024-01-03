@@ -13,10 +13,11 @@ import java.util.Map;
 public abstract class MultiAutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends AbstractGenericService<S, M> implements AutoWrapper<S, T, M> {
 
     protected final Class<?>[] typeArguments = GenericTypeUtils.resolveTypeArguments(this.getClass(), this.getClass());
-    public abstract <DS> Map<DS, T> autoWrap(Collection<DS> collection);
 
-    public Map<Long, T> idAutoWrap(Collection<Long> collection){
-        return convert2IdMap(this.mapperClass, collection,GenericsUtil.cast2Class(typeArguments[1]) );
+//    public abstract <DS> Map<DS, T> autoWrap(Collection<DS> collection);
+
+    public Map<Long, T> idAutoWrap(Collection<Long> collection) {
+        return convert2IdMap(this.mapperClass, collection, GenericsUtil.cast2Class(typeArguments[1]));
     }
 
 }

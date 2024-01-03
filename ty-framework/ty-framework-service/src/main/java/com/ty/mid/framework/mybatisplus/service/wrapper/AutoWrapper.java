@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
  * @param <T>
  */
 public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> {
+
+    Map<?, T> autoWrap(Collection<?> collection);
     /**
      * 1.使用BeanUtils 复制完成S->T的映射
      * 2.使用Id查询并使用Id作为返回Map的Key
@@ -33,7 +35,7 @@ public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M exten
     @SuppressWarnings("unchecked")
     default <DS> Map<DS, T> convert2IdMap(Class<M> baseMapperXClass, Collection<DS> collection, Class<T> instanceClass) {
         Function<T, DS> tFunction = ds -> (DS) ds.getId();
-        return convert2Map(baseMapperXClass, S::getId, tFunction, collection,instanceClass);
+        return convert2Map(baseMapperXClass, S::getId, tFunction, collection, instanceClass);
     }
 
     /**
@@ -45,7 +47,7 @@ public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M exten
      * @return
      */
     @SuppressWarnings("unchecked")
-    default <DS> Map<DS, T> convert2IdMap(Class<M> baseMapperXClass, Collection<DS> collection, Function<S, T> function) {
+    default <DS> Map<DS, T> convert2IdMap(Class<M> baseMapperXClass, Collection<DS> collection, Function<List<S>, List<T>> function) {
         Function<T, DS> tFunction = ds -> (DS) ds.getId();
         return convert2Map(baseMapperXClass, S::getId, tFunction, collection, function);
     }
@@ -78,9 +80,9 @@ public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M exten
      * @param collection
      * @return
      */
-    default <DS> Map<DS, T> convert2Map(Class<M> baseMapperXClass, SFunction<S, ?> sFunction, Function<T, DS> tFunction, Collection<DS> collection, Function<S, T> function) {
+    default <DS> Map<DS, T> convert2Map(Class<M> baseMapperXClass, SFunction<S, ?> sFunction, Function<T, DS> tFunction, Collection<DS> collection, Function<List<S>, List<T>> function) {
         List<S> mDo = SpringContextHelper.getBean(baseMapperXClass).selectList(sFunction, collection);
-        List<T> targetList = mDo.stream().map(function).collect(Collectors.toList());
+        List<T> targetList = function.apply(mDo);
         if (CollUtil.isEmpty(targetList)) {
             return Collections.emptyMap();
         }

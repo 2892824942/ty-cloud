@@ -51,7 +51,7 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
         log.info("successfully clear cache: {}", cacheName);
     }
 
-    protected BaseCacheService<? extends BaseIdDO<?>,  ? extends AbstractDTO> resolveService(String cacheName) {
+    protected BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO> resolveService(String cacheName) {
         BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO> service = cacheServices.stream().filter(c -> c.getCacheName().equals(cacheName)).findFirst().orElse(null);
         Validator.requireNonNull(cacheName, Validator.formatMessage("缓存 [%s] 不存在", cacheName));
         return service;

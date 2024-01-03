@@ -12,8 +12,8 @@ import java.util.Map;
  *
  * @param <T>
  */
-public abstract class AbstractAutoWrapper<DS, S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> implements AutoWrapper<S, T, M> {
+public abstract class AbstractAutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> implements AutoWrapper<S, T, M> {
 
-    public abstract Map<DS, T> autoWrap(Collection<DS> collection);
+//    public abstract Map<?, T> autoWrap(Collection<?> collection);
 
 }
