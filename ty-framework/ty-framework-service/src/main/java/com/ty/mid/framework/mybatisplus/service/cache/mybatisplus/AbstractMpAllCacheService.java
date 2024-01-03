@@ -2,9 +2,10 @@ package com.ty.mid.framework.mybatisplus.service.cache.mybatisplus;
 
 import com.ty.mid.framework.common.dto.AbstractDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
+import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
 import com.ty.mid.framework.mybatisplus.service.AbstractGenericService;
-import com.ty.mid.framework.mybatisplus.service.cache.CacheService;
+import com.ty.mid.framework.mybatisplus.service.cache.generic.BaseCacheService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
@@ -23,12 +24,11 @@ import java.util.List;
  * 支持map格式缓存，支持list缓存
  *
  * @param <T>
- * @param <ID>
  * @param <M>
  * @param <D>
  */
 @Slf4j
-public abstract class AbstractMpAllCacheService<T extends BaseIdDO<ID>, ID extends Serializable, M extends BaseMapperX<T,ID>, D extends AbstractDTO> extends AbstractGenericService<T, ID, M, D> implements CacheService<T, ID, D> {
+public abstract class AbstractMpAllCacheService<T extends BaseDO, M extends BaseMapperX<T, Long>, D extends AbstractDTO> extends AbstractGenericService<T, M> implements BaseCacheService<T, D> {
     @Resource(name = "jCacheCacheManager")
     protected CacheManager jCacheCacheManager;
     @Resource(name = "configuration")

@@ -35,7 +35,7 @@ import java.util.Objects;
 
 /**
  * Created by suyouliang on 2022/03/26
- * Content :给添加@KLock切面加锁处理
+ * Content :给添加@Lock切面加锁处理
  */
 @Aspect
 @Component
@@ -259,7 +259,7 @@ public class LockAspect extends AbstractAspect {
             } catch (Exception e) {
                 log.warn("exception when unlock，e:", e);
 
-                if (lockRes.getDowngrade() == Boolean.TRUE) {
+                if (lockRes.getDowngrade().equals(Boolean.TRUE)) {
                     //如果为降级逻辑，则释放锁的异常处理逻辑失效
                     return;
                 }

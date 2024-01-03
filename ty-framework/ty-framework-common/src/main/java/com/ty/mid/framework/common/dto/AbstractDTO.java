@@ -26,4 +26,8 @@ public abstract class AbstractDTO implements Auditable<Long>, Serializable {
     @Schema(description = "是否删除 0:未删除 1:已删除")
     private Boolean deleted;
 
+    @Override
+    public Long getId() {
+        return id;
+    }
 }
