@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service.wrapper;
+package com.ty.mid.framework.mybatisplus.service.wrapper.core;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> {
 
     Map<?, T> autoWrap(Collection<?> collection);
+
     /**
      * 1.使用BeanUtils 复制完成S->T的映射
      * 2.使用Id查询并使用Id作为返回Map的Key

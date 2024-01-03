@@ -8,8 +8,6 @@ import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
-import com.ty.mid.framework.mybatisplus.service.wrapper.AbstractAutoWrapper;
-import com.ty.mid.framework.mybatisplus.service.wrapper.AutoWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
@@ -22,14 +20,6 @@ import java.util.stream.Collectors;
 
 /**
  * 业务常用实体自动装载器
- * 使用说明:
- * 0.常用实体转换方法需在AbstractWrapperFactory中定义
- * 1.mapstruct中禁止定义常用实体转换,主要此类转换内部执行sql并将数据填充,而mapstruct会自动识别单一的A->B,当调用List<A>->List<B>时,会自动调用A->B,导致多次执行sql
- * 2.转换的source以及target必须继承BaseIdDO<Long>
- * 3.暂时只支持单一入参.多入参完全可以拆分变成多个单一入参
- * <p>
- * 注意:不频繁的实体转换推荐手动查询sql转换,此类的自动转换的价值在于CLassWrapperEnum定义的实体频繁使用,减少在对应实体转换时,手动查询sql(或调用已有方法赋值)的步骤.
- * 同样的,由于反射引入会降低此部分的性能.与带来的价值对比,可以接受
  */
 @Slf4j
 public class MappingProvider {
@@ -106,7 +96,6 @@ public class MappingProvider {
             });
             //3.获取核心数据
             //兼容List<Long>形式标记
-            //TODO 兼容 String:"A,B,C"? 如果需要 这个类可以抽像一下了
             boolean isCollection = false;
             Collection<Object> values = idKeyMap.values();
             Object firstValue = idKeyMap.values().iterator().next();
@@ -117,13 +106,6 @@ public class MappingProvider {
 
 
             //4.转换赋值
-            Collection<Object> finalValues = values;
-
-
-//            Map<? extends Class<? extends Field>, Map<Object,Object>> dataMap = targetClassFieldMap.entrySet().stream().collect(Collectors.toMap(Field::getClass,
-//                    field -> autoWrapServiceMap.get(MappingProvider.getGenericClass(field,0)).autoWrap(finalValues), (a, b) -> a));
-
-
             for (Field targetField : targetClassFieldMap.keySet()) {
                 Class<?> aClass = targetClassFieldMap.get(targetField);
                 Map<Object, Object> dataMap = autoWrapServiceMap.get(aClass).autoWrap(values);
@@ -152,24 +134,6 @@ public class MappingProvider {
         }
     }
 
-//    /**
-//     * 解析AbstractMappingFactory中的所有AutoWrapper属性
-//     */
-//
-//    public static Map<Class<?>, Field> getAutoWrapperMap(AbstractMappingFactory abstractMappingFactory) {
-//        Field[] fields = getAllFields(abstractMappingFactory.getClass(), AbstractMappingFactory.class);
-//        if (ArrayUtils.isEmpty(fields)) {
-//            return Collections.emptyMap();
-//        }
-//        //这里的key是第三个泛型类型,Field为AutoWrapper属性
-//        return Arrays.stream(fields)
-//                .filter(field -> AutoWrapper.class.isAssignableFrom(field.getType()))
-//                .collect(Collectors.toMap(field -> MappingProvider.getGenericClass(field, 2), Function.identity(), (a, b) -> {
-//                    throw new FrameworkException("AutoWrapper中,一个自动装载类型只能有一个wrapper实现,当前实体属性类型:" + a.getType() + ",重复定义,请检查:" + abstractMappingFactory.getClass());
-//                }));
-//
-//    }
-
     /**
      * 解析AbstractMappingFactory中的所有AutoWrapper属性
      */
@@ -179,16 +143,11 @@ public class MappingProvider {
             return Collections.emptyMap();
         }
         //这里的key是第2个泛型类型,Field为AutoWrapper属性
-        return autoWrapServiceMap.values().stream().collect(Collectors.toMap(wrapService -> {
-
-            if (AbstractAutoWrapper.class.isAssignableFrom(wrapService.getClass())) {
-                AbstractAutoWrapper abstractAutoWrapper = (AbstractAutoWrapper) wrapService;
-                return GenericTypeUtils.resolveTypeArguments(abstractAutoWrapper.getClass(), AutoWrapper.class)[1];
-            }
-            return GenericTypeUtils.resolveTypeArguments(wrapService.getClass(), AutoWrapper.class)[1];
-        }, Function.identity(), (a, b) -> {
-            throw new FrameworkException("AutoWrapper中,一个自动装载类型只能有一个wrapper实现,当前实体属性类型:" + a.getClass() + ",重复定义,请检查:" + b.getClass());
-        }));
+        return autoWrapServiceMap.values().stream()
+                .collect(Collectors.toMap(wrapService -> GenericTypeUtils.resolveTypeArguments(wrapService.getClass(), AutoWrapper.class)[1], Function.identity()
+                        , (a, b) -> {
+                            throw new FrameworkException("AutoWrapper中,一个自动装载类型只能有一个wrapper实现,当前实体属性类型:" + a.getClass() + ",重复定义,请检查:" + b.getClass());
+                        }));
     }
 
     /**

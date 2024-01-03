@@ -17,7 +17,7 @@ public @interface BMapping {
      *
      * @return name
      */
-    Class<?>[] values() ;
+    Class<?>[] values();
 
 
 }
