@@ -18,10 +18,10 @@ import java.util.stream.Collectors;
  * 可缓存service的定义，附带实现方法
  * 解释：实现方法本应放到下层abstract，但是由于java不支持多继承，所以使用default方法解决该问题
  *
+ * @param <S>
  * @param <T>
- * @param <D>
  */
-public interface BaseCacheService<T, D> extends Converter<T, D> {
+public interface BaseCacheService<S, T> extends Converter<S, T> {
     Logger log = LoggerFactory.getLogger(BaseCacheService.class);
 
 
@@ -30,21 +30,21 @@ public interface BaseCacheService<T, D> extends Converter<T, D> {
      *
      * @return
      */
-    List<T> listFromDbNeedCache();
+    List<S> listFromDbNeedCache();
 
     String getCacheName();
 
-    Cache<String, D> getCache();
+    Cache<String, T> getCache();
 
     /**
      * 重新加载缓存
      *
      * @return
      */
-    default Collection<D> reloadCache() {
+    default Collection<T> reloadCache() {
         log.info("reloading cache {}, with cache class: {}", getCacheName(), this.getClass().getSimpleName());
 
-        List<T> list = this.listFromDbNeedCache();
+        List<S> list = this.listFromDbNeedCache();
         if (CollUtil.isEmpty(list)) {
             log.warn("cache data is empty");
         }
@@ -54,9 +54,9 @@ public interface BaseCacheService<T, D> extends Converter<T, D> {
             log.warn("cache size more than 5000 is not recommended,it will slow your application start up speed down!");
         }
 
-        Collection<D> dtos = this.convert(list);
+        Collection<T> dtos = this.convert2(list);
 
-        Map<String, D> cacheMap = dtos.stream().collect(Collectors.toMap(this::resolveMapKey, Function.identity()));
+        Map<String, T> cacheMap = dtos.stream().collect(Collectors.toMap(this::resolveMapKey, Function.identity()));
         getCache().putAll(cacheMap);
         log.info("cache {} reloaded.", getCacheName());
         return dtos;
@@ -68,7 +68,7 @@ public interface BaseCacheService<T, D> extends Converter<T, D> {
      * @return
      */
     default void clearCache() {
-        Cache<String, D> cache = getCache();
+        Cache<String, T> cache = getCache();
         cache.removeAll();
     }
 
@@ -78,7 +78,7 @@ public interface BaseCacheService<T, D> extends Converter<T, D> {
      *
      * @return
      */
-    default Map<String, D> getAll(Set<String> keys) {
+    default Map<String, T> getAll(Set<String> keys) {
         return getCache().getAll(keys);
     }
 
@@ -98,13 +98,13 @@ public interface BaseCacheService<T, D> extends Converter<T, D> {
      * @param key
      * @return
      */
-    default D getByCacheKey(String key) {
+    default T getByCacheKey(String key) {
         Validator.requireNonEmpty(key, "key不能为空");
-        D ret = getCache().get(key);
+        T ret = getCache().get(key);
         log.info("get data in map cache [{}], key [{}], and cache {}", getCacheName(), key, ret == null ? "miss" : "found");
         return ret;
     }
 
-    String resolveMapKey(D dto);
+    String resolveMapKey(T dto);
 
 }

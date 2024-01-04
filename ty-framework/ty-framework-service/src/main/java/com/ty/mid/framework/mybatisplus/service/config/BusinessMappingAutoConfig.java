@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service.wrapper.config;
+package com.ty.mid.framework.mybatisplus.service.config;
 
 import lombok.extern.slf4j.Slf4j;
 

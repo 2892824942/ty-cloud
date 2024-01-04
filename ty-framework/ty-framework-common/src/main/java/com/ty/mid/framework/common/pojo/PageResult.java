@@ -1,5 +1,7 @@
 package com.ty.mid.framework.common.pojo;
 
+import cn.hutool.core.collection.CollUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -36,6 +38,16 @@ public final class PageResult<T> implements Serializable {
 
     public static <T> PageResult<T> empty(Long total) {
         return new PageResult<>(total);
+    }
+
+    @JsonIgnore
+    public boolean hasData(){
+        return CollUtil.isEmpty(list);
+    }
+
+    @JsonIgnore
+    public boolean hasEmptyData(){
+        return CollUtil.isNotEmpty(list);
     }
 
 }

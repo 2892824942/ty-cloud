@@ -5,6 +5,7 @@ import com.ty.mid.framework.common.lang.NonNull;
 import com.ty.mid.framework.common.lang.Nullable;
 import com.ty.mid.framework.common.util.DateUtils;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
@@ -13,19 +14,9 @@ import java.util.Date;
 public interface Timeliness {
 
     @NonNull
-    Date getFromDate();
+    LocalDateTime getFromDate();
 
     @Nullable
-    Date getToDate();
-
-    @JsonIgnore
-    default boolean isTimeValid() {
-        return this.isTimeValid(DateUtils.now());
-    }
-
-    @JsonIgnore
-    default boolean isTimeValid(@NonNull Date date) {
-        return DateUtils.isDateInRange(date, this.getFromDate(), this.getToDate());
-    }
+    LocalDateTime getToDate();
 
 }

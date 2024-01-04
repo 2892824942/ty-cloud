@@ -3,8 +3,7 @@ package com.ty.mid.framework.mybatisplus.service.support;
 import com.ty.mid.framework.common.dto.AbstractDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.util.Validator;
-import com.ty.mid.framework.core.config.ApplicationConfiguration;
-import com.ty.mid.framework.mybatisplus.service.ServiceCacheLoader;
+import com.ty.mid.framework.mybatisplus.service.cache.ServiceCacheLoader;
 import com.ty.mid.framework.mybatisplus.service.cache.generic.BaseCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,6 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class DefaultServiceCacheLoader implements ServiceCacheLoader {
-
-    @Autowired
-    private ApplicationConfiguration configuration;
 
     @Autowired(required = false)
     private List<BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO>> cacheServices = new ArrayList<>();

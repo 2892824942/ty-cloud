@@ -11,30 +11,30 @@ import java.util.Collections;
 import java.util.stream.Collectors;
 
 public interface Converter<S, T> {
-    default Collection<T> convert(Collection<S> entities) {
+    default Collection<T> convert2(Collection<S> entities) {
         if (CollUtil.isEmpty(entities)) {
             return Collections.emptyList();
         }
-        return entities.stream().map(this::convert).collect(Collectors.toList());
+        return entities.stream().map(this::convert2).collect(Collectors.toList());
     }
 
-    default Collection<S> rConvert(Collection<T> entities) {
+    default Collection<S> rConvert2(Collection<T> entities) {
         if (CollUtil.isEmpty(entities)) {
             return Collections.emptyList();
         }
-        return entities.stream().map(this::rConvert).collect(Collectors.toList());
+        return entities.stream().map(this::rConvert2).collect(Collectors.toList());
     }
 
-    default T convert(S entity) {
-        return convert(entity, getTargetTypeReference());
+    default T convert2(S entity) {
+        return convert2(entity, getTargetTypeReference());
     }
 
-    default S rConvert(T dto) {
-        return convert(dto, getSourceTypeReference());
+    default S rConvert2(T dto) {
+        return convert2(dto, getSourceTypeReference());
     }
 
 
-    default <FR, TO> TO convert(FR dto, TypeReference<TO> typeReference) {
+    default <FR, TO> TO convert2(FR dto, TypeReference<TO> typeReference) {
         if (dto == null) {
             return null;
         }

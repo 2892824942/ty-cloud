@@ -7,7 +7,7 @@ import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.common.util.JsonUtils;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
-import com.ty.mid.framework.mybatisplus.service.AbstractGenericService;
+import com.ty.mid.framework.mybatisplus.service.GenericService;
 import com.ty.mid.framework.mybatisplus.service.wrapper.core.AutoWrapper;
 
 import java.util.Collection;
@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends AbstractGenericService<S, M> implements AutoWrapper<S, T, M> {
+public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends GenericService<S, M> implements AutoWrapper<S, T, M> {
 
     protected final Class<?> targetGenericClass = GenericsUtil.getGenericTypeByIndex(this.getClass(), 1);
 

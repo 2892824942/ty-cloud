@@ -2,6 +2,9 @@ package com.ty.mid.framework.mybatisplus.service.cache.generic;
 
 import com.ty.mid.framework.common.dto.AbstractDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
+import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
+import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
+import com.ty.mid.framework.mybatisplus.service.integrate.GenericAutoWrapService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
@@ -16,16 +19,15 @@ import java.io.Serializable;
  * 2.缓存使用JCache api
  *
  * @param <T>
- * @param <ID>
- * @param <D>
+
  */
 @Slf4j
-public abstract class AbstractCacheService<T extends BaseIdDO<ID>, ID extends Serializable, D extends AbstractDTO> implements BaseCacheService<T, D> {
+public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends GenericAutoWrapService<S,T,M> implements BaseCacheService<S, T> {
 
     @Resource(name = "jCacheCacheManager")
     protected CacheManager jCacheCacheManager;
     @Resource(name = "configuration")
-    private javax.cache.configuration.Configuration<String, D> configuration;
+    private javax.cache.configuration.Configuration<String, T> configuration;
 
     @PostConstruct
     public void init() {
@@ -35,7 +37,7 @@ public abstract class AbstractCacheService<T extends BaseIdDO<ID>, ID extends Se
     }
 
     @Override
-    public Cache<String, D> getCache() {
+    public Cache<String, T> getCache() {
         return jCacheCacheManager.getCache(getCacheName());
     }
 }

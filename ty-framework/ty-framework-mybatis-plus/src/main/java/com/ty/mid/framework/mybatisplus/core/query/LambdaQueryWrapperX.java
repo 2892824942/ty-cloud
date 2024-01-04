@@ -45,6 +45,20 @@ public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQuery
         return this;
     }
 
+    public LambdaQueryWrapperX<T> likeLeftIfPresent(SFunction<T, ?> column, String val) {
+        if (StringUtils.hasText(val)) {
+            return super.likeLeft(column, val);
+        }
+        return this;
+    }
+
+    public LambdaQueryWrapperX<T> likeRightIfPresent(SFunction<T, ?> column, String val) {
+        if (StringUtils.hasText(val)) {
+            return super.likeRight(column, val);
+        }
+        return this;
+    }
+
     public LambdaQueryWrapperX<T> inIfPresent(SFunction<T, ?> column, Collection<?> values) {
         if (ObjectUtil.isAllNotEmpty(values) && !ArrayUtil.isEmpty(values)) {
             return super.in(column, values);

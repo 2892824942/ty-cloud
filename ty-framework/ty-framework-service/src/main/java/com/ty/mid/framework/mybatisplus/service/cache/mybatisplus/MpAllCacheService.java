@@ -1,10 +1,13 @@
 package com.ty.mid.framework.mybatisplus.service.cache.mybatisplus;
 
 import com.ty.mid.framework.common.dto.AbstractDTO;
+import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
-import com.ty.mid.framework.mybatisplus.service.AbstractGenericService;
+import com.ty.mid.framework.mybatisplus.service.GenericService;
 import com.ty.mid.framework.mybatisplus.service.cache.generic.BaseCacheService;
+import com.ty.mid.framework.mybatisplus.service.cache.generic.CacheService;
+import com.ty.mid.framework.mybatisplus.service.integrate.GenericAutoWrapService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.PostConstruct;
@@ -21,31 +24,15 @@ import java.util.List;
  * <p>
  * 支持map格式缓存，支持list缓存
  *
+ * @param <S>
  * @param <T>
  * @param <M>
- * @param <D>
  */
 @Slf4j
-public abstract class AbstractMpAllCacheService<T extends BaseDO, M extends BaseMapperX<T, Long>, D extends AbstractDTO> extends AbstractGenericService<T, M> implements BaseCacheService<T, D> {
-    @Resource(name = "jCacheCacheManager")
-    protected CacheManager jCacheCacheManager;
-    @Resource(name = "configuration")
-    private javax.cache.configuration.Configuration<String, D> configuration;
-
-    @PostConstruct
-    public void init() {
-        jCacheCacheManager.createCache(this.getCacheName(), configuration);
-        log.info("initializing cache {}, cache class: {}", this.getCacheName(), getClass().getName());
-        this.reloadCache();
-    }
+public abstract class MpAllCacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends CacheService<S,T,M> {
 
     @Override
-    public Cache<String, D> getCache() {
-        return jCacheCacheManager.getCache(getCacheName());
-    }
-
-    @Override
-    public List<T> listFromDbNeedCache() {
+    public List<S> listFromDbNeedCache() {
         return super.list();
     }
 
