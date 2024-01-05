@@ -7,16 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.cache.Cache;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * 可缓存service的定义，附带实现方法
- * 解释：实现方法本应放到下层abstract，但是由于java不支持多继承，所以使用default方法解决该问题
  *
  * @param <S>
  * @param <T>
@@ -47,16 +43,17 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
         List<S> list = this.listFromDbNeedCache();
         if (CollUtil.isEmpty(list)) {
             log.warn("cache data is empty");
+            return Collections.emptyList();
         }
 
         log.info("fetched {} data from database", list.size());
         if (list.size() > 5000) {
-            log.warn("cache size more than 5000 is not recommended,it will slow your application start up speed down!");
+            log.warn("cache size more than 5000 is not recommended,it will slow down your application start up speed !");
         }
 
         Collection<T> dtos = this.convert2(list);
 
-        Map<String, T> cacheMap = dtos.stream().collect(Collectors.toMap(this::resolveMapKey, Function.identity()));
+        Map<String, T> cacheMap = dtos.stream().collect(Collectors.toMap(this.defineMapKey(), Function.identity()));
         getCache().putAll(cacheMap);
         log.info("cache {} reloaded.", getCacheName());
         return dtos;
@@ -98,13 +95,17 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      * @param key
      * @return
      */
-    default T getByCacheKey(String key) {
+    default T getByKey(String key) {
         Validator.requireNonEmpty(key, "key不能为空");
         T ret = getCache().get(key);
         log.info("get data in map cache [{}], key [{}], and cache {}", getCacheName(), key, ret == null ? "miss" : "found");
         return ret;
     }
 
-    String resolveMapKey(T dto);
+    /**
+     * 定义缓存的key
+     * @return
+     */
+    Function<T, String> defineMapKey();
 
 }

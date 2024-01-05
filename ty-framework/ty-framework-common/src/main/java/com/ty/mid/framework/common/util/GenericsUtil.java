@@ -190,7 +190,7 @@ public final class GenericsUtil {
         }
         return map;
     }
-    public static Class<?> getGenericTypeByIndex(Class<?> targetClass, int index) {
+    public  static <T> Class<T> getGenericTypeByIndex(Class<?> targetClass, int index) {
         Type superclass = targetClass.getGenericSuperclass();
 
         if (superclass instanceof ParameterizedType) {
@@ -198,7 +198,7 @@ public final class GenericsUtil {
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
 
             if (typeArguments.length > 0 && typeArguments[index] instanceof Class) {
-                return (Class<?>) typeArguments[index];
+                return (Class<T>) typeArguments[index];
             }
         }
 

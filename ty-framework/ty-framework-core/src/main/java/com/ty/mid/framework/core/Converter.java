@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.impl.BeanConverter;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.ty.mid.framework.common.exception.FrameworkException;
+import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.common.util.Validator;
 
 import java.util.Collection;
@@ -26,40 +27,24 @@ public interface Converter<S, T> {
     }
 
     default T convert2(S entity) {
-        return convert2(entity, getTargetTypeReference());
+        return convert2(entity, GenericsUtil.getGenericTypeByIndex(this.getClass(),1));
     }
 
     default S rConvert2(T dto) {
-        return convert2(dto, getSourceTypeReference());
+        return convert2(dto, GenericsUtil.getGenericTypeByIndex(this.getClass(),0));
     }
 
 
-    default <FR, TO> TO convert2(FR dto, TypeReference<TO> typeReference) {
+    default <FR, TO> TO convert2(FR dto, Class<TO> toClass) {
         if (dto == null) {
             return null;
         }
-        Validator.requireNonNull(typeReference, "to model typeReference can not be null");
+        Validator.requireNonNull(toClass, "to model Class can not be null");
         try {
-            BeanConverter<TO> beanConverter = new BeanConverter<>(typeReference.getType());
+            BeanConverter<TO> beanConverter = new BeanConverter<>(toClass);
             return beanConverter.convert(dto, null);
         } catch (Exception e) {
             throw new FrameworkException(e);
         }
     }
-
-    /**
-     * 使用TypeReference转换，保留全部类型
-     *
-     * @return
-     */
-    TypeReference<T> getTargetTypeReference();
-
-    /**
-     * 使用TypeReference转换，保留全部类型
-     *
-     * @return
-     */
-    TypeReference<S> getSourceTypeReference();
-
-
 }
