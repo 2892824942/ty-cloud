@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service.cache;
+package com.ty.mid.framework.service.cache;
 
 import java.util.Set;
 

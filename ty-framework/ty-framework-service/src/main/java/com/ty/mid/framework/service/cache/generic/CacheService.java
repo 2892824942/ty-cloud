@@ -1,10 +1,11 @@
-package com.ty.mid.framework.mybatisplus.service.cache.generic;
+package com.ty.mid.framework.service.cache.generic;
 
-import com.ty.mid.framework.common.dto.AbstractDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
+import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
-import com.ty.mid.framework.mybatisplus.service.integrate.GenericAutoWrapService;
+import com.ty.mid.framework.service.cache.listener.CacheListener;
+import com.ty.mid.framework.service.integrate.GenericAutoWrapService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.jcache.JCacheCacheManager;
 
@@ -12,7 +13,8 @@ import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.cache.Cache;
 import javax.cache.CacheManager;
-import java.io.Serializable;
+import javax.cache.configuration.FactoryBuilder;
+import javax.cache.configuration.MutableCacheEntryListenerConfiguration;
 import java.util.function.Function;
 
 /**
@@ -40,7 +42,12 @@ public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M
 
     @PostConstruct
     public void init() {
-        getCacheManager().createCache(this.getCacheName(), configuration);
+        Cache<String, T> cache = getCacheManager().createCache(this.getCacheName(), configuration);
+        MutableCacheEntryListenerConfiguration<String, T> mutableCacheEntryListenerConfiguration = new MutableCacheEntryListenerConfiguration<String, T>(
+                FactoryBuilder.factoryOf(GenericsUtil.cast2Class(CacheListener.class)), null, false, false
+        );
+
+        cache.registerCacheEntryListener(mutableCacheEntryListenerConfiguration);
         log.info("initializing cache {}, cache class: {}", this.getCacheName(), getClass().getName());
         this.reloadCache();
     }

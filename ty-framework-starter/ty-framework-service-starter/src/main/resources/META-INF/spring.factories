@@ -1,2 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ty.mid.framework.mybatisplus.service.config.ServiceAutoConfiguration
+  com.ty.mid.framework.service.config.ServiceAutoConfiguration,\
+  com.ty.mid.framework.service.config.CaffeineJCacheAutoConfiguration,\
+  com.ty.mid.framework.service.config.RedisJCacheAutoConfiguration

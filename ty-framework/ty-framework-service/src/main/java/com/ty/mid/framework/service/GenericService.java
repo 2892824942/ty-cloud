@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service;
+package com.ty.mid.framework.service;
 
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.service.IService;

@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service.cache.generic;
+package com.ty.mid.framework.service.cache.generic;
 
 import cn.hutool.core.collection.CollUtil;
 import com.ty.mid.framework.common.util.Validator;
@@ -53,7 +53,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
 
         Collection<T> dtos = this.convert2(list);
 
-        Map<String, T> cacheMap = dtos.stream().collect(Collectors.toMap(this.defineMapKey(), Function.identity()));
+        Map<String, T> cacheMap = dtos.stream().collect(Collectors.toMap(this.defineMapKey(), Function.identity(),(a,b)->b));
         getCache().putAll(cacheMap);
         log.info("cache {} reloaded.", getCacheName());
         return dtos;

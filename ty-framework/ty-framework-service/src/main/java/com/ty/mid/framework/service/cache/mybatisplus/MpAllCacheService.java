@@ -1,19 +1,11 @@
-package com.ty.mid.framework.mybatisplus.service.cache.mybatisplus;
+package com.ty.mid.framework.service.cache.mybatisplus;
 
-import com.ty.mid.framework.common.dto.AbstractDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
-import com.ty.mid.framework.mybatisplus.service.GenericService;
-import com.ty.mid.framework.mybatisplus.service.cache.generic.BaseCacheService;
-import com.ty.mid.framework.mybatisplus.service.cache.generic.CacheService;
-import com.ty.mid.framework.mybatisplus.service.integrate.GenericAutoWrapService;
+import com.ty.mid.framework.service.cache.generic.CacheService;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import javax.cache.Cache;
-import javax.cache.CacheManager;
 import java.util.List;
 
 /**
@@ -29,7 +21,7 @@ import java.util.List;
  * @param <M>
  */
 @Slf4j
-public abstract class MpAllCacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends CacheService<S,T,M> {
+public abstract class MpAllCacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends CacheService<S, T, M> {
 
     @Override
     public List<S> listFromDbNeedCache() {

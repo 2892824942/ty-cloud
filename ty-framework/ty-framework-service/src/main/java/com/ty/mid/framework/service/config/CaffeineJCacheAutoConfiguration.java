@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service.config;
+package com.ty.mid.framework.service.config;
 
 import com.github.benmanes.caffeine.jcache.spi.CaffeineCachingProvider;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +11,7 @@ import javax.cache.CacheManager;
 import javax.cache.Caching;
 import javax.cache.configuration.Configuration;
 import javax.cache.configuration.MutableConfiguration;
-import javax.cache.expiry.CreatedExpiryPolicy;
+import javax.cache.expiry.AccessedExpiryPolicy;
 import javax.cache.expiry.Duration;
 import java.util.concurrent.TimeUnit;
 
@@ -36,8 +36,11 @@ public class CaffeineJCacheAutoConfiguration {
         // 创建 Caffeine 缓存配置
         Configuration<Object, Object> caffeineConfig = new MutableConfiguration<>()
                 .setTypes(Object.class, Object.class)
-                .setStoreByValue(false) // 设置为 true 时，缓存的值会被拷贝而不是直接引用
-                .setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(new Duration(TimeUnit.MINUTES, 10))); // 设置失效时间
+                // 设置为 true 时，缓存的值会被拷贝而不是直接引用
+                .setStoreByValue(false)
+                // 设置失效时间
+                .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(new Duration(TimeUnit.SECONDS, 20)))
+                .setStatisticsEnabled(Boolean.TRUE);
         return caffeineConfig;
     }
 

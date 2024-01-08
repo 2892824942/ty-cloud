@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service.wrapper;
+package com.ty.mid.framework.service.wrapper;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
@@ -7,8 +7,8 @@ import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.common.util.JsonUtils;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
-import com.ty.mid.framework.mybatisplus.service.GenericService;
-import com.ty.mid.framework.mybatisplus.service.wrapper.core.AutoWrapper;
+import com.ty.mid.framework.service.GenericService;
+import com.ty.mid.framework.service.wrapper.core.AutoWrapper;
 
 import java.util.Collection;
 import java.util.Collections;

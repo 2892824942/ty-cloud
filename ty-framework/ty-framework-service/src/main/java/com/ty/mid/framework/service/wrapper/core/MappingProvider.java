@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service.wrapper.core;
+package com.ty.mid.framework.service.wrapper.core;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;

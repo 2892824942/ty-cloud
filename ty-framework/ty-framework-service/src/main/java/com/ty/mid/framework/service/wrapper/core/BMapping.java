@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service.wrapper.core;
+package com.ty.mid.framework.service.wrapper.core;
 
 
 import java.lang.annotation.*;

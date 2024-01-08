@@ -1,10 +1,10 @@
-package com.ty.mid.framework.mybatisplus.service.support;
+package com.ty.mid.framework.service.cache.support;
 
 import com.ty.mid.framework.common.dto.AbstractDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.util.Validator;
-import com.ty.mid.framework.mybatisplus.service.cache.ServiceCacheLoader;
-import com.ty.mid.framework.mybatisplus.service.cache.generic.BaseCacheService;
+import com.ty.mid.framework.service.cache.ServiceCacheLoader;
+import com.ty.mid.framework.service.cache.generic.BaseCacheService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 

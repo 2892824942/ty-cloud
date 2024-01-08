@@ -1,7 +1,8 @@
-package com.ty.mid.framework.mybatisplus.service.config;
+package com.ty.mid.framework.service.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RedissonClient;
+import org.redisson.jcache.JCacheManager;
 import org.redisson.jcache.configuration.RedissonConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -14,7 +15,7 @@ public class RedisJCacheAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnBean(RedissonClient.class)
+    @ConditionalOnBean({RedissonClient.class,JCacheManager.class})
     @ConditionalOnMissingBean
     <K, V> javax.cache.configuration.Configuration<K, V> configuration(RedissonClient redisClient) {
         return RedissonConfiguration.fromInstance(redisClient);

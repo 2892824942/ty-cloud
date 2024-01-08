@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.service.wrapper.core;
+package com.ty.mid.framework.service.wrapper.core;
 
 import cn.hutool.core.collection.CollUtil;
 import com.ty.mid.framework.common.dto.AbstractNameDTO;
