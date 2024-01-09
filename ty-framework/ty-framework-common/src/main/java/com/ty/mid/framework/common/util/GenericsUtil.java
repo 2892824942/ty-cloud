@@ -87,13 +87,17 @@ public final class GenericsUtil {
 
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> check2Map(Object object) {
-        if (object != null && !(object instanceof Map)) throw new ClassCastException("Not a map");
+        if (object != null && !(object instanceof Map)) {
+            throw new ClassCastException("Not a map");
+        }
         return (Map<K, V>) object;
     }
 
     public static <K, V> Map<K, V> check2Map(Object object, Class<K> keyType, Class<V> valueType) {
         if (object != null) {
-            if (!(object instanceof Map<?, ?>)) throw new ClassCastException("Not a map");
+            if (!(object instanceof Map<?, ?>)) {
+                throw new ClassCastException("Not a map");
+            }
             Map<?, ?> map = (Map<?, ?>) object;
             int i = 0;
             for (Map.Entry<?, ?> entry : map.entrySet()) {
@@ -135,7 +139,9 @@ public final class GenericsUtil {
      */
     @SuppressWarnings("unchecked")
     public static <T> List<T> toList(Object object) {
-        if (object != null && !(object instanceof List)) return null;
+        if (object != null && !(object instanceof List)) {
+            return null;
+        }
         return (List<T>) object;
     }
 
@@ -145,7 +151,9 @@ public final class GenericsUtil {
      */
     @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> toMap(Object object) {
-        if (object != null && !(object instanceof Map)) return null;
+        if (object != null && !(object instanceof Map)) {
+            return null;
+        }
         return (Map<K, V>) object;
     }
 
@@ -190,7 +198,16 @@ public final class GenericsUtil {
         }
         return map;
     }
-    public  static <T> Class<T> getGenericTypeByIndex(Class<?> targetClass, int index) {
+
+    /**
+     * 此方法只用作已知的,确定的泛型定义中可识别,对于通用拉取的,泛型本就不确定的无法识别
+     *
+     * @param targetClass
+     * @param index
+     * @param <T>
+     * @return
+     */
+    public static <T> Class<T> getGenericTypeByIndex(Class<?> targetClass, int index) {
         Type superclass = targetClass.getGenericSuperclass();
 
         if (superclass instanceof ParameterizedType) {

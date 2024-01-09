@@ -15,7 +15,7 @@ public class RedisJCacheAutoConfiguration {
 
 
     @Bean
-    @ConditionalOnBean({RedissonClient.class,JCacheManager.class})
+    @ConditionalOnBean({RedissonClient.class, JCacheManager.class})
     @ConditionalOnMissingBean
     <K, V> javax.cache.configuration.Configuration<K, V> configuration(RedissonClient redisClient) {
         return RedissonConfiguration.fromInstance(redisClient);

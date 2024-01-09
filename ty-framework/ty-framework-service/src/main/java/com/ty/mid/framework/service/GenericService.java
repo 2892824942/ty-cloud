@@ -28,21 +28,43 @@ public abstract class GenericService<T extends BaseDO, M extends BaseMapperX<T, 
         return baseMapper.selectOne(field, value);
     }
 
+    public T selectOne(String field, Object value, boolean throwEx) {
+        return baseMapper.selectOne(field, value, throwEx);
+    }
+
+
     public T selectOne(SFunction<T, ?> field, Object value) {
         return baseMapper.selectOne(field, value);
+    }
+
+    public T selectOne(SFunction<T, ?> field, Object value, boolean throwEx) {
+        return baseMapper.selectOne(field, value, throwEx);
     }
 
     public T selectOne(String field1, Object value1, String field2, Object value2) {
         return baseMapper.selectOne(field1, value1, field2, value2);
     }
 
+    public T selectOne(String field1, Object value1, String field2, Object value2, boolean throwEx) {
+        return baseMapper.selectOne(field1, value1, field2, value2, throwEx);
+    }
+
     public T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
         return baseMapper.selectOne(field1, value1, field2, value2);
+    }
+
+    public T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2, boolean throwEx) {
+        return baseMapper.selectOne(field1, value1, field2, value2, throwEx);
     }
 
     public T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2,
                        SFunction<T, ?> field3, Object value3) {
         return baseMapper.selectOne(field1, value1, field2, value2, field3, value3);
+    }
+
+    public T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2,
+                       SFunction<T, ?> field3, Object value3, boolean throwEx) {
+        return baseMapper.selectOne(field1, value1, field2, value2, field3, value3, throwEx);
     }
 
     public Long selectCount() {

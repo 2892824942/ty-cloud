@@ -28,6 +28,22 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      */
     List<S> listFromDbNeedCache();
 
+
+    /**
+     * 查询需要缓存的数据
+     *
+     * @return
+     */
+    List<S> listFromDbNeedCache(Iterator<String> keys);
+
+
+    /**
+     * 查询需要缓存的数据 单个
+     *
+     * @return
+     */
+    S getDataFromDbNeedCache(String key);
+
     String getCacheName();
 
     Cache<String, T> getCache();
@@ -53,10 +69,50 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
 
         Collection<T> dtos = this.convert2(list);
 
-        Map<String, T> cacheMap = dtos.stream().collect(Collectors.toMap(this.defineMapKey(), Function.identity(),(a,b)->b));
+        Map<String, T> cacheMap = dtos.stream().collect(Collectors.toMap(this.defineMapKey(), Function.identity(), (a, b) -> b));
         getCache().putAll(cacheMap);
         log.info("cache {} reloaded.", getCacheName());
         return dtos;
+    }
+
+    /**
+     * 重新加载缓存
+     *
+     * @return
+     */
+    default Map<String, T> getDbDataMap(Iterator<String> keys) {
+        log.info("reloading cache {}, with cache class: {}", getCacheName(), this.getClass().getSimpleName());
+
+        List<S> list = this.listFromDbNeedCache(keys);
+        if (CollUtil.isEmpty(list)) {
+            log.warn("cache data is empty");
+            return Collections.emptyMap();
+        }
+
+        log.info("fetched {} data from database", list.size());
+        if (list.size() > 5000) {
+            log.warn("cache size more than 5000 is not recommended,it will slow down your application start up speed !");
+        }
+
+        Collection<T> dtos = this.convert2(list);
+
+        return dtos.stream().collect(Collectors.toMap(this.defineMapKey(), Function.identity(), (a, b) -> b));
+    }
+
+
+    /**
+     * 重新加载缓存
+     *
+     * @return
+     */
+    default T getDbData(String key) {
+
+        S dataFromDbNeedCache = this.getDataFromDbNeedCache(key);
+        if (Objects.isNull(dataFromDbNeedCache)) {
+            log.warn("cache data is empty");
+            return null;
+        }
+        return this.convert2(dataFromDbNeedCache);
     }
 
     /**
@@ -75,8 +131,11 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    default Map<String, T> getAll(Set<String> keys) {
-        return getCache().getAll(keys);
+    default Map<String, T> getAll(Collection<String> keys) {
+        if (CollUtil.isEmpty(keys)) {
+            return Collections.emptyMap();
+        }
+        return getCache().getAll(new HashSet<>(keys));
     }
 
 
@@ -104,8 +163,16 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
 
     /**
      * 定义缓存的key
+     *
      * @return
      */
     Function<T, String> defineMapKey();
+
+    /**
+     * 定义更新的key
+     *
+     * @return
+     */
+    Function<S, ?> defineSourceMapKey();
 
 }

@@ -95,8 +95,8 @@ public interface BaseAutoConvert {
 
     }
 
-     default Map<Long, String> getUserNameMap(Collection<Long> userIdList){
-         return null;
-     }
+    default Map<Long, String> getUserNameMap(Collection<Long> userIdList) {
+        return null;
+    }
 }
 

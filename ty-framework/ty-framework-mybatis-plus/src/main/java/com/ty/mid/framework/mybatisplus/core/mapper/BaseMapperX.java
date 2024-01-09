@@ -74,25 +74,47 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
     }
 
     default T selectOne(String field, Object value) {
-        return selectOne(new QueryWrapper<T>().eq(field, value));
+        return selectOne(field, value, Boolean.FALSE);
+    }
+
+    default T selectOne(String field, Object value, boolean throwEx) {
+        return selectOne(new QueryWrapper<T>().eq(field, value), throwEx);
     }
 
     default T selectOne(SFunction<T, ?> field, Object value) {
-        return selectOne(new LambdaQueryWrapper<T>().eq(field, value));
+        return selectOne(field, value, Boolean.FALSE);
+    }
+
+    default T selectOne(SFunction<T, ?> field, Object value, boolean throwEx) {
+        return selectOne(new LambdaQueryWrapper<T>().eq(field, value), throwEx);
     }
 
     default T selectOne(String field1, Object value1, String field2, Object value2) {
-        return selectOne(new QueryWrapper<T>().eq(field1, value1).eq(field2, value2));
+        return selectOne(field1, value1, field2, value2, Boolean.FALSE);
+    }
+
+    default T selectOne(String field1, Object value1, String field2, Object value2, boolean throwEx) {
+        return selectOne(new QueryWrapper<T>().eq(field1, value1).eq(field2, value2), throwEx);
     }
 
     default T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
-        return selectOne(new LambdaQueryWrapper<T>().eq(field1, value1).eq(field2, value2));
+        return selectOne(field1, value1, field2, value2, Boolean.FALSE);
+    }
+
+    default T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2, boolean throwEx) {
+        return selectOne(new LambdaQueryWrapper<T>().eq(field1, value1).eq(field2, value2), throwEx);
     }
 
     default T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2,
                         SFunction<T, ?> field3, Object value3) {
+        return selectOne(field1, value1, field2, value2, field3, value3, Boolean.FALSE);
+    }
+
+
+    default T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2,
+                        SFunction<T, ?> field3, Object value3, Boolean throwEx) {
         return selectOne(new LambdaQueryWrapper<T>().eq(field1, value1).eq(field2, value2)
-                .eq(field3, value3));
+                .eq(field3, value3), throwEx);
     }
 
     default Long selectCount() {

@@ -38,8 +38,9 @@ public class CaffeineJCacheAutoConfiguration {
                 .setTypes(Object.class, Object.class)
                 // 设置为 true 时，缓存的值会被拷贝而不是直接引用
                 .setStoreByValue(false)
+                .setReadThrough(true)
                 // 设置失效时间
-                .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(new Duration(TimeUnit.SECONDS, 20)))
+                .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(new Duration(TimeUnit.SECONDS, 10)))
                 .setStatisticsEnabled(Boolean.TRUE);
         return caffeineConfig;
     }
