@@ -37,13 +37,13 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
 
     @Override
     public void reloadCache(String cacheName) {
-        this.resolveService(cacheName).reloadCache();
+        this.resolveService(cacheName).cacheReload();
         log.info("successfully reload cache: {}", cacheName);
     }
 
     @Override
     public void clearCache(String cacheName) {
-        this.resolveService(cacheName).clearCache();
+        this.resolveService(cacheName).cacheClear();
         log.info("successfully clear cache: {}", cacheName);
     }
 

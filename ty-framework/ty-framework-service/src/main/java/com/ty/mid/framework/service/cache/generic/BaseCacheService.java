@@ -1,15 +1,19 @@
 package com.ty.mid.framework.service.cache.generic;
 
 import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.Converter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.cache.Cache;
+import javax.validation.constraints.NotNull;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 可缓存service的定义，附带实现方法
@@ -26,7 +30,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    List<S> listFromDbNeedCache();
+    List<S> cacheLoadListFromDb();
 
 
     /**
@@ -34,7 +38,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    List<S> listFromDbNeedCache(Iterator<String> keys);
+    List<S> cacheLoadListFromDb(Iterator<String> keys);
 
 
     /**
@@ -42,7 +46,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    S getDataFromDbNeedCache(String key);
+    S cacheLoadFromDb(String key);
 
     String getCacheName();
 
@@ -53,10 +57,10 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    default Collection<T> reloadCache() {
+    default Collection<T> cacheReload() {
         log.info("reloading cache {}, with cache class: {}", getCacheName(), this.getClass().getSimpleName());
 
-        List<S> list = this.listFromDbNeedCache();
+        List<S> list = this.cacheLoadListFromDb();
         if (CollUtil.isEmpty(list)) {
             log.warn("cache data is empty");
             return Collections.emptyList();
@@ -69,11 +73,64 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
 
         Collection<T> dtos = this.convert2(list);
 
-        Map<String, T> cacheMap = dtos.stream().collect(Collectors.toMap(this.defineMapKey(), Function.identity(), (a, b) -> b));
+        Map<String, T> cacheMap = dtos.stream().collect(Collectors.toMap(this.getKeyStr(), Function.identity(), (a, b) -> b));
         getCache().putAll(cacheMap);
         log.info("cache {} reloaded.", getCacheName());
         return dtos;
     }
+
+    default boolean isMultiColumn() {
+        return CollUtil.isNotEmpty(cacheDefineDOMapKeys());
+    }
+
+    default Function<T, String> getKeyStr() {
+        if (isMultiColumn()) {
+            //多个字段组合,通过间隔符链接
+            List<Function<T, String>> functions = cacheDefineDTOMapKeys();
+            return t -> functions.stream().map(function -> function.apply(t)).collect(Collectors.joining(cacheDelimiter()));
+        }
+        return cacheDefineDTOMapKey();
+    }
+
+
+    default List<String> parseKeyStr(String key) {
+        if (isMultiColumn()) {
+            if (StringUtils.isBlank(key)) {
+                throw new FrameworkException("cache key canot be null");
+            }
+            //多个参数定义
+            String[] split = key.split(cacheDelimiter());
+            return Arrays.stream(split).collect(Collectors.toList());
+        }
+        //单一定义
+        return Collections.singletonList(key);
+    }
+
+    default List<List<String>> parseKeyStr(List<String> keys) {
+        if (isMultiColumn()) {
+            List<List<String>> dataList = cacheDefineDTOMapKeys().stream().map(function -> new ArrayList<String>()).collect(Collectors.toList());
+            //多个参数定义
+            for (int i = 0; i < keys.size(); i++) {
+                String key = keys.get(i);
+                String[] split = key.split(cacheDelimiter());
+                List<String> collect = Arrays.stream(split).collect(Collectors.toList());
+                for (int j = 0; i < collect.size(); i++) {
+                    dataList.get(j).add(collect.get(j));
+                }
+
+            }
+            return dataList;
+        }
+        //单一定义
+        return Collections.singletonList(keys);
+    }
+
+    /**
+     * 间隔符定义
+     */
+
+    @NotNull
+    String cacheDelimiter();
 
     /**
      * 重新加载缓存
@@ -83,7 +140,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
     default Map<String, T> getDbDataMap(Iterator<String> keys) {
         log.info("reloading cache {}, with cache class: {}", getCacheName(), this.getClass().getSimpleName());
 
-        List<S> list = this.listFromDbNeedCache(keys);
+        List<S> list = this.cacheLoadListFromDb(keys);
         if (CollUtil.isEmpty(list)) {
             log.warn("cache data is empty");
             return Collections.emptyMap();
@@ -96,7 +153,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
 
         Collection<T> dtos = this.convert2(list);
 
-        return dtos.stream().collect(Collectors.toMap(this.defineMapKey(), Function.identity(), (a, b) -> b));
+        return dtos.stream().collect(Collectors.toMap(this.getKeyStr(), Function.identity(), (a, b) -> b));
     }
 
 
@@ -107,7 +164,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      */
     default T getDbData(String key) {
 
-        S dataFromDbNeedCache = this.getDataFromDbNeedCache(key);
+        S dataFromDbNeedCache = this.cacheLoadFromDb(key);
         if (Objects.isNull(dataFromDbNeedCache)) {
             log.warn("cache data is empty");
             return null;
@@ -120,7 +177,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    default void clearCache() {
+    default void cacheClear() {
         Cache<String, T> cache = getCache();
         cache.removeAll();
     }
@@ -131,7 +188,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    default Map<String, T> getAll(Collection<String> keys) {
+    default Map<String, T> cacheGetAll(Collection<String> keys) {
         if (CollUtil.isEmpty(keys)) {
             return Collections.emptyMap();
         }
@@ -144,7 +201,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    default boolean containsKey(String key) {
+    default boolean cacheContainsKey(String key) {
         return getCache().containsKey(key);
     }
 
@@ -154,25 +211,43 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      * @param key
      * @return
      */
-    default T getByKey(String key) {
+    default T cacheGetByKey(String key) {
         Validator.requireNonEmpty(key, "key不能为空");
         T ret = getCache().get(key);
         log.info("get data in map cache [{}], key [{}], and cache {}", getCacheName(), key, ret == null ? "miss" : "found");
         return ret;
     }
 
-    /**
-     * 定义缓存的key
-     *
-     * @return
-     */
-    Function<T, String> defineMapKey();
+    default Function<T, String> cacheDefineDTOMapKey() {
+        Function<S, ?> function = cacheDefineDOMapKey();
+        return t -> {
+            S s = rConvert2(t);
+            return String.valueOf(function.apply(s));
+        };
+    }
+
+    default List<Function<T, String>> cacheDefineDTOMapKeys() {
+        List<? extends Function<S, ?>> functions = cacheDefineDOMapKeys();
+        return functions.stream().map(function -> (Function<T, String>) t -> {
+            S s = rConvert2(t);
+            return String.valueOf(function.apply(s));
+        }).collect(Collectors.toList());
+    }
+
 
     /**
      * 定义更新的key
      *
      * @return
      */
-    Function<S, ?> defineSourceMapKey();
+    Function<S, ?> cacheDefineDOMapKey();
+
+
+    /**
+     * 定义更新的key
+     *
+     * @return
+     */
+    List<? extends Function<S, ?>> cacheDefineDOMapKeys();
 
 }

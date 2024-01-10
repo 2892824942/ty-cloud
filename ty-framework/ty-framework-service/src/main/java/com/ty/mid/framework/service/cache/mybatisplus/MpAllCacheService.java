@@ -24,7 +24,7 @@ import java.util.List;
 public abstract class MpAllCacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends CacheService<S, T, M> {
 
     @Override
-    public List<S> listFromDbNeedCache() {
+    public List<S> cacheLoadListFromDb() {
         return super.list();
     }
 
