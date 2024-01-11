@@ -40,7 +40,7 @@ public class CaffeineJCacheAutoConfiguration {
                 .setStoreByValue(false)
                 .setReadThrough(true)
                 // 设置失效时间
-                .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(new Duration(TimeUnit.SECONDS, 10)))
+                .setExpiryPolicyFactory(AccessedExpiryPolicy.factoryOf(new Duration(TimeUnit.DAYS, 1)))
                 .setStatisticsEnabled(Boolean.TRUE);
         return caffeineConfig;
     }

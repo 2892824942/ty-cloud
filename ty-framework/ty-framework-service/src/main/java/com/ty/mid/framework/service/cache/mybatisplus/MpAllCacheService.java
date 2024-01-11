@@ -1,31 +1,61 @@
 package com.ty.mid.framework.service.cache.mybatisplus;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
 import com.ty.mid.framework.service.cache.generic.CacheService;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 抽象的带缓存service，基于mybatis-plus,实现自动缓存全量数据的功能
  * 注意:
- * 1.此类适合缓存如字典,全国市区等基本不变且数量不多的场景,如果经常改变或者数据量超过5000,请慎用此方法,这会影响系统启动速度
+ * 1.此类适合缓存如字典,全国市区等基本不变且数量不多的场景
  * 2.如果不需要缓存全部,请使用AbstractCacheService 定制缓存的内容
  * <p>
- * 支持map格式缓存，支持list缓存
+ * 实现细节参考
  *
- * @param <S>
- * @param <T>
- * @param <M>
+ * @see CacheService
  */
 @Slf4j
 public abstract class MpAllCacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends CacheService<S, T, M> {
+    protected static final Integer BATCH_SIZE = 1;
+
+    @Override
+    public void init() {
+        super.init();
+        Long count = selectCount();
+        if (count < BATCH_SIZE) {
+            cacheReload();
+            return;
+        }
+        List<S> dataList = new ArrayList<>(1000);
+        //使用流式查询
+        this.baseMapper.selectList(Wrappers.emptyWrapper(), resultContext -> {
+            // 依次得到每条业务记录
+            log.debug("当前处理第{}条记录.",resultContext.getResultCount());
+            S source = resultContext.getResultObject();
+            //做自己的业务处理,比如分发任务
+            dataList.add(source);
+            if (dataList.size() > 2000) {
+                //存到缓存中
+                Map<String, T> dbDataMap = getDbDataMap(dataList);
+                getCache().putAll(dbDataMap);
+                dataList.clear();
+            }
+        });
+        //将剩余的全部放入缓存
+        Map<String, T> dbDataMap = getDbDataMap(dataList);
+        getCache().putAll(dbDataMap);
+    }
 
     @Override
     public List<S> cacheLoadListFromDb() {
-        return super.list();
+        return selectList();
     }
 
 }

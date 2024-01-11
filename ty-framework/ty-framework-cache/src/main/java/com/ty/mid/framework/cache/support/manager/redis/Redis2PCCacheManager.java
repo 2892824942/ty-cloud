@@ -12,6 +12,8 @@ import java.util.Map;
 
 /**
  * Redis 两阶段提交cacheManager实现
+ * 整合Mysql事务,事务支持
+ *
  */
 public class Redis2PCCacheManager extends RedisCacheManager {
     RedisCacheWriter cacheWriter;
