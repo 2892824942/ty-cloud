@@ -23,7 +23,7 @@ import java.util.Map;
  */
 @Slf4j
 public abstract class MpAllCacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends CacheService<S, T, M> {
-    protected static final Integer BATCH_SIZE = 1;
+    protected static final Integer BATCH_SIZE = 3000;
 
     @Override
     public void init() {
@@ -33,7 +33,7 @@ public abstract class MpAllCacheService<S extends BaseDO, T extends BaseIdDO<Lon
             cacheReload();
             return;
         }
-        List<S> dataList = new ArrayList<>(1000);
+        List<S> dataList = new ArrayList<>(2000);
         //使用流式查询
         this.baseMapper.selectList(Wrappers.emptyWrapper(), resultContext -> {
             // 依次得到每条业务记录
