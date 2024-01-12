@@ -35,7 +35,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    List<S> cacheLoadListFromDb(Iterator<String> keys);
+    List<S> cacheLoadListFromDb(Collection<String> keys);
 
 
     /**
@@ -116,7 +116,7 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      *
      * @return
      */
-    default Map<String, T> getDbDataMap(Iterator<String> keys) {
+    default Map<String, T> getDbDataMap(Collection<String> keys) {
         List<S> list = this.cacheLoadListFromDb(keys);
         return getDbDataMap(list);
     }

@@ -14,7 +14,7 @@ import java.util.Map;
 /**
  * 抽象的带缓存service，基于mybatis-plus,实现自动缓存全量数据的功能
  * 注意:
- * 1.此类适合缓存如字典,全国市区等基本不变且数量不多的场景
+ * 1.此类适合缓存如字典,全国省市区等基本不变且数量不多的场景
  * 2.如果不需要缓存全部,请使用AbstractCacheService 定制缓存的内容
  * <p>
  * 实现细节参考
@@ -37,7 +37,7 @@ public abstract class MpAllCacheService<S extends BaseDO, T extends BaseIdDO<Lon
         //使用流式查询
         this.baseMapper.selectList(Wrappers.emptyWrapper(), resultContext -> {
             // 依次得到每条业务记录
-            log.debug("当前处理第{}条记录.",resultContext.getResultCount());
+            log.debug("当前处理第{}条记录.", resultContext.getResultCount());
             S source = resultContext.getResultObject();
             //做自己的业务处理,比如分发任务
             dataList.add(source);

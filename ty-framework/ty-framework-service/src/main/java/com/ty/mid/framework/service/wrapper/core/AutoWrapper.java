@@ -17,12 +17,10 @@ import java.util.stream.Collectors;
 
 /**
  * 可缓存service的定义
- *
- * @param <T>
  */
-public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> {
+public interface AutoWrapper<S extends BaseDO> {
 
-    Map<?, T> autoWrap(Collection<?> collection);
+    Map<?, ?> autoWrap(Collection<?> collection);
 
     /**
      * 1.使用BeanUtils 复制完成S->T的映射
@@ -34,7 +32,7 @@ public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M exten
      * @return
      */
     @SuppressWarnings("unchecked")
-    default <DS> Map<DS, T> convert2IdMap(Class<M> baseMapperXClass, Collection<DS> collection, Class<T> instanceClass) {
+    default <DS, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> Map<DS, T> convert2IdMap(Class<M> baseMapperXClass, Collection<DS> collection, Class<T> instanceClass) {
         Function<T, DS> tFunction = ds -> (DS) ds.getId();
         return convert2Map(baseMapperXClass, S::getId, tFunction, collection, instanceClass);
     }
@@ -48,7 +46,7 @@ public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M exten
      * @return
      */
     @SuppressWarnings("unchecked")
-    default <DS> Map<DS, T> convert2IdMap(Class<M> baseMapperXClass, Collection<DS> collection, Function<List<S>, List<T>> function) {
+    default <DS, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> Map<DS, T> convert2IdMap(Class<M> baseMapperXClass, Collection<DS> collection, Function<List<S>, List<T>> function) {
         Function<T, DS> tFunction = ds -> (DS) ds.getId();
         return convert2Map(baseMapperXClass, S::getId, tFunction, collection, function);
     }
@@ -63,7 +61,7 @@ public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M exten
      * @param collection
      * @return
      */
-    default <DS> Map<DS, T> convert2Map(Class<M> baseMapperXClass, SFunction<S, ?> sFunction, Function<T, DS> tFunction, Collection<DS> collection, Class<T> instanceClass) {
+    default <DS, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> Map<DS, T> convert2Map(Class<M> baseMapperXClass, SFunction<S, ?> sFunction, Function<T, DS> tFunction, Collection<DS> collection, Class<T> instanceClass) {
         List<S> mDo = SpringContextHelper.getBean(baseMapperXClass).selectList(sFunction, collection);
         List<T> targetList = JsonUtils.parseArray(JsonUtils.toJson(mDo), instanceClass);
         if (CollUtil.isEmpty(targetList)) {
@@ -81,12 +79,33 @@ public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>, M exten
      * @param collection
      * @return
      */
-    default <DS> Map<DS, T> convert2Map(Class<M> baseMapperXClass, SFunction<S, ?> sFunction, Function<T, DS> tFunction, Collection<DS> collection, Function<List<S>, List<T>> function) {
-        List<S> mDo = SpringContextHelper.getBean(baseMapperXClass).selectList(sFunction, collection);
-        List<T> targetList = function.apply(mDo);
+    default <DS, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> Map<DS, T> convert2Map(Class<M> baseMapperXClass, SFunction<S, ?> sFunction, Function<T, DS> tFunction, Collection<DS> collection, Function<List<S>, List<T>> function) {
+        return convert2Map(SpringContextHelper.getBean(baseMapperXClass), sFunction, tFunction, collection, function);
+    }
+
+    /**
+     * 使用给定的Function<S, T> function 完成复制
+     *
+     * @param baseMapperX
+     * @param sFunction
+     * @param tFunction
+     * @param collection
+     * @return
+     */
+    default <DS, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> Map<DS, T> convert2Map(M baseMapperX, SFunction<S, ?> sFunction, Function<T, DS> tFunction, Collection<DS> collection, Function<List<S>, List<T>> function) {
+        Collection<T> targetList = getTargetList(baseMapperX, sFunction, collection, function);
         if (CollUtil.isEmpty(targetList)) {
             return Collections.emptyMap();
         }
         return targetList.stream().collect(Collectors.toMap(tFunction, Function.identity(), (a, b) -> a));
+    }
+
+    default <DS, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> Collection<T> getTargetList(M baseMapperX, SFunction<S, ?> sFunction, Collection<DS> collection, Function<List<S>, List<T>> function) {
+        List<S> mDo = baseMapperX.selectList(sFunction, collection);
+        List<T> targetList = function.apply(mDo);
+        if (CollUtil.isEmpty(targetList)) {
+            return Collections.emptyList();
+        }
+        return targetList;
     }
 }

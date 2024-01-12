@@ -2,6 +2,7 @@ package com.ty.mid.framework.service.cache.generic;
 
 import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.LambdaUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.util.GenericsUtil;
@@ -22,10 +23,11 @@ import javax.cache.configuration.MutableCacheEntryListenerConfiguration;
 import javax.cache.configuration.MutableConfiguration;
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 抽象的带缓存service，实现自动缓存数据的功能
+ * 一:抽象的带缓存service，实现自动缓存数据的功能
  * 1.缓存Map对象
  * 2.缓存使用JCache api,支持key集合查询及删除
  *
@@ -41,6 +43,8 @@ import java.util.stream.Collectors;
  * 使用说明:
  * -如果缓存相关业务需要缓存即刻生效,需要手动干预缓存(建议直接删除)已达到增删改后自动更新缓存的目的
  * -如果缓存相关业务不需要即刻生效,可设置缓存更新时间或者通过cache加载管理器统一处理
+ * <p>
+ * 二:集成了自动装载Service
  */
 @Slf4j
 public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends GenericAutoWrapService<S, T, M> implements BaseCacheService<S, T> {
@@ -121,10 +125,8 @@ public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M
 
 
     @Override
-    public List<S> cacheLoadListFromDb(Iterator<String> keys) {
-        List<String> keyList = new ArrayList<>();
-        keys.forEachRemaining(keyList::add);
-        return getDbList(keyList);
+    public List<S> cacheLoadListFromDb(Collection<String> keys) {
+        return getDbList(new ArrayList<>(keys));
     }
 
     @Override
@@ -173,5 +175,17 @@ public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M
         return Collections.singletonList(keys);
     }
 
-
+    @Override
+    public <DS, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> Collection<T> getTargetList(M baseMapperX, SFunction<S, ?> sFunction, Collection<DS> collection, Function<List<S>, List<T>> function) {
+        //当前的Service拥有缓存和自动装载两个能力
+        SFunction<S, ?> cacheSFunction = cacheDefineDOMapKey();
+        //对比是否是同一属性
+        if (Objects.equals(LambdaUtils.extract(cacheSFunction).getImplMethodName(), LambdaUtils.extract(sFunction).getImplMethodName())) {
+            //如果是则走缓存
+            Collection<String> keys = GenericsUtil.check2Collection(collection);
+            Map<String, T> all = GenericsUtil.check2Map(getCache().getAll(new HashSet<>(keys)));
+            return all.values();
+        }
+        return super.getTargetList(baseMapperX, sFunction, collection, function);
+    }
 }

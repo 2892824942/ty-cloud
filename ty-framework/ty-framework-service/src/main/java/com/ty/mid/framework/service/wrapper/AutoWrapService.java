@@ -1,6 +1,6 @@
 package com.ty.mid.framework.service.wrapper;
 
-import cn.hutool.core.collection.CollUtil;
+import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.util.GenericsUtil;
@@ -11,15 +11,13 @@ import com.ty.mid.framework.service.GenericService;
 import com.ty.mid.framework.service.wrapper.core.AutoWrapper;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
-public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends GenericService<S, M> implements AutoWrapper<S, T, M> {
+public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends GenericService<S, M> implements AutoWrapper<S> {
 
-    protected final Class<?> targetGenericClass = GenericsUtil.getGenericTypeByIndex(this.getClass(), 1);
+    protected final Class<?>[] targetGenericClasses = GenericTypeUtils.resolveTypeArguments(this.getClass(), AutoWrapService.class);
 
     @Override
     public Map<?, T> autoWrap(Collection<?> collection) {
@@ -69,9 +67,13 @@ public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>
      * @return
      */
     public final <DS> Map<DS, T> convert(Collection<DS> collection, SFunction<S, ?> sFunction, Function<T, DS> tFunction) {
-        Function<List<S>, List<T>> targetFunction = target -> JsonUtils.parseArray(JsonUtils.toJson(target), GenericsUtil.cast2Class(targetGenericClass));
+        Function<List<S>, List<T>> targetFunction = target -> JsonUtils.parseArray(JsonUtils.toJson(target), getDtoClass());
 
         return convert(collection, sFunction, tFunction, targetFunction);
+    }
+
+    private Class<T> getDtoClass() {
+        return GenericsUtil.cast2Class(targetGenericClasses[1]);
     }
 
 
@@ -84,12 +86,7 @@ public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>
      * @return
      */
     public final <DS> Map<DS, T> convert(Collection<DS> collection, SFunction<S, ?> sFunction, Function<T, DS> tFunction, Function<List<S>, List<T>> function) {
-        List<S> mDo = this.getBaseMapper().selectList(sFunction, collection);
-        List<T> targetList = function.apply(mDo);
-        if (CollUtil.isEmpty(targetList)) {
-            return Collections.emptyMap();
-        }
-        return targetList.stream().collect(Collectors.toMap(tFunction, Function.identity(), (a, b) -> a));
+        return convert2Map(this.getBaseMapper(), sFunction, tFunction, collection, function);
     }
 
 }

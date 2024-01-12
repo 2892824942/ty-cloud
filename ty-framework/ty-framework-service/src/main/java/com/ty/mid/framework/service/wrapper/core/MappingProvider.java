@@ -8,6 +8,7 @@ import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
+import com.ty.mid.framework.service.wrapper.AutoWrapService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
@@ -135,7 +136,7 @@ public class MappingProvider {
     }
 
     /**
-     * 解析AbstractMappingFactory中的所有AutoWrapper属性
+     * 解析AutoWrapper
      */
 
     public static Map<Class<?>, AutoWrapper> getAbstractAutoWrapService(Map<String, AutoWrapper> autoWrapServiceMap) {
@@ -144,7 +145,7 @@ public class MappingProvider {
         }
         //这里的key是第2个泛型类型,Field为AutoWrapper属性
         return autoWrapServiceMap.values().stream()
-                .collect(Collectors.toMap(wrapService -> GenericTypeUtils.resolveTypeArguments(wrapService.getClass(), AutoWrapper.class)[1], Function.identity()
+                .collect(Collectors.toMap(wrapService -> GenericTypeUtils.resolveTypeArguments(wrapService.getClass(), AutoWrapService.class)[1], Function.identity()
                         , (a, b) -> {
                             throw new FrameworkException("AutoWrapper中,一个自动装载类型只能有一个wrapper实现,当前实体属性类型:" + a.getClass() + ",重复定义,请检查:" + b.getClass());
                         }));
