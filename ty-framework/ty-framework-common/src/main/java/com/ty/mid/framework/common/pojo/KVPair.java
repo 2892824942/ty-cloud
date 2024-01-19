@@ -6,14 +6,14 @@ import java.util.Objects;
 /**
  * 键值对
  */
-public class KeyValuePair<K, V> implements KVBaseResp<K, V> {
+public class KVPair<K, V> implements KVResp<K, V> {
 
     private final K key;
 
     private final V value;
 
 
-    protected KeyValuePair(K key, V value) {
+    protected KVPair(K key, V value) {
         this.key = key;
         this.value = value;
     }
@@ -26,7 +26,7 @@ public class KeyValuePair<K, V> implements KVBaseResp<K, V> {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        KeyValuePair<?, ?> that = (KeyValuePair<?, ?>) o;
+        KVPair<?, ?> that = (KVPair<?, ?>) o;
         return key.equals(that.key) &&
                 Objects.equals(value, that.value);
     }

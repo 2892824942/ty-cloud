@@ -1,6 +1,6 @@
 package com.ty.mid.framework.common.util;
 
-import com.ty.mid.framework.common.pojo.KeyValuePair;
+import com.ty.mid.framework.common.pojo.KVPair;
 import com.ty.mid.framework.common.lang.NonNull;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
 
@@ -18,7 +18,7 @@ public abstract class DomainUtil {
      * @param valueName
      * @return
      */
-    public static Map<String, Object> renameKeyValue(@NonNull KeyValuePair dto, @NonNull String keyName, @NonNull String valueName) {
+    public static Map<String, Object> renameKeyValue(@NonNull KVPair dto, @NonNull String keyName, @NonNull String valueName) {
         if (dto == null) {
             return null;
         }
@@ -34,7 +34,7 @@ public abstract class DomainUtil {
      * @param valueName
      * @return
      */
-    public static Collection<Map<String, Object>> renameKeyValue(@NonNull Collection<KeyValuePair> dtos, @NonNull String keyName, @NonNull String valueName) {
+    public static Collection<Map<String, Object>> renameKeyValue(@NonNull Collection<KVPair> dtos, @NonNull String keyName, @NonNull String valueName) {
         if (dtos == null) {
             return null;
         }

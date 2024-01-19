@@ -1,6 +1,6 @@
 package com.ty.mid.framework.common.util;
 
-import com.ty.mid.framework.common.pojo.KVBaseResp;
+import com.ty.mid.framework.common.pojo.KVResp;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,8 +22,8 @@ public class SafeGetUtil {
         return get(obj, function, "");
     }
 
-    public static <K> String getKVStringValue(KVBaseResp<K, String> kVBaseResp) {
-        return get(kVBaseResp, KVBaseResp::getValue, "");
+    public static <K> String getKVStringValue(KVResp<K, String> kVResp) {
+        return get(kVResp, KVResp::getValue, "");
     }
 
     public static <K> Integer getInt(K obj, Function<K, Integer> function) {

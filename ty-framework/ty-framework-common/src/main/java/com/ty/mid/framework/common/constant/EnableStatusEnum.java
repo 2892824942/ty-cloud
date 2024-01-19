@@ -1,7 +1,7 @@
 package com.ty.mid.framework.common.constant;
 
 import cn.hutool.core.util.ObjUtil;
-import com.ty.mid.framework.common.pojo.KVBaseResp;
+import com.ty.mid.framework.common.pojo.KVResp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,7 +12,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum EnableStatusEnum implements KVBaseResp<Integer, String> {
+public enum EnableStatusEnum implements KVResp<Integer, String> {
 
     ENABLE(0, "开启"),
     DISABLE(1, "关闭");

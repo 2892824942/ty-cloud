@@ -1,16 +1,25 @@
 package com.ty.mid.framework.common.exception;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 /**
- * 框架异常父类
+ * 框架异常类
  *
- * @author xuchenglong
+ * @author suyouliang
  * @createTime 2019-08-14 15:21
  */
-public class FrameworkException extends RuntimeException {
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class FrameworkException extends BaseException {
 
-    protected String code;
+    public static FrameworkException of(String code, String message){
+        return new FrameworkException(code,message);
+    }
 
-    protected String message;
+    public static FrameworkException of(String message){
+        return new FrameworkException(message);
+    }
 
     public FrameworkException(String code, String message) {
         super(message);
@@ -41,9 +50,5 @@ public class FrameworkException extends RuntimeException {
     public FrameworkException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.message = message;
-    }
-
-    public String getCode() {
-        return this.code;
     }
 }
