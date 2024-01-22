@@ -217,6 +217,12 @@
                 <version>${revision}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.ty</groupId>
+                <artifactId>ty-framework-web</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
             <!-- 业务组件-starter -->
             <dependency>
                 <groupId>com.ty</groupId>
@@ -251,6 +257,11 @@
             <dependency>
                 <groupId>com.ty</groupId>
                 <artifactId>ty-framework-idempotent-starter</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.ty</groupId>
+                <artifactId>ty-framework-web-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <!-- Spring 核心 -->

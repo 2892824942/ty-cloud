@@ -31,4 +31,8 @@ public class PageParam extends SortParam implements Serializable {
     @Max(value = 100, message = "每页条数最大值为 100")
     private Integer pageSize = PAGE_SIZE;
 
+    public Integer openSelectAll() {
+        return pageNo = PAGE_SIZE_NONE;
+    }
+
 }

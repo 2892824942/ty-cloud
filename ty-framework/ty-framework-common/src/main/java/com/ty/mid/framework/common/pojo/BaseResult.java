@@ -11,6 +11,7 @@ import lombok.ToString;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @NoArgsConstructor
@@ -65,8 +66,8 @@ public class BaseResult<T> implements Serializable, Result<T> {
         return result;
     }
 
-    public static <T> BaseResult<? super Collection<T>> successPage(PageResult<T> pageResult) {
-        BaseResult<Collection<T>> result = new BaseResult<>();
+    public static <T> BaseResult<List<T>> successPage(PageResult<T> pageResult) {
+        BaseResult<List<T>> result = new BaseResult<>();
         result.setData(pageResult.getList());
         result.setTotalCount(pageResult.getTotal());
         return result;
@@ -114,5 +115,4 @@ public class BaseResult<T> implements Serializable, Result<T> {
         result.setMessage(baseCodeEnum.getMessage());
         return result;
     }
-
 }

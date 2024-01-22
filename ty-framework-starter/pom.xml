@@ -17,6 +17,7 @@
         <module>ty-framework-mybatis-plus-starter</module>
         <module>ty-framework-security-starter</module>
         <module>ty-framework-service-starter</module>
+        <module>ty-framework-web-starter</module>
 
     </modules>
 

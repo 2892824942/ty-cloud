@@ -1,8 +1,10 @@
 package com.ty.mid.framework.service.wrapper.core;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import com.ty.mid.framework.common.dto.AbstractNameDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
+import com.ty.mid.framework.common.pojo.PageResult;
 import com.ty.mid.framework.common.util.collection.CollectionUtils;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.BeforeMapping;
@@ -10,6 +12,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
 import java.util.*;
+import java.util.function.Function;
 
 /**
  * 用户入值 Covert
@@ -97,6 +100,15 @@ public interface BaseAutoConvert {
 
     default Map<Long, String> getUserNameMap(Collection<Long> userIdList) {
         return null;
+    }
+
+
+    default <S,T> PageResult<T> covertPage(PageResult<S> dataPage, Function<List<S>,List<T>> function) {
+        if (CollectionUtil.isEmpty(dataPage.getList())) {
+            return PageResult.empty();
+        }
+        List<T> resultPage = function.apply(dataPage.getList());
+        return PageResult.of(resultPage, dataPage.getTotal());
     }
 }
 

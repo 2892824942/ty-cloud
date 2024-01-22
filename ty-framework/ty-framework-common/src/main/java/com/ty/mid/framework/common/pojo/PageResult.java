@@ -1,14 +1,16 @@
 package com.ty.mid.framework.common.pojo;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.PageUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Schema(description = "分页结果")
@@ -39,12 +41,12 @@ public final class PageResult<T> implements Serializable {
 
 
     @JsonIgnore
-    public boolean hasData(){
+    public boolean isEmpty(){
         return CollUtil.isEmpty(list);
     }
 
     @JsonIgnore
-    public boolean hasEmptyData(){
+    public boolean isNotEmpty(){
         return CollUtil.isNotEmpty(list);
     }
 

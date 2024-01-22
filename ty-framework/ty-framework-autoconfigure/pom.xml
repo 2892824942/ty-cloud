@@ -29,7 +29,6 @@
             <scope>provided</scope>
         </dependency>
 
-
         <dependency>
             <groupId>com.ty</groupId>
             <artifactId>ty-framework-lock</artifactId>
@@ -50,6 +49,13 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-autoconfigure</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>com.ty</groupId>
+            <artifactId>ty-framework-web</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
 
         <!--test相关依赖-->
         <dependency>

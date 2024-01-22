@@ -1,7 +1,6 @@
 package com.ty.mid.framework.mybatisplus.core.mapper;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.collection.IterUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -12,7 +11,6 @@ import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.github.yulichang.base.MPJBaseMapper;
 import com.github.yulichang.interfaces.MPJBaseJoin;
-import com.ty.mid.framework.common.constant.DefaultTypeEnum;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.pojo.PageParam;
 import com.ty.mid.framework.common.pojo.PageResult;
@@ -20,7 +18,6 @@ import com.ty.mid.framework.mybatisplus.core.util.MyBatisUtils;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -44,14 +41,14 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
         // 特殊：不分页，直接查询全部
         if (PageParam.PAGE_SIZE_NONE.equals(pageParam.getPageNo())) {
             List<T> list = selectList(queryWrapper);
-            return new PageResult<>(list, (long) list.size());
+            return PageResult.of(list, (long) list.size());
         }
 
         // MyBatis Plus 查询
         IPage<T> mpPage = MyBatisUtils.buildPage(pageParam);
         selectPage(mpPage, queryWrapper);
         // 转换返回
-        return new PageResult<>(mpPage.getRecords(), mpPage.getTotal());
+        return PageResult.of(mpPage.getRecords(), mpPage.getTotal());
     }
 
     /**
@@ -66,14 +63,14 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
         // 特殊：不分页，直接查询全部
         if (PageParam.PAGE_SIZE_NONE.equals(pageParam.getPageNo())) {
             List<DTO> list = selectJoinList(dtoClass, queryWrapper);
-            return new PageResult<>(list, (long) list.size());
+            return PageResult.of(list, (long) list.size());
         }
 
         // MyBatis Plus 查询
         IPage<DTO> mpPage = MyBatisUtils.buildPage(pageParam);
         selectJoinPage(mpPage, dtoClass, queryWrapper);
         // 转换返回
-        return new PageResult<>(mpPage.getRecords(), mpPage.getTotal());
+        return PageResult.of(mpPage.getRecords(), mpPage.getTotal());
     }
 
     default T selectOne(String field, Object value) {
