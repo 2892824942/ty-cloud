@@ -36,8 +36,7 @@ public class TestService {
 
 ```
 
-4. 支持锁指定的业务key，如同一个方法ID入参相同的加锁，其他的放行。业务key的获取支持Spel，具体使用方式如下
-   ![输入图片说明](https://gitee.com/uploads/images/2018/0125/100452_e5d61dc8_492218.png "屏幕截图.png")
+4. 支持锁指定的业务key，如同一个方法ID入参相同的加锁，其他的放行。业务key的获取支持Spel
 
 > spring mvc项目接入
 
@@ -119,5 +118,4 @@ customReleaseTimeoutStrategy: 自定义释放锁时，需指定自定义处理�
 项目主要是基于Java Lock的定义调用，而比较常见的分布式锁实现是redis的Redisson实现，对于前者，是没有定义带失效时间的tryLock方法的
 tryLock（long waitTime,TimeUnit unit） ----java lock
 tryLock（long waitTime,long leaseTime,TimeUnit unit） ----Redisson RLock
-所以在面向java lock调用时 将没有带leaseTime的tryLock api，但也不用纠结，Redisson提供了watch dog机制，当不设置leaseTime时，默认使用watch
-dog设置的超时时间。
+所以在面向java lock调用时 将没有带leaseTime的tryLock api，项目的注解方式在实现的时候加入了方言支持,对于redisson的实现类,对应注解支持失效时间
