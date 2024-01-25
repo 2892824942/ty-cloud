@@ -2,8 +2,8 @@ package com.ty.mid.framework.lock.factory.support;
 
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.factory.registry.AbstractTypeLockManager;
-import com.ty.mid.framework.lock.factory.registry.LockManagerKeeper;
+import com.ty.mid.framework.lock.manager.AbstractTypeLockManager;
+import com.ty.mid.framework.lock.manager.LockManagerKeeper;
 import org.springframework.integration.support.locks.LockRegistry;
 
 import java.util.List;

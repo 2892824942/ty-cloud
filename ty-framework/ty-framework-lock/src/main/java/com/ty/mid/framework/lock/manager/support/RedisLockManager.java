@@ -1,8 +1,8 @@
-package com.ty.mid.framework.lock.factory.support.registry;
+package com.ty.mid.framework.lock.manager.support;
 
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.factory.registry.AbstractTypeLockManager;
+import com.ty.mid.framework.lock.manager.AbstractTypeLockManager;
 import com.ty.mid.framework.lock.factory.support.RedissonLockFactory;
 import com.ty.mid.framework.lock.registry.support.redis.redisson.RedissonLockRegistry;
 import org.redisson.api.RedissonClient;

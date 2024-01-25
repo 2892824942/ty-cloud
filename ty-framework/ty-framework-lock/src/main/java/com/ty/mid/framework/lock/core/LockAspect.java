@@ -10,7 +10,7 @@ import com.ty.mid.framework.lock.annotation.LocalLock;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.factory.AdapterLockFactory;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.factory.registry.LockManagerKeeper;
+import com.ty.mid.framework.lock.manager.LockManagerKeeper;
 import com.ty.mid.framework.lock.handler.LockInvocationException;
 import com.ty.mid.framework.lock.parser.FailFastLockParser;
 import com.ty.mid.framework.lock.parser.LocalLockParser;

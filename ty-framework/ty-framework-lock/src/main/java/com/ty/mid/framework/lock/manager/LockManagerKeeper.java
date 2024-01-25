@@ -1,4 +1,4 @@
-package com.ty.mid.framework.lock.factory.registry;
+package com.ty.mid.framework.lock.manager;
 
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.factory.LockFactory;
