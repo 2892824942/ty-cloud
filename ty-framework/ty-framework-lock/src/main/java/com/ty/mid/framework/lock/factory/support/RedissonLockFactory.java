@@ -3,40 +3,43 @@ package com.ty.mid.framework.lock.factory.support;
 import com.ty.mid.framework.lock.enums.LockScopeType;
 import com.ty.mid.framework.lock.enums.LockType;
 import com.ty.mid.framework.lock.factory.LockFactory;
+import lombok.Getter;
+import org.redisson.api.RedissonClient;
 
 import java.util.Objects;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class LocalLockFactory implements LockFactory {
+@Getter
+public class RedissonLockFactory implements LockFactory {
+    protected RedissonClient redissonClient;
 
-    public LocalLockFactory() {
+    public RedissonLockFactory(RedissonClient redissonClient) {
+        this.redissonClient = redissonClient;
     }
 
     @Override
     public Lock getLock(String type, String lockKey) {
-        // 获取锁类型
+
         LockType lockTypeEnum = LockType.of(type);
         if (Objects.isNull(lockTypeEnum)) {
-            return new ReentrantLock();
+            return redissonClient.getLock(lockKey);
         }
         switch (lockTypeEnum) {
             case Fair:
-                return new ReentrantLock(true);
+                return redissonClient.getFairLock(lockKey);
             case Read:
-                return new ReentrantReadWriteLock().readLock();
+                return redissonClient.getReadWriteLock(lockKey).readLock();
             case Write:
-                return new ReentrantReadWriteLock().writeLock();
+                return redissonClient.getReadWriteLock(lockKey).writeLock();
             case Reentrant:
             default:
-                return new ReentrantLock();
+                return redissonClient.getLock(lockKey);
         }
     }
 
     @Override
     public LockScopeType getScopeType() {
-        return LockScopeType.Local;
+        return LockScopeType.Distributed;
     }
 
 }

@@ -6,6 +6,7 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.support.SimpleValueWrapper;
 import org.springframework.cache.transaction.TransactionAwareCacheDecorator;
 import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
@@ -63,7 +64,7 @@ public class CustomTransactionAwareCacheDecorator extends TransactionAwareCacheD
 
                 }
                 //resource不会随着事务提交清理，需要手动清理
-                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                     @Override
                     public void beforeCommit(boolean readOnly) {
                         ThreadResourceUtil.removeAllResource();
@@ -88,7 +89,7 @@ public class CustomTransactionAwareCacheDecorator extends TransactionAwareCacheD
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             //事务开启情况下，数据在事务上下文缓存。
             ThreadResourceUtil.bindResource(getCacheName(), key, value);
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
                 public void beforeCommit(boolean readOnly) {
                     ThreadResourceUtil.removeAllResource();

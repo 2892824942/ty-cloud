@@ -1,6 +1,7 @@
 package com.ty.mid.framework.lock.decorator;
 
 import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.core.LockInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
@@ -11,16 +12,14 @@ import java.util.concurrent.locks.Lock;
 public abstract class AbstractLockDecorator implements Lock {
 
 
-    protected String lockKey;
-    protected LockConfig lockConfig;
+    protected LockInfo lockInfo;
     protected Lock distributedLock;
     private String prefix = "dec:lock";
 
 
-    public AbstractLockDecorator(String lockKey, Lock distributedLock, LockConfig lockConfig) {
-        this.lockKey = constructLockKey(lockKey);
+    public AbstractLockDecorator(Lock distributedLock, LockInfo lockInfo) {
         this.distributedLock = distributedLock;
-        this.lockConfig = lockConfig;
+        this.lockInfo = lockInfo;
     }
 
     public void setPrefix(String prefix) {

@@ -1,6 +1,6 @@
 package com.ty.mid.framework.lock.adapter;
 
-import com.ty.mid.framework.lock.model.LockInfo;
+import com.ty.mid.framework.lock.core.LockInfo;
 
 import java.util.concurrent.locks.Lock;
 

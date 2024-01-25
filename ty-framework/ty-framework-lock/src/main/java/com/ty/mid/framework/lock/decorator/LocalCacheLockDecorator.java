@@ -1,6 +1,7 @@
 package com.ty.mid.framework.lock.decorator;
 
 import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.core.LockInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.CannotAcquireLockException;
 
@@ -12,8 +13,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class LocalCacheLockDecorator extends AbstractLockDecorator {
     protected ReentrantLock localLock = new ReentrantLock();
 
-    public LocalCacheLockDecorator(String lockKey, Lock distributedLock, LockConfig lockConfig) {
-        super(lockKey, distributedLock, lockConfig);
+    public LocalCacheLockDecorator(Lock distributedLock, LockInfo lockInfo) {
+        super(distributedLock, lockInfo);
     }
 
     @Override
@@ -23,7 +24,7 @@ public class LocalCacheLockDecorator extends AbstractLockDecorator {
     }
 
     private void rethrowAsLockException(Exception e) {
-        throw new CannotAcquireLockException("Failed to lock mutex at " + this.lockKey, e);
+        throw new CannotAcquireLockException("Failed to lock mutex at " + this.lockInfo.getName(), e);
     }
 
     @Override
@@ -75,7 +76,7 @@ public class LocalCacheLockDecorator extends AbstractLockDecorator {
     @Override
     public void unlock() {
         if (!this.localLock.isHeldByCurrentThread()) {
-            throw new IllegalStateException("You do not own lock at " + this.lockKey);
+            throw new IllegalStateException("You do not own lock at " + this.lockInfo.getName());
         }
         if (this.localLock.getHoldCount() >= 1) {
             this.localLock.unlock();

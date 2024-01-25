@@ -1,5 +1,6 @@
 package com.ty.mid.framework.lock.registry;
 
+import com.ty.mid.framework.lock.core.LockInfo;
 import org.springframework.integration.support.locks.LockRegistry;
 
 import java.util.concurrent.locks.Lock;

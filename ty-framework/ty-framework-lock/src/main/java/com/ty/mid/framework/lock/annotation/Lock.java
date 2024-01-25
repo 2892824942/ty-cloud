@@ -4,9 +4,10 @@ package com.ty.mid.framework.lock.annotation;
 import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.enums.LockType;
-import com.ty.mid.framework.lock.model.ExceptionOnLockStrategy;
-import com.ty.mid.framework.lock.model.FailOnLockStrategy;
-import com.ty.mid.framework.lock.model.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
+import org.springframework.core.annotation.Order;
 
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;

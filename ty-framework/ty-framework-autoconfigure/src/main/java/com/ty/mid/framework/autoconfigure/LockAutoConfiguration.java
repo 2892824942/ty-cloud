@@ -7,17 +7,17 @@ import com.ty.mid.framework.lock.core.BusinessKeyProvider;
 import com.ty.mid.framework.lock.core.LockAspect;
 import com.ty.mid.framework.lock.core.LockInfoProvider;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.factory.registry.AbstractTypeLockStrangeFactory;
-import com.ty.mid.framework.lock.factory.registry.LockRegistryFactory;
-import com.ty.mid.framework.lock.factory.support.TypeLockRegistryFactory;
+import com.ty.mid.framework.lock.factory.registry.AbstractTypeLockManager;
+import com.ty.mid.framework.lock.factory.registry.LockManagerKeeper;
+import com.ty.mid.framework.lock.factory.support.TypeLockManagerKeeper;
 import com.ty.mid.framework.lock.factory.support.registry.*;
 import com.ty.mid.framework.lock.handler.LockHandler;
 import com.ty.mid.framework.lock.handler.lock.ExceptionOnLockCustomerHandler;
 import com.ty.mid.framework.lock.handler.lock.FailOnLockCustomerHandler;
 import com.ty.mid.framework.lock.handler.release.ReleaseTimeoutCustomerHandler;
-import com.ty.mid.framework.lock.model.ExceptionOnLockStrategy;
-import com.ty.mid.framework.lock.model.FailOnLockStrategy;
-import com.ty.mid.framework.lock.model.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
 import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
@@ -53,41 +53,34 @@ public class LockAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public TypeLockRegistryFactory typeLockRegistryFactory(LockConfig lockConfig, RedissonClient redissonClient) {
-        List<AbstractTypeLockStrangeFactory> typeRegistryFactories = new ArrayList<>();
-        typeRegistryFactories.add(new LocalDefaultTypeLockFactory(lockConfig));
-        typeRegistryFactories.add(new LocalTransactionSupportTypeLockFactory(lockConfig));
-        typeRegistryFactories.add(new RedisDefaultTypeLockFactory(redissonClient, lockConfig));
-        typeRegistryFactories.add(new RedisTransactionSupportTypeLockFactory(redissonClient, lockConfig));
-        typeRegistryFactories.add(new RedisTransactionSupportWithLocalCacheTypeLockFactory(redissonClient, lockConfig));
-        typeRegistryFactories.add(new RedisWithLocalCacheTypeLockFactory(redissonClient, lockConfig));
-        return new TypeLockRegistryFactory(typeRegistryFactories);
+    public LockManagerKeeper typeLockRegistryFactory(RedissonClient redissonClient) {
+        List<AbstractTypeLockManager> typeLockManagers = new ArrayList<>();
+        typeLockManagers.add(new JvmLockManager());
+        typeLockManagers.add(new RedisLockManager(redissonClient));
+        return new TypeLockManagerKeeper(typeLockManagers);
     }
 
     @Bean
-    public LockRegistry lockRegistry(LockConfig lockConfig, TypeLockRegistryFactory typeLockRegistryFactory) {
+    public LockRegistry lockRegistry(LockConfig lockConfig, LockManagerKeeper LockManagerKeeper) {
         loadStrategy(lockConfig);
-        return typeLockRegistryFactory.getLockRegistry(lockConfig.getImplementer(), lockConfig.isSupportTransaction(), lockConfig.isWithLocalCache());
+        return LockManagerKeeper.getLockRegistry(lockConfig.getImplementer());
     }
 
     /**
      * lock切面
      *
-     * @param lockRegistryFactory lockRegistryFactory
-     * @param lockFactory         lockFactory
-     * @param lockInfoProvider    lockInfoProvider
      * @return LockAspect
      */
     @Bean
     @ConditionalOnMissingBean
-    LockAspect lockAspect(LockRegistryFactory lockRegistryFactory, LockFactory lockFactory, LockInfoProvider lockInfoProvider) {
-        return new LockAspect(lockRegistryFactory, lockFactory, lockInfoProvider);
+    LockAspect lockAspect() {
+        return new LockAspect();
     }
 
 
     @Bean
-    public LockFactory lockFactory(LockConfig lockConfig, TypeLockRegistryFactory typeLockRegistryFactory) {
-        return typeLockRegistryFactory.getLockFactory(lockConfig.getImplementer(), lockConfig.isSupportTransaction(), lockConfig.isWithLocalCache());
+    public LockFactory lockFactory(LockConfig lockConfig, TypeLockManagerKeeper typeLockRegistryFactory) {
+        return typeLockRegistryFactory.getLockFactory(lockConfig.getImplementer());
     }
 
     private void loadStrategy(LockConfig lockConfig) {

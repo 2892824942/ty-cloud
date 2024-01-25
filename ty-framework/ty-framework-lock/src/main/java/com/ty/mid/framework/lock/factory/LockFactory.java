@@ -10,4 +10,5 @@ public interface LockFactory {
     LockScopeType getScopeType();
 
 
+
 }

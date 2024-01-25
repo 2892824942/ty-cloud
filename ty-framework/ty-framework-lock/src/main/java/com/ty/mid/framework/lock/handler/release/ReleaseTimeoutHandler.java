@@ -2,7 +2,7 @@ package com.ty.mid.framework.lock.handler.release;
 
 
 import com.ty.mid.framework.lock.handler.LockHandler;
-import com.ty.mid.framework.lock.model.LockInfo;
+import com.ty.mid.framework.lock.core.LockInfo;
 
 /**
  * 获取锁超时的处理逻辑接口

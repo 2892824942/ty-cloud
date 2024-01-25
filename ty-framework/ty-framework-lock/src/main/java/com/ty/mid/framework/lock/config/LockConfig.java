@@ -1,11 +1,13 @@
 package com.ty.mid.framework.lock.config;
 
-import com.ty.mid.framework.lock.model.ExceptionOnLockStrategy;
-import com.ty.mid.framework.lock.model.FailOnLockStrategy;
-import com.ty.mid.framework.lock.model.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
 import com.ty.mid.framework.lock.strategy.LockTransactionStrategy;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by suyouliang on 2020/03/21.
@@ -45,6 +47,10 @@ public class LockConfig {
      * 默认的等待时间单位
      */
     private long leaseTime = 60;
+    /**
+     * 默认的时间单位:秒
+     */
+    TimeUnit timeUnit= TimeUnit.SECONDS;
 
     /**
      * 加锁失败的处理策略
@@ -83,7 +89,7 @@ public class LockConfig {
      * @see FailOnLockStrategy#FAIL_FAST
      * @see ReleaseTimeoutStrategy#FAIL_FAST
      */
-    private String exceptionMsg;
+    private String exceptionMsg ;
 
     /**
      * lock实现厂商类型
