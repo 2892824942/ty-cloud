@@ -55,6 +55,25 @@ public class LockAspect extends AbstractAspect {
     @Resource
     private LockInfoProvider lockInfoProvider;
 
+    public static LockContext getLockContext(String lockName) {
+        Map<String, LockContext> lockContextMap = CURRENT_THREAD_LOCAL_LOCKRES_MAP.get();
+        if (MapUtil.isEmpty(lockContextMap)) {
+            return null;
+        }
+        return lockContextMap.get(getCurrentLockId(lockName));
+    }
+
+    /**
+     * 获取当前锁在map中的key
+     *
+     * @param lockName
+     * @return
+     */
+    private static String getCurrentLockId(String lockName) {
+        Validator.requireNonEmpty(lockName, "lockName can not be empty");
+        return Thread.currentThread().getId() + ":" + lockName;
+    }
+
     @Pointcut("@annotation(com.ty.mid.framework.lock.annotation.Lock)")
     public void lockPointcutMain() {
     }
@@ -65,14 +84,6 @@ public class LockAspect extends AbstractAspect {
 
     @Pointcut("@annotation(com.ty.mid.framework.lock.annotation.LocalLock)")
     public void localLockPointcut() {
-    }
-
-    public static LockContext getLockContext(String lockName) {
-        Map<String, LockContext> lockContextMap = CURRENT_THREAD_LOCAL_LOCKRES_MAP.get();
-        if (MapUtil.isEmpty(lockContextMap)) {
-            return null;
-        }
-        return lockContextMap.get(getCurrentLockId(lockName));
     }
 
     private Lock convert2LockAnnotation(ProceedingJoinPoint joinPoint) {
@@ -107,8 +118,8 @@ public class LockAspect extends AbstractAspect {
         }
         String currentLock = getCurrentLockId(lockInfo.getName());
         LockContext lockContext = lockResMap.get(currentLock);
-        if (Objects.isNull(lockContext)){
-            lockContext = new LockContext(lockInfo, joinPoint,false);
+        if (Objects.isNull(lockContext)) {
+            lockContext = new LockContext(lockInfo, joinPoint, false);
             lockResMap.putIfAbsent(currentLock, lockContext);
         }
         java.util.concurrent.locks.Lock lockObj = Objects.isNull(lockContext.getLock()) ? this.getLock(lockInfo) : lockContext.getLock();
@@ -150,7 +161,6 @@ public class LockAspect extends AbstractAspect {
 
         return joinPoint.proceed();
     }
-
 
     @AfterReturning(pointcut = "lockPointcutMain() || FailFastLockPointcut() || localLockPointcut() ")
     public void afterReturning(JoinPoint joinPoint) throws Throwable {
@@ -246,7 +256,6 @@ public class LockAspect extends AbstractAspect {
         return adapter.acquire(lock, lockInfo);
     }
 
-
     /**
      * 释放锁
      */
@@ -284,9 +293,9 @@ public class LockAspect extends AbstractAspect {
             }
             // avoid release lock twice when exception happens below
             lockContext.setRes(false);
-            log.debug("lock release error,lockContext:{}",lockContext);
+            log.debug("lock release error,lockContext:{}", lockContext);
         }
-        log.debug("lock release successful,lockContext:{}",lockContext);
+        log.debug("lock release successful,lockContext:{}", lockContext);
     }
 
     // 支持api级锁的可重入，线程上下文所有的数据为空后，执行线程上下文删除
@@ -314,17 +323,6 @@ public class LockAspect extends AbstractAspect {
      */
     private String getCurrentLockId(JoinPoint joinPoint, Lock lock) {
         return getCurrentLockId(lockInfoProvider.getLockName(joinPoint, lock));
-    }
-
-    /**
-     * 获取当前锁在map中的key
-     *
-     * @param lockName
-     * @return
-     */
-    private static String getCurrentLockId(String lockName) {
-        Validator.requireNonEmpty(lockName, "lockName can not be empty");
-        return Thread.currentThread().getId() +":"+ lockName;
     }
 
     /**
@@ -378,7 +376,7 @@ public class LockAspect extends AbstractAspect {
         private Boolean res;
         private Boolean downgrade = Boolean.FALSE;
 
-        LockContext(LockInfo lockInfo, ProceedingJoinPoint joinPoint,Boolean res) {
+        LockContext(LockInfo lockInfo, ProceedingJoinPoint joinPoint, Boolean res) {
             this.lockInfo = lockInfo;
             this.joinPoint = joinPoint;
             this.res = res;

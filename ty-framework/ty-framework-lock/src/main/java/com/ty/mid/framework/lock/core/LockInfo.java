@@ -2,11 +2,11 @@ package com.ty.mid.framework.lock.core;
 
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.enums.LockType;
+import com.ty.mid.framework.lock.registry.TypeLockRegistry;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.LockTransactionStrategy;
 import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
-import com.ty.mid.framework.lock.registry.TypeLockRegistry;
 import lombok.Data;
 
 import java.util.concurrent.TimeUnit;

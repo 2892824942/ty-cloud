@@ -34,11 +34,11 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
     }
 
     public Lock doGetLock(LockInfo lockInfo) {
-        Lock lock = getLockFactory().getLock(Optional.ofNullable(lockInfo.getType()).map(LockType::getCode).orElse(null),lockInfo.getName());
-        if (lockInfo.getWithLocalCache()){
+        Lock lock = getLockFactory().getLock(Optional.ofNullable(lockInfo.getType()).map(LockType::getCode).orElse(null), lockInfo.getName());
+        if (lockInfo.getWithLocalCache()) {
             lock = new LocalCacheLockDecorator(lock, lockInfo);
         }
-        if (lockInfo.getSupportTransaction()){
+        if (lockInfo.getSupportTransaction()) {
             lock = new TransactionLockDecorator(lock, lockInfo);
         }
         return lock;
@@ -46,7 +46,7 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
 
     @Override
     public Lock obtain(Object lockKey) {
-        return this.obtain(null,lockKey);
+        return this.obtain(null, lockKey);
     }
 
     @Override

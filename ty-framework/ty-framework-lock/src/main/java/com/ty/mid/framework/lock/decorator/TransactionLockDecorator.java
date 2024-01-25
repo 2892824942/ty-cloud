@@ -9,9 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.AnnotationTransactionAttributeSource;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.transaction.interceptor.TransactionAttribute;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
@@ -76,7 +74,7 @@ public class TransactionLockDecorator extends AbstractLockDecorator {
             return distributedLock.tryLock(time, unit);
         }
         LockAspect.LockContext lockContext = LockAspect.getLockContext(lockInfo.getName());
-        if (Objects.nonNull(lockContext)){
+        if (Objects.nonNull(lockContext)) {
             ProceedingJoinPoint joinPoint = lockContext.getJoinPoint();
             TransactionAttribute transactionAttribute = SpringContextHelper.getBean(AnnotationTransactionAttributeSource.class).getTransactionAttribute(((MethodSignature) joinPoint.getSignature()).getMethod(), joinPoint.getClass());
             int propagationBehavior = transactionAttribute.getPropagationBehavior();

@@ -2,7 +2,6 @@ package com.ty.mid.framework.lock.registry;
 
 import com.ty.mid.framework.core.cache.Cache;
 import com.ty.mid.framework.core.cache.support.InMemoryCache;
-import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.factory.LockFactory;
 
@@ -23,22 +22,6 @@ public abstract class AbstractCacheLockRegistry extends AbstractDecorateLockRegi
     public AbstractCacheLockRegistry(LockFactory lockFactory) {
         super(lockFactory);
     }
-
-    protected boolean openClearLRU() {
-        return true;
-    }
-
-    /**
-     * 覆盖父类写法
-     *
-     * @param LockInfo lockInfo
-     * @return
-     */
-    @Override
-    public Lock doGetLock(LockInfo lockInfo) {
-        return this.locks.computeIfAbsent(lockInfo.getName(), super.doGetLock(lockInfo), timeUnit, expiration);
-    }
-
 
     public static void main(String[] args) {
         Map<String, String> testMap = new ConcurrentHashMap<>();
@@ -61,6 +44,21 @@ public abstract class AbstractCacheLockRegistry extends AbstractDecorateLockRegi
         String key3 = "ccc";
         String computeIfAbsent2 = testMap.computeIfAbsent(key3, (a) -> "computeIfAbsent2");
         System.out.println("computeIfAbsent2 return:" + computeIfAbsent2);
+    }
+
+    protected boolean openClearLRU() {
+        return true;
+    }
+
+    /**
+     * 覆盖父类写法
+     *
+     * @param LockInfo lockInfo
+     * @return
+     */
+    @Override
+    public Lock doGetLock(LockInfo lockInfo) {
+        return this.locks.computeIfAbsent(lockInfo.getName(), super.doGetLock(lockInfo), timeUnit, expiration);
     }
 
 

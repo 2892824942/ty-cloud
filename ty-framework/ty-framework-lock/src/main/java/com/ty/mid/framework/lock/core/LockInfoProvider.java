@@ -1,13 +1,11 @@
 package com.ty.mid.framework.lock.core;
 
-import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
-import com.ty.mid.framework.lock.strategy.LockTransactionStrategy;
 import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -89,7 +87,7 @@ public class LockInfoProvider {
         return lockInfo;
     }
 
-    public LockInfo transform2(LockConfig lockConfig,String type,String lockKey) {
+    public LockInfo transform2(LockConfig lockConfig, String type, String lockKey) {
         //锁的名字，锁的粒度就是这里控制的
         String lockName = doGetLockName(lockKey);
         long leaseTime = lockConfig.getLeaseTime();
@@ -103,8 +101,8 @@ public class LockInfoProvider {
         LockInfo lockInfo = new LockInfo();
         lockInfo.setImplementer(lockConfig.getImplementer());
         lockInfo.setName(lockName);
-        lockInfo.setWaitTime( lockConfig.getWaitTime() );
-        lockInfo.setLeaseTime( leaseTime);
+        lockInfo.setWaitTime(lockConfig.getWaitTime());
+        lockInfo.setLeaseTime(leaseTime);
         lockInfo.setTimeUnit(lockConfig.getTimeUnit());
         lockInfo.setSupportTransaction(lockConfig.isSupportTransaction());
         lockInfo.setWithLocalCache(lockConfig.isWithLocalCache());
@@ -139,7 +137,7 @@ public class LockInfoProvider {
     @SuppressWarnings("unchecked")
     private Class<? extends RuntimeException> getExceptionClass(Lock lock, LockConfig lockConfig) {
         if (StringUtils.isEmpty(lock.exceptionClass())) {
-            return Objects.isNull(lockConfig.getExceptionClass())?RuntimeException.class: lockConfig.getExceptionClass();
+            return Objects.isNull(lockConfig.getExceptionClass()) ? RuntimeException.class : lockConfig.getExceptionClass();
         }
         try {
             return (Class<? extends RuntimeException>) Class.forName(lock.exceptionClass());
