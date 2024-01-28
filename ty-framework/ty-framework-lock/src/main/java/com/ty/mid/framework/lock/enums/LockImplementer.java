@@ -7,17 +7,8 @@ public enum LockImplementer {
     /**
      * 本地JVM实现
      */
-    JVM_DEFAULT,
+    JVM,
     /**
-     * jvm_with_transaction,
-     */
-    JVM_With_Transaction,
-
-
-    /**
-     * redis实现
-     */
-    REDIS_D,
 
     /**
      * redis实现

@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
  * @param <K>
  * @param <V>
  */
-@Deprecated
 public interface Cache<K, V> {
     @Nullable
     Collection<V> getCollection(K key);

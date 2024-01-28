@@ -46,7 +46,7 @@ public class LockTests {
         }
     }
 
-    /**
+    /**obtain
      * 同一进程内多线程获取锁测试
      *
      * @throws Exception

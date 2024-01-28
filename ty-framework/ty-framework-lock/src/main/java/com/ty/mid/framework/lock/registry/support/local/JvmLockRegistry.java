@@ -28,6 +28,6 @@ public class JvmLockRegistry extends AbstractCacheLockRegistry {
      */
     @Override
     protected boolean openClearLRU() {
-        return false;
+        return true;
     }
 }

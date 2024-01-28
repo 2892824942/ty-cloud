@@ -39,7 +39,11 @@ public class TestService {
         return "success";
     }
 
-
+    /**
+     * 注解方式
+     * @param user
+     * @return
+     */
     @FailFastLock
     public String getValueWithFailFastLock(User user) {
         try {
