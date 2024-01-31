@@ -7,21 +7,18 @@ import com.ty.mid.framework.lock.core.BusinessKeyProvider;
 import com.ty.mid.framework.lock.core.LockAspect;
 import com.ty.mid.framework.lock.core.LockInfoProvider;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.manager.AbstractTypeLockManager;
-import com.ty.mid.framework.lock.manager.support.JvmLockManager;
-import com.ty.mid.framework.lock.manager.LockManagerKeeper;
 import com.ty.mid.framework.lock.factory.support.TypeLockManagerKeeper;
 import com.ty.mid.framework.lock.handler.LockHandler;
 import com.ty.mid.framework.lock.handler.lock.ExceptionOnLockCustomerHandler;
 import com.ty.mid.framework.lock.handler.lock.FailOnLockCustomerHandler;
 import com.ty.mid.framework.lock.handler.release.ReleaseTimeoutCustomerHandler;
-import com.ty.mid.framework.lock.manager.support.RedisLockManager;
+import com.ty.mid.framework.lock.manager.AbstractTypeLockManager;
+import com.ty.mid.framework.lock.manager.LockManagerKeeper;
+import com.ty.mid.framework.lock.manager.support.JvmLockManager;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
-import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
@@ -35,11 +32,11 @@ import java.util.List;
 /**
  * @date 2022/03/26
  * Content :lock自动装配
+ * 只要加入自动配置,直接会加载,除非enable设置为false
  */
-@ConditionalOnProperty(prefix = LockConfig.PREFIX, name = "enable", havingValue = "true")
-@AutoConfigureAfter(RedisAutoConfiguration.class)
+@ConditionalOnProperty(prefix = LockConfig.PREFIX, name = "enable", matchIfMissing = true)
 @EnableConfigurationProperties(LockConfig.class)
-@ConditionalOnBean(RedissonClient.class)
+@AutoConfigureAfter({RedisAutoConfiguration.class, LockZookeeperAutoConfiguration.class})
 public class LockAutoConfiguration {
 
     @Bean
@@ -48,23 +45,31 @@ public class LockAutoConfiguration {
     }
 
     @Bean
-    public BusinessKeyProvider businessKeyProvider() {
+    public BusinessKeyProvider businessKeyProvider(LockConfig lockConfig) {
+        loadStrategy(lockConfig);
         return new BusinessKeyProvider();
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    public LockManagerKeeper typeLockRegistryFactory(RedissonClient redissonClient) {
+    public LockManagerKeeper lockManagerKeeper() {
         List<AbstractTypeLockManager> typeLockManagers = new ArrayList<>();
         typeLockManagers.add(new JvmLockManager());
-        typeLockManagers.add(new RedisLockManager(redissonClient));
         return new TypeLockManagerKeeper(typeLockManagers);
     }
 
     @Bean
-    public LockRegistry lockRegistry(LockConfig lockConfig, LockManagerKeeper LockManagerKeeper) {
-        loadStrategy(lockConfig);
-        return LockManagerKeeper.getLockRegistry(lockConfig.getImplementer());
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = LockConfig.PREFIX, name = "implementer", havingValue = "jvm")
+    public LockRegistry lockRegistry(LockManagerKeeper lockManagerKeeper, LockConfig lockConfig) {
+        return lockManagerKeeper.getLockRegistry(lockConfig.getImplementer());
+    }
+
+
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = LockConfig.PREFIX, name = "implementer", havingValue = "jvm")
+    public LockFactory lockFactory(LockManagerKeeper lockManagerKeeper, LockConfig lockConfig) {
+        return lockManagerKeeper.getLockFactory(lockConfig.getImplementer());
     }
 
     /**
@@ -76,12 +81,6 @@ public class LockAutoConfiguration {
     @ConditionalOnMissingBean
     LockAspect lockAspect() {
         return new LockAspect();
-    }
-
-
-    @Bean
-    public LockFactory lockFactory(LockConfig lockConfig, TypeLockManagerKeeper typeLockRegistryFactory) {
-        return typeLockRegistryFactory.getLockFactory(lockConfig.getImplementer());
     }
 
     private void loadStrategy(LockConfig lockConfig) {

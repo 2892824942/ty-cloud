@@ -3,6 +3,7 @@ package com.ty.mid.framework.lock.annotation;
 
 import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.enums.LockType;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
@@ -42,7 +43,7 @@ public @interface Lock {
      *
      * @return LockConfig.LockImplementer
      */
-    LockConfig.LockImplementer implementer() default LockConfig.LockImplementer.EMPTY;
+    LockImplementer implementer() default LockImplementer.EMPTY;
 
     /**
      * 锁类型，默认可重入锁

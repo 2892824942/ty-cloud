@@ -2,7 +2,6 @@ package com.ty.mid.framework.lock.decorator;
 
 import com.ty.mid.framework.lock.core.LockInfo;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.CannotAcquireLockException;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -22,14 +21,21 @@ public class LocalCacheLockDecorator extends AbstractLockDecorator {
         distributedLock.lock();
     }
 
-    private void rethrowAsLockException(Exception e) {
-        throw new CannotAcquireLockException("Failed to lock mutex at " + this.lockInfo.getName(), e);
-    }
-
     @Override
     public void lockInterruptibly() throws InterruptedException {
-        this.localLock.lockInterruptibly();
-        this.distributedLock.lockInterruptibly();
+        try {
+            this.localLock.lockInterruptibly();
+            this.distributedLock.lockInterruptibly();
+        } catch (InterruptedException interruptedException) {
+            this.localLock.unlock();
+            this.distributedLock.unlock();
+            Thread.currentThread().interrupt();
+            throw interruptedException;
+        } catch (Exception e) {
+            this.localLock.unlock();
+            this.distributedLock.unlock();
+            this.rethrowAsLockException(e);
+        }
     }
 
     @Override

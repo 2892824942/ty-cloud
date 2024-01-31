@@ -2,19 +2,19 @@ package com.ty.mid.framework.lock.manager.support;
 
 import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.factory.support.RedissonLockFactory;
+import com.ty.mid.framework.lock.factory.support.ZkLockFactory;
 import com.ty.mid.framework.lock.manager.AbstractTypeLockManager;
-import com.ty.mid.framework.lock.registry.support.RedissonLockRegistry;
-import org.redisson.api.RedissonClient;
+import com.ty.mid.framework.lock.registry.support.ZkLockRegistry;
+import org.apache.curator.framework.CuratorFramework;
 import org.springframework.integration.support.locks.LockRegistry;
 
-public class RedisLockManager extends AbstractTypeLockManager {
-    RedissonClient redissonClient;
+public class ZkLockManager extends AbstractTypeLockManager {
+    CuratorFramework curatorFramework;
     LockFactory lockFactory;
 
-    public RedisLockManager(RedissonClient redissonClient) {
-        this.redissonClient = redissonClient;
-        this.lockFactory = new RedissonLockFactory(redissonClient);
+    public ZkLockManager(CuratorFramework curatorFramework) {
+        this.curatorFramework = curatorFramework;
+        this.lockFactory = new ZkLockFactory(curatorFramework);
     }
 
     @Override
@@ -24,12 +24,12 @@ public class RedisLockManager extends AbstractTypeLockManager {
 
     @Override
     public LockImplementer implementerType() {
-        return LockImplementer.REDIS;
+        return LockImplementer.ZOOKEEPER;
     }
 
 
     @Override
     public LockRegistry getLockRegistry() {
-        return new RedissonLockRegistry(lockFactory);
+        return new ZkLockRegistry(lockFactory);
     }
 }

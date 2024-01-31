@@ -20,29 +20,11 @@ public abstract class AbstractCacheLockRegistry extends AbstractDecorateLockRegi
     /**
      * 10分钟足够业务运行
      */
-    protected long expiration = 60*10;
+    protected long expiration = 60 * 10;
 
     public AbstractCacheLockRegistry(LockFactory lockFactory) {
         super(lockFactory);
     }
-
-
-
-    protected boolean openClearLRU() {
-        return true;
-    }
-
-    /**
-     * 覆盖父类写法
-     *
-     * @param lockInfo lockInfo
-     * @return
-     */
-    @Override
-    public Lock doGetLock(LockInfo lockInfo) {
-        return this.locks.computeIfAbsent(lockInfo.getName(), super.doGetLock(lockInfo), timeUnit, expiration);
-    }
-
 
     public static void main(String[] args) {
         Map<String, String> testMap = new ConcurrentHashMap<>();
@@ -65,6 +47,21 @@ public abstract class AbstractCacheLockRegistry extends AbstractDecorateLockRegi
         String key3 = "ccc";
         String computeIfAbsent2 = testMap.computeIfAbsent(key3, (a) -> "computeIfAbsent2");
         System.out.println("computeIfAbsent2 return:" + computeIfAbsent2);
+    }
+
+    protected boolean openClearLRU() {
+        return true;
+    }
+
+    /**
+     * 覆盖父类写法
+     *
+     * @param lockInfo lockInfo
+     * @return
+     */
+    @Override
+    public Lock doGetLock(LockInfo lockInfo) {
+        return this.locks.computeIfAbsent(lockInfo.getName(), super.doGetLock(lockInfo), timeUnit, expiration);
     }
 
 }

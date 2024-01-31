@@ -4,6 +4,7 @@ import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
@@ -44,7 +45,7 @@ public class LockInfoProvider {
                     "This may cause dead lock in some circumstances.", lockName);
         }
         //lock厂商实现类型
-        LockConfig.LockImplementer implementer = getValueOrDefault(LockConfig.LockImplementer.EMPTY, lock.implementer(), lockConfig.getImplementer());
+        LockImplementer implementer = getValueOrDefault(LockImplementer.EMPTY, lock.implementer(), lockConfig.getImplementer());
         //是否支持上下文感知
 
         BooleanEnum supportTransactionBoolean = getValueOrDefault(BooleanEnum.NULL, lock.supportTransaction(), BooleanEnum.booleanOf(lockConfig.isSupportTransaction()));

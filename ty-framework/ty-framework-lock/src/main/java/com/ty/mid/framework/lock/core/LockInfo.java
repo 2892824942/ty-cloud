@@ -1,6 +1,6 @@
 package com.ty.mid.framework.lock.core;
 
-import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.enums.LockType;
 import com.ty.mid.framework.lock.registry.TypeLockRegistry;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
@@ -53,7 +53,7 @@ public class LockInfo {
     /**
      * lock厂商实现类型
      */
-    private LockConfig.LockImplementer implementer;
+    private LockImplementer implementer;
     /**
      * 是否支持上下文感知
      */

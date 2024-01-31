@@ -1,8 +1,9 @@
 package com.ty.mid.framework.lock.parser;
 
+import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.lock.annotation.LocalLock;
 import com.ty.mid.framework.lock.annotation.Lock;
-import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.enums.LockImplementer;
 import org.aspectj.lang.JoinPoint;
 import sun.reflect.annotation.AnnotationParser;
 import sun.reflect.annotation.AnnotationType;
@@ -29,8 +30,8 @@ public class LocalLockParser extends AbstractLockParser<LocalLock> {
         stringObjectMap.put("keys", lockAnnotation.keys());
         stringObjectMap.put("waitTime", 0L);
         stringObjectMap.put("timeUnit", TimeUnit.SECONDS);
-        stringObjectMap.put("withLocalCache", Boolean.FALSE);
-        stringObjectMap.put("implementer", LockConfig.LockImplementer.JVM);
+        stringObjectMap.put("withLocalCache", BooleanEnum.FALSE);
+        stringObjectMap.put("implementer", LockImplementer.JVM);
         return (Lock) AnnotationParser.annotationForMap(Lock.class, stringObjectMap);
     }
 }

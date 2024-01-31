@@ -7,6 +7,7 @@ import com.ty.mid.framework.lock.decorator.LocalCacheLockDecorator;
 import com.ty.mid.framework.lock.decorator.TransactionLockDecorator;
 import com.ty.mid.framework.lock.enums.LockType;
 import com.ty.mid.framework.lock.factory.LockFactory;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 
 @Slf4j
+@Getter
 public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
 
     private final LockFactory lockFactory;
@@ -27,10 +29,6 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
     public AbstractDecorateLockRegistry(LockFactory lockFactory) {
         this.lockFactory = lockFactory;
 
-    }
-
-    public LockFactory getLockFactory() {
-        return lockFactory;
     }
 
     public Lock doGetLock(LockInfo lockInfo) {

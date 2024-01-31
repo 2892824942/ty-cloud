@@ -1,10 +1,10 @@
 package com.ty.mid.framework.lock.manager.support;
 
-import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.factory.LockFactory;
+import com.ty.mid.framework.lock.factory.support.JvmLockFactory;
 import com.ty.mid.framework.lock.manager.AbstractTypeLockManager;
-import com.ty.mid.framework.lock.factory.support.LocalLockFactory;
-import com.ty.mid.framework.lock.registry.support.local.JvmLockRegistry;
+import com.ty.mid.framework.lock.registry.support.JvmLockRegistry;
 import org.springframework.integration.support.locks.LockRegistry;
 
 public class JvmLockManager extends AbstractTypeLockManager {
@@ -12,12 +12,12 @@ public class JvmLockManager extends AbstractTypeLockManager {
 
     @Override
     public LockFactory getLockFactory() {
-        return new LocalLockFactory();
+        return JvmLockFactory.getInstance();
     }
 
     @Override
-    public LockConfig.LockImplementer implementerType() {
-        return LockConfig.LockImplementer.JVM;
+    public LockImplementer implementerType() {
+        return LockImplementer.JVM;
     }
 
     @Override

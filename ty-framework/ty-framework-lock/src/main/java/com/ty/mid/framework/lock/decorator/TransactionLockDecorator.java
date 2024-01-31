@@ -33,6 +33,11 @@ public class TransactionLockDecorator extends AbstractLockDecorator {
             return;
         }
         //当前存在事务上下文
+        if (isAbsoluteTransaction()) {
+            //当前事务上下文为独立的事务
+            distributedLock.lock();
+            return;
+        }
         LockTransactionStrategy transactionStrategy = super.lockInfo.getLockTransactionStrategy();
         switch (transactionStrategy) {
             case THREAD_SAFE:
@@ -49,7 +54,17 @@ public class TransactionLockDecorator extends AbstractLockDecorator {
 
     @Override
     public void lockInterruptibly() throws InterruptedException {
-        this.distributedLock.lockInterruptibly();
+        try {
+            this.distributedLock.lockInterruptibly();
+        } catch (InterruptedException interruptedException) {
+            //如果分布式锁实现没有做兜底,这里做兜底
+            this.distributedLock.unlock();
+            Thread.currentThread().interrupt();
+            throw interruptedException;
+        } catch (Exception e) {
+            this.distributedLock.unlock();
+            this.rethrowAsLockException(e);
+        }
     }
 
     @Override
@@ -73,14 +88,10 @@ public class TransactionLockDecorator extends AbstractLockDecorator {
         if (!TransactionSynchronizationManager.isSynchronizationActive()) {
             return distributedLock.tryLock(time, unit);
         }
-        LockAspect.LockContext lockContext = LockAspect.getLockContext(lockInfo.getName());
-        if (Objects.nonNull(lockContext)) {
-            ProceedingJoinPoint joinPoint = lockContext.getJoinPoint();
-            TransactionAttribute transactionAttribute = SpringContextHelper.getBean(AnnotationTransactionAttributeSource.class).getTransactionAttribute(((MethodSignature) joinPoint.getSignature()).getMethod(), joinPoint.getClass());
-            int propagationBehavior = transactionAttribute.getPropagationBehavior();
-            if (Objects.equals(TransactionDefinition.PROPAGATION_REQUIRES_NEW, propagationBehavior)) {
-                return distributedLock.tryLock(time, unit);
-            }
+
+        if (isAbsoluteTransaction()) {
+            //当前事务上下文为独立的事务
+            return distributedLock.tryLock(time, unit);
         }
 
         LockTransactionStrategy transactionStrategy = super.lockInfo.getLockTransactionStrategy();
@@ -105,7 +116,11 @@ public class TransactionLockDecorator extends AbstractLockDecorator {
         }
 
         LockTransactionStrategy transactionStrategy = super.lockInfo.getLockTransactionStrategy();
-
+        if (isAbsoluteTransaction()) {
+            //当前事务上下文为独立的事务
+            distributedLock.unlock();
+            return;
+        }
 
         switch (transactionStrategy) {
             case THREAD_SAFE:
@@ -124,6 +139,17 @@ public class TransactionLockDecorator extends AbstractLockDecorator {
             default:
                 distributedLock.unlock();
         }
+    }
+
+    private boolean isAbsoluteTransaction() {
+        LockAspect.LockContext lockContext = LockAspect.getLockContext(lockInfo.getName());
+        if (Objects.nonNull(lockContext)) {
+            ProceedingJoinPoint joinPoint = lockContext.getJoinPoint();
+            TransactionAttribute transactionAttribute = SpringContextHelper.getBean(AnnotationTransactionAttributeSource.class).getTransactionAttribute(((MethodSignature) joinPoint.getSignature()).getMethod(), joinPoint.getClass());
+            int propagationBehavior = transactionAttribute.getPropagationBehavior();
+            return Objects.equals(TransactionDefinition.PROPAGATION_REQUIRES_NEW, propagationBehavior);
+        }
+        return false;
     }
 
 }

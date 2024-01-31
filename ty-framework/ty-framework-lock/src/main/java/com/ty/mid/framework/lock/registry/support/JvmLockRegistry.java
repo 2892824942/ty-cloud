@@ -1,23 +1,23 @@
-package com.ty.mid.framework.lock.registry.support.local;
+package com.ty.mid.framework.lock.registry.support;
 
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.factory.support.LocalLockFactory;
+import com.ty.mid.framework.lock.factory.support.JvmLockFactory;
 import com.ty.mid.framework.lock.registry.AbstractCacheLockRegistry;
 
 /**
  * 单例的本地lock注册
  */
 public class JvmLockRegistry extends AbstractCacheLockRegistry {
-    private static LockFactory lockFactory = new LocalLockFactory();
-    private static JvmLockRegistry JVMLockRegistry = new JvmLockRegistry(lockFactory);
+    private static final LockFactory LOCK_FACTORY = JvmLockFactory.getInstance();
+    private static final JvmLockRegistry JVM_LOCK_REGISTRY = new JvmLockRegistry(LOCK_FACTORY);
 
 
-    public JvmLockRegistry(LockFactory lockFactory) {
-        super(lockFactory);
+    public JvmLockRegistry(LockFactory LOCK_FACTORY) {
+        super(LOCK_FACTORY);
     }
 
     public static JvmLockRegistry getInstance() {
-        return JVMLockRegistry;
+        return JVM_LOCK_REGISTRY;
     }
 
     /**

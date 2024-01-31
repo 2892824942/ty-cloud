@@ -5,12 +5,15 @@ package com.ty.mid.framework.lock.enums;
  */
 public enum LockImplementer {
     /**
+     * 空实现,为默认开发者请勿使用
+     */
+    EMPTY,
+    /**
      * 本地JVM实现
      */
     JVM,
     /**
-
-    /**
+     * /**
      * redis实现
      */
     REDIS,

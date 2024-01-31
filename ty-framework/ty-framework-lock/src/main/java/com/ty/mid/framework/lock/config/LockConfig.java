@@ -1,5 +1,6 @@
 package com.ty.mid.framework.lock.config;
 
+import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.LockTransactionStrategy;
@@ -20,25 +21,25 @@ public class LockConfig {
     /**
      * 默认的时间单位:秒
      */
-    TimeUnit timeUnit = TimeUnit.SECONDS;
+    private TimeUnit timeUnit = TimeUnit.SECONDS;
     /**
      * 加锁失败的处理策略
      *
      * @return lockTimeoutStrategy
      */
-    FailOnLockStrategy lockFailStrategy = FailOnLockStrategy.FAIL_FAST;
+    private FailOnLockStrategy lockFailStrategy = FailOnLockStrategy.FAIL_FAST;
     /**
      * 加锁异常的处理策略
      *
      * @return lockTimeoutStrategy
      */
-    ExceptionOnLockStrategy exceptionOnLockStrategy = ExceptionOnLockStrategy.THROW_EXCEPTION;
+    private ExceptionOnLockStrategy exceptionOnLockStrategy = ExceptionOnLockStrategy.THROW_EXCEPTION;
     /**
      * 释放锁时已超时的处理策略
      *
      * @return releaseTimeoutStrategy
      */
-    ReleaseTimeoutStrategy releaseTimeoutStrategy = ReleaseTimeoutStrategy.FAIL_FAST;
+    private ReleaseTimeoutStrategy releaseTimeoutStrategy = ReleaseTimeoutStrategy.FAIL_FAST;
     /**
      * 是否开启
      */
@@ -87,36 +88,5 @@ public class LockConfig {
      * @see ReleaseTimeoutStrategy#FAIL_FAST
      */
     private String exceptionMsg;
-
-    /**
-     * lock实现厂商类型
-     */
-    public enum LockImplementer {
-        /**
-         * 系统区分默认值使用，开发者请勿使用
-         */
-        EMPTY,
-        /**
-         * 本地JVM实现
-         */
-        JVM,
-        /**
-         * redis实现
-         */
-        REDIS,
-        /**
-         * zookeeper实现
-         */
-        ZOOKEEPER,
-        /**
-         * etcd实现
-         */
-        ETCD,
-        /**
-         * mysql实现
-         */
-        MYSQL,
-        ;
-    }
 
 }

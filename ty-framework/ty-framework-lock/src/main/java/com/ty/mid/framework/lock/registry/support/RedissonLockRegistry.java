@@ -1,4 +1,4 @@
-package com.ty.mid.framework.lock.registry.support.redis.redisson;
+package com.ty.mid.framework.lock.registry.support;
 
 import com.ty.mid.framework.lock.factory.LockFactory;
 import com.ty.mid.framework.lock.registry.AbstractDecorateLockRegistry;

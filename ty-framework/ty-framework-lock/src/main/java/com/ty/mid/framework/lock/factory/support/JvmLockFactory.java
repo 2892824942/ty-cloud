@@ -13,7 +13,11 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
-public class LocalLockFactory implements LockFactory {
+public class JvmLockFactory implements LockFactory {
+    /**
+     * 单例实体
+     */
+    private static final JvmLockFactory JVM_LOCK_FACTORY = new JvmLockFactory();
     /**
      * 自带过期时间，重置后续期
      */
@@ -22,9 +26,15 @@ public class LocalLockFactory implements LockFactory {
     /**
      * 10分钟足够业务运行
      */
-    protected long expiration = 60*10;
-    public LocalLockFactory() {
+    protected long expiration = 60 * 10;
+
+    private JvmLockFactory() {
     }
+
+    public static JvmLockFactory getInstance() {
+        return JVM_LOCK_FACTORY;
+    }
+
 
     @Override
     public Lock getLock(String type, String lockKey) {

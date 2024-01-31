@@ -10,8 +10,8 @@ import com.ty.mid.framework.lock.annotation.LocalLock;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.factory.AdapterLockFactory;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.manager.LockManagerKeeper;
 import com.ty.mid.framework.lock.handler.LockInvocationException;
+import com.ty.mid.framework.lock.manager.LockManagerKeeper;
 import com.ty.mid.framework.lock.parser.FailFastLockParser;
 import com.ty.mid.framework.lock.parser.LocalLockParser;
 import com.ty.mid.framework.lock.registry.AbstractDecorateLockRegistry;
@@ -92,18 +92,18 @@ public class LockAspect extends AbstractAspect {
         // get annotation
         Lock Lock = super.findAnnotation(method, Lock.class);
         if (Objects.nonNull(Lock)) {
+            FailFastLock failFastLock = super.findAnnotation(method, FailFastLock.class);
+            if (Objects.nonNull(failFastLock)) {
+                return FailFastLockParser.getInstance().convert(failFastLock, joinPoint);
+            }
+            LocalLock localLock = super.findAnnotation(method, LocalLock.class);
+            if (Objects.nonNull(localLock)) {
+                return LocalLockParser.getInstance().convert(localLock, joinPoint);
+            }
             return Lock;
         }
+        throw new FrameworkException("lock parse error");
 
-        FailFastLock failFastLock = super.findAnnotation(method, FailFastLock.class);
-        if (Objects.nonNull(failFastLock)) {
-            return FailFastLockParser.getInstance().convert(failFastLock, joinPoint);
-        }
-        LocalLock localLock = super.findAnnotation(method, LocalLock.class);
-        if (Objects.nonNull(localLock)) {
-            return LocalLockParser.getInstance().convert(localLock, joinPoint);
-        }
-        throw new FrameworkException("lock parse error,no support parser ");
     }
 
     @Around("lockPointcutMain() || FailFastLockPointcut() || localLockPointcut() ")

@@ -1,6 +1,6 @@
 package com.ty.mid.framework.lock.factory.support;
 
-import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.factory.LockFactory;
 import com.ty.mid.framework.lock.manager.AbstractTypeLockManager;
 import com.ty.mid.framework.lock.manager.LockManagerKeeper;
@@ -16,7 +16,7 @@ public class TypeLockManagerKeeper implements LockManagerKeeper {
     }
 
     @Override
-    public LockRegistry getLockRegistry(LockConfig.LockImplementer lockImplementer) {
+    public LockRegistry getLockRegistry(LockImplementer lockImplementer) {
 
         for (AbstractTypeLockManager typeRegistryFactory : typeRegistryFactories) {
             if (lockImplementer.equals(typeRegistryFactory.implementerType())) {
@@ -27,12 +27,17 @@ public class TypeLockManagerKeeper implements LockManagerKeeper {
     }
 
     @Override
-    public LockFactory getLockFactory(LockConfig.LockImplementer lockImplementer) {
+    public LockFactory getLockFactory(LockImplementer lockImplementer) {
         for (AbstractTypeLockManager typeRegistryFactory : typeRegistryFactories) {
             if (lockImplementer.equals(typeRegistryFactory.implementerType())) {
                 return typeRegistryFactory.getLockFactory();
             }
         }
         throw new UnsupportedOperationException("no support implementer of lockImplementer:");
+    }
+
+    @Override
+    public List<AbstractTypeLockManager> getTypeLockManagers() {
+        return typeRegistryFactories;
     }
 }
