@@ -222,4 +222,10 @@ public class InMemoryCache<K, IK, T> implements HashCache<K, IK, T> {
         cacheInMemory.setCacheComputeIfAbsent(cacheKey, cacheValue, timeUnit, renewTime);
         return true;
     }
+
+    @Override
+    public Collection<T> getAll() {
+        return cacheInMemory.getCacheMapType()
+                .values();
+    }
 }

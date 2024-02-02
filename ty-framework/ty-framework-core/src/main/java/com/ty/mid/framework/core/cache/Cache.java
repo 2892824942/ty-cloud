@@ -69,4 +69,7 @@ public interface Cache<K, V> {
 
     boolean renewCache(K cacheKey, long renewTime, TimeUnit timeUnit);
 
+    @Nullable
+    Collection<V> getAll();
+
 }
