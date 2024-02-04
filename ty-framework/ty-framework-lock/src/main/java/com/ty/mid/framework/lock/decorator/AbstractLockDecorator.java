@@ -1,7 +1,8 @@
 package com.ty.mid.framework.lock.decorator;
 
-import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.core.LockInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.util.StringUtils;
 
 import java.util.concurrent.locks.Condition;
@@ -11,16 +12,14 @@ import java.util.concurrent.locks.Lock;
 public abstract class AbstractLockDecorator implements Lock {
 
 
-    protected String lockKey;
-    protected LockConfig lockConfig;
-    protected Lock distributedLock;
+    protected LockInfo lockInfo;
+    protected Lock realLock;
     private String prefix = "dec:lock";
 
 
-    public AbstractLockDecorator(String lockKey, Lock distributedLock, LockConfig lockConfig) {
-        this.lockKey = constructLockKey(lockKey);
-        this.distributedLock = distributedLock;
-        this.lockConfig = lockConfig;
+    public AbstractLockDecorator(Lock realLock, LockInfo lockInfo) {
+        this.realLock = realLock;
+        this.lockInfo = lockInfo;
     }
 
     public void setPrefix(String prefix) {
@@ -34,6 +33,10 @@ public abstract class AbstractLockDecorator implements Lock {
     @Override
     public Condition newCondition() {
         throw new UnsupportedOperationException("Conditions are not supported");
+    }
+
+    protected void rethrowAsLockException(Exception e) {
+        throw new CannotAcquireLockException("Failed to lock mutex at " + this.lockInfo.getName(), e);
     }
 
 

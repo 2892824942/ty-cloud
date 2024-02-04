@@ -9,13 +9,18 @@ public enum LockTransactionStrategy {
      */
     WARMING,
     /**
-     * 禁止，会抛异常阻断业务逻辑（仅开启supportTransaction生效）
+     * 抛异常阻断业务逻辑（仅开启supportTransaction生效）
      */
-    FORBIDDEN,
+    THROWING,
     /**
      * 仅开启supportTransaction生效，
      * 保证多线程访问安全，unlock会在事务完成后再提交。
      * 缺点：会使lock的作用域膨胀。直至上下文事务完成
      */
-    THREAD_SAFE;
+    THREAD_SAFE,
+    /**
+     * 关闭探测
+     */
+    DISABLED,
+    ;
 }

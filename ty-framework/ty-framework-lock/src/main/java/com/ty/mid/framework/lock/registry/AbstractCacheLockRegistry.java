@@ -2,7 +2,7 @@ package com.ty.mid.framework.lock.registry;
 
 import com.ty.mid.framework.core.cache.Cache;
 import com.ty.mid.framework.core.cache.support.InMemoryCache;
-import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.factory.LockFactory;
 
 import java.util.Map;
@@ -10,17 +10,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
-public abstract class AbstractCacheLockRegistry extends AbstractLockRegistry {
+public abstract class AbstractCacheLockRegistry extends AbstractDecorateLockRegistry {
 
     /**
      * 自带过期时间，重置后续期
      */
     private final Cache<String, Lock> locks = new InMemoryCache<>(openClearLRU());
     protected TimeUnit timeUnit = TimeUnit.SECONDS;
-    protected long expiration = -1;
+    /**
+     * 10分钟足够业务运行
+     */
+    protected long expiration = 60 * 10;
 
-    public AbstractCacheLockRegistry(LockConfig lockConfig, LockFactory lockFactory) {
-        super(lockConfig, lockFactory);
+    public AbstractCacheLockRegistry(LockFactory lockFactory) {
+        super(lockFactory);
     }
 
     public static void main(String[] args) {
@@ -53,13 +56,12 @@ public abstract class AbstractCacheLockRegistry extends AbstractLockRegistry {
     /**
      * 覆盖父类写法
      *
-     * @param lockType
-     * @param lockKey
+     * @param lockInfo lockInfo
      * @return
      */
     @Override
-    protected Lock getNewLock(String lockType, String lockKey) {
-        return this.locks.computeIfAbsent(lockType, this.getNewLock(lockType, lockKey), timeUnit, expiration);
+    public Lock doGetLock(LockInfo lockInfo) {
+        return this.locks.computeIfAbsent(lockInfo.getName(), super.doGetLock(lockInfo), timeUnit, expiration);
     }
 
 }

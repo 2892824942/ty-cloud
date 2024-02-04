@@ -8,13 +8,13 @@ import com.ty.mid.framework.lock.adapter.LockAdapter;
 import com.ty.mid.framework.lock.annotation.FailFastLock;
 import com.ty.mid.framework.lock.annotation.LocalLock;
 import com.ty.mid.framework.lock.annotation.Lock;
+import com.ty.mid.framework.lock.exception.LockInvocationException;
 import com.ty.mid.framework.lock.factory.AdapterLockFactory;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.factory.registry.LockRegistryFactory;
-import com.ty.mid.framework.lock.handler.LockInvocationException;
-import com.ty.mid.framework.lock.model.LockInfo;
+import com.ty.mid.framework.lock.manager.LockManagerKeeper;
 import com.ty.mid.framework.lock.parser.FailFastLockParser;
 import com.ty.mid.framework.lock.parser.LocalLockParser;
+import com.ty.mid.framework.lock.registry.AbstractDecorateLockRegistry;
 import com.ty.mid.framework.lock.registry.TypeLockRegistry;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +27,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -48,16 +49,29 @@ public class LockAspect extends AbstractAspect {
      * 触发场景：当系统支持配置实时刷新时，lockConfig配置更改会导致前后的lock可能不是同一个，如果使用的是HashMap或ConcurrentHashMap，存在多线程覆盖，导致lock被替换
      * 使用TreadLocal，支持线程内 存在多个lock。每个lock执行完成后将清理lock上下文的lockRes，执行下一个lock时，lock的上下文是干净的。
      */
-    private final ThreadLocal<Map<String, LockRes>> currentThreadLocalLockResMap = new ThreadLocal<>();
-
-    LockRegistryFactory lockRegistryFactory;
-    LockFactory lockFactory;
+    private static final ThreadLocal<Map<String, LockContext>> CURRENT_THREAD_LOCAL_LOCKRES_MAP = new ThreadLocal<>();
+    @Resource
+    LockManagerKeeper lockManagerKeeper;
+    @Resource
     private LockInfoProvider lockInfoProvider;
 
-    public LockAspect(LockRegistryFactory lockRegistryFactory, LockFactory lockFactory, LockInfoProvider lockInfoProvider) {
-        this.lockRegistryFactory = lockRegistryFactory;
-        this.lockFactory = lockFactory;
-        this.lockInfoProvider = lockInfoProvider;
+    public static LockContext getLockContext(String lockName) {
+        Map<String, LockContext> lockContextMap = CURRENT_THREAD_LOCAL_LOCKRES_MAP.get();
+        if (MapUtil.isEmpty(lockContextMap)) {
+            return null;
+        }
+        return lockContextMap.get(getCurrentLockId(lockName));
+    }
+
+    /**
+     * 获取当前锁在map中的key
+     *
+     * @param lockName
+     * @return
+     */
+    private static String getCurrentLockId(String lockName) {
+        Validator.requireNonEmpty(lockName, "lockName can not be empty");
+        return Thread.currentThread().getId() + ":" + lockName;
     }
 
     @Pointcut("@annotation(com.ty.mid.framework.lock.annotation.Lock)")
@@ -74,22 +88,22 @@ public class LockAspect extends AbstractAspect {
 
     private Lock convert2LockAnnotation(ProceedingJoinPoint joinPoint) {
         Method method = this.resolveMethod(joinPoint);
-        log.debug("check api idempotent from class: {}, method: {}", method.getDeclaringClass().getName(), method.getName());
+        log.debug("check api Lock from class: {}, method: {}", method.getDeclaringClass().getName(), method.getName());
         // get annotation
         Lock Lock = super.findAnnotation(method, Lock.class);
         if (Objects.nonNull(Lock)) {
+            FailFastLock failFastLock = super.findAnnotation(method, FailFastLock.class);
+            if (Objects.nonNull(failFastLock)) {
+                return FailFastLockParser.getInstance().convert(failFastLock, joinPoint);
+            }
+            LocalLock localLock = super.findAnnotation(method, LocalLock.class);
+            if (Objects.nonNull(localLock)) {
+                return LocalLockParser.getInstance().convert(localLock, joinPoint);
+            }
             return Lock;
         }
+        throw new FrameworkException("lock parse error");
 
-        FailFastLock failFastLock = super.findAnnotation(method, FailFastLock.class);
-        if (Objects.nonNull(failFastLock)) {
-            return FailFastLockParser.getInstance().convert(failFastLock, joinPoint);
-        }
-        LocalLock localLock = super.findAnnotation(method, LocalLock.class);
-        if (Objects.nonNull(localLock)) {
-            return LocalLockParser.getInstance().convert(localLock, joinPoint);
-        }
-        throw new FrameworkException("lock parse error,no support parser ");
     }
 
     @Around("lockPointcutMain() || FailFastLockPointcut() || localLockPointcut() ")
@@ -97,16 +111,20 @@ public class LockAspect extends AbstractAspect {
         log.debug("lock aspect excuse");
         Lock annoLock = this.convert2LockAnnotation(joinPoint);
         LockInfo lockInfo = lockInfoProvider.get(joinPoint, annoLock);
-        Map<String, LockRes> lockResMap = currentThreadLocalLockResMap.get();
+        Map<String, LockContext> lockResMap = CURRENT_THREAD_LOCAL_LOCKRES_MAP.get();
         if (MapUtil.isEmpty(lockResMap)) {
             lockResMap = new HashMap<>();
-            currentThreadLocalLockResMap.set(lockResMap);
+            CURRENT_THREAD_LOCAL_LOCKRES_MAP.set(lockResMap);
         }
-        String currentLock = this.getCurrentLockId(lockInfo.getName());
-        LockRes lockRes = lockResMap.get(currentLock);
-        java.util.concurrent.locks.Lock lockObj = Objects.isNull(lockRes) ? this.getLock(lockInfo) : lockRes.getLock();
+        String currentLock = getCurrentLockId(lockInfo.getName());
+        LockContext lockContext = lockResMap.get(currentLock);
+        if (Objects.isNull(lockContext)) {
+            lockContext = new LockContext(lockInfo, joinPoint, false);
+            lockResMap.putIfAbsent(currentLock, lockContext);
+        }
+        java.util.concurrent.locks.Lock lockObj = Objects.isNull(lockContext.getLock()) ? this.getLock(lockInfo) : lockContext.getLock();
         boolean lockResult = true;
-        LockRes lockResNew = new LockRes(lockInfo, false);
+
         try {
             lockResult = this.acquireLock(lockObj, lockInfo);
         } catch (Exception e) {
@@ -117,7 +135,7 @@ public class LockAspect extends AbstractAspect {
                 return result;
             }
             //到这里，说明用户选择降级保障业务逻辑，这里进行无锁执行业务逻辑
-            lockResNew.downgrade = Boolean.TRUE;
+            lockContext.downgrade = Boolean.TRUE;
         }
 
         //如果获取锁失败了，则进入失败的处理逻辑
@@ -135,15 +153,14 @@ public class LockAspect extends AbstractAspect {
             }
 
         }
-        lockResNew.setLock(lockObj);
-        lockResNew.setRes(true);
-        lockResMap.putIfAbsent(currentLock, lockResNew);
+        lockContext.setLock(lockObj);
+        lockContext.setRes(true);
+
         log.debug("success get lock ,lockInfo:{}", lockInfo);
 
 
         return joinPoint.proceed();
     }
-
 
     @AfterReturning(pointcut = "lockPointcutMain() || FailFastLockPointcut() || localLockPointcut() ")
     public void afterReturning(JoinPoint joinPoint) throws Throwable {
@@ -192,7 +209,8 @@ public class LockAspect extends AbstractAspect {
         return res;
     }
 
-    private LockAdapter getAdapter() {
+    private LockAdapter getAdapter(LockInfo lockInfo) {
+        LockFactory lockFactory = lockManagerKeeper.getLockFactory(lockInfo.getImplementer());
         if (lockFactory instanceof AdapterLockFactory) {
             AdapterLockFactory adapterLockFactory = (AdapterLockFactory) lockFactory;
             LockAdapter adapter = adapterLockFactory.getAdapter();
@@ -209,12 +227,19 @@ public class LockAspect extends AbstractAspect {
      * 3.如果注解中没有指定 厂商，是否支持事务，是否支持本地缓存，则根据全局设置lockConfig确定
      */
     private java.util.concurrent.locks.Lock getLock(LockInfo lockInfo) {
-        LockRegistry lockRegistry = lockRegistryFactory.getLockRegistry(lockInfo.getImplementer(), lockInfo.getSupportTransaction(), lockInfo.getWithLocalCache());
+
+        LockRegistry lockRegistry = lockManagerKeeper.getLockRegistry(lockInfo.getImplementer());
+        //如果是装饰的lockRegistry,直接调用doGetLock
+        if (lockRegistry instanceof AbstractDecorateLockRegistry) {
+            AbstractDecorateLockRegistry decorateLockRegistry = (AbstractDecorateLockRegistry) lockRegistry;
+            return decorateLockRegistry.doGetLock(lockInfo);
+        }
+        //如果是TypeLockRegistry,则调用obtain type方法,此时:基于包装的能力只受全局控制,注解相关的配置(缓存及事务)失效
         if (lockRegistry instanceof TypeLockRegistry) {
             TypeLockRegistry typeLockRegistry = (TypeLockRegistry) lockRegistry;
             return typeLockRegistry.obtain(lockInfo.getType().getCode(), lockInfo.getName());
         }
-        //没有定义适配器的，默认使用java定义tryLock方法，此时：leaseTime参数将无效
+        //没有定义适配器的,调用spring的原生定义，此时：leaseTime参数将无效
         return lockRegistry.obtain(lockInfo.getName());
     }
 
@@ -223,7 +248,7 @@ public class LockAspect extends AbstractAspect {
      * 注意：默认情况下，由于java的tryLock没有leaseTime（持有锁有效期）参数，此时设置的leaseTime参数将无效
      */
     private boolean acquireLock(java.util.concurrent.locks.Lock lock, LockInfo lockInfo) throws Throwable {
-        LockAdapter adapter = this.getAdapter();
+        LockAdapter adapter = this.getAdapter(lockInfo);
         if (Objects.isNull(adapter)) {
             //没有定义适配器的，默认使用java定义tryLock方法，此时：leaseTime参数将无效
             return lock.tryLock(lockInfo.getWaitTime(), lockInfo.getTimeUnit());
@@ -231,57 +256,59 @@ public class LockAspect extends AbstractAspect {
         return adapter.acquire(lock, lockInfo);
     }
 
-
     /**
      * 释放锁
      */
     private void releaseLock(JoinPoint joinPoint, String currentLock) throws Throwable {
-        LockRes lockRes = currentThreadLocalLockResMap.get().get(currentLock);
-        if (Objects.isNull(lockRes)) {
+        LockContext lockContext = CURRENT_THREAD_LOCAL_LOCKRES_MAP.get().get(currentLock);
+        if (Objects.isNull(lockContext)) {
             throw new NullPointerException("Please check whether the input parameter used as the lock key value has been modified in the method," +
                     " which will cause the acquire and release locks to have different key values and throw npe current LockKey:" + currentLock);
         }
 
-        if (lockRes.getRes()) {
+        if (lockContext.getRes()) {
             try {
-                LockAdapter adapter = this.getAdapter();
-                java.util.concurrent.locks.Lock nowLock = lockRes.getLock();
+                LockAdapter adapter = this.getAdapter(lockContext.lockInfo);
+                java.util.concurrent.locks.Lock nowLock = lockContext.getLock();
                 if (Objects.isNull(adapter)) {
                     //没有定义适配器的，默认使用java定义tryLock方法，此时：leaseTime参数将无效
                     nowLock.unlock();
                 } else {
-                    boolean release = adapter.release(nowLock, lockRes.getLockInfo());
+                    boolean release = adapter.release(nowLock, lockContext.getLockInfo());
                     if (!release) {
-                        handleReleaseTimeout(lockRes.getLockInfo(), joinPoint);
+                        handleReleaseTimeout(lockContext.getLockInfo(), joinPoint);
                     }
                 }
 
             } catch (Exception e) {
                 log.warn("exception when unlock，e:", e);
 
-                if (lockRes.getDowngrade().equals(Boolean.TRUE)) {
+                if (lockContext.getDowngrade().equals(Boolean.TRUE)) {
                     //如果为降级逻辑，则释放锁的异常处理逻辑失效
                     return;
                 }
                 // avoid release lock twice when exception happens below
-                lockRes.setRes(false);
-                handleReleaseTimeout(lockRes.getLockInfo(), joinPoint);
+                lockContext.setRes(false);
+                handleReleaseTimeout(lockContext.getLockInfo(), joinPoint);
             }
             // avoid release lock twice when exception happens below
-            lockRes.setRes(false);
+            lockContext.setRes(false);
+            log.debug("lock release error,lockContext:{}", lockContext);
         }
+        log.debug("lock release successful,lockContext:{}", lockContext);
     }
 
     // 支持api级锁的可重入，线程上下文所有的数据为空后，执行线程上下文删除
     private void cleanUpThreadLocal(String currentLock) {
-        Map<String, LockRes> lockResMap = currentThreadLocalLockResMap.get();
+        Map<String, LockContext> lockResMap = CURRENT_THREAD_LOCAL_LOCKRES_MAP.get();
         try {
-            lockResMap = currentThreadLocalLockResMap.get();
+            lockResMap = CURRENT_THREAD_LOCAL_LOCKRES_MAP.get();
             lockResMap.remove(currentLock);
         } finally {
             if (lockResMap.isEmpty()) {
-                currentThreadLocalLockResMap.remove();
+                CURRENT_THREAD_LOCAL_LOCKRES_MAP.remove();
             }
+
         }
 
 
@@ -296,17 +323,6 @@ public class LockAspect extends AbstractAspect {
      */
     private String getCurrentLockId(JoinPoint joinPoint, Lock lock) {
         return getCurrentLockId(lockInfoProvider.getLockName(joinPoint, lock));
-    }
-
-    /**
-     * 获取当前锁在map中的key
-     *
-     * @param lockName
-     * @return
-     */
-    private String getCurrentLockId(String lockName) {
-        Validator.requireNonEmpty(lockName, "lockName can not be empty");
-        return Thread.currentThread().getId() + lockName;
     }
 
     /**
@@ -349,16 +365,20 @@ public class LockAspect extends AbstractAspect {
         }
     }
 
+    /**
+     * lock上下文
+     */
     @Data
-    private static class LockRes {
-
+    public static class LockContext {
+        private ProceedingJoinPoint joinPoint;
         private LockInfo lockInfo;
         private java.util.concurrent.locks.Lock lock;
         private Boolean res;
         private Boolean downgrade = Boolean.FALSE;
 
-        LockRes(LockInfo lockInfo, Boolean res) {
+        LockContext(LockInfo lockInfo, ProceedingJoinPoint joinPoint, Boolean res) {
             this.lockInfo = lockInfo;
+            this.joinPoint = joinPoint;
             this.res = res;
         }
     }

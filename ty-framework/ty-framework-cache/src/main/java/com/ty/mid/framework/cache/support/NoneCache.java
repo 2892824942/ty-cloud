@@ -109,6 +109,11 @@ public class NoneCache<K, IK, T> implements HashCache<K, IK, T> {
     }
 
     @Override
+    public Collection<T> getAll() {
+        return null;
+    }
+
+    @Override
     public Map<IK, T> getMapAll(K key) {
         return null;
     }

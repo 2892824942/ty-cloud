@@ -1,2 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ty.mid.framework.autoconfigure.LockAutoConfiguration
+  com.ty.mid.framework.autoconfigure.LockAutoConfiguration,\
+  com.ty.mid.framework.autoconfigure.LockRedissonAutoConfiguration,\
+  com.ty.mid.framework.autoconfigure.CuratorAutoConfiguration,\
+  com.ty.mid.framework.autoconfigure.LockZookeeperAutoConfiguration

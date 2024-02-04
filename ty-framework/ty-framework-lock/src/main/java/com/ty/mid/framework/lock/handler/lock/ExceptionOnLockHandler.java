@@ -1,7 +1,7 @@
 package com.ty.mid.framework.lock.handler.lock;
 
+import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.handler.LockHandler;
-import com.ty.mid.framework.lock.model.LockInfo;
 import org.aspectj.lang.JoinPoint;
 
 import java.util.concurrent.locks.Lock;

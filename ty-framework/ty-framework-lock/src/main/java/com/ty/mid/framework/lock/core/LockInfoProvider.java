@@ -2,18 +2,17 @@ package com.ty.mid.framework.lock.core;
 
 import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.common.exception.FrameworkException;
+import com.ty.mid.framework.common.util.SafeGetUtil;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.config.LockConfig;
-import com.ty.mid.framework.lock.model.ExceptionOnLockStrategy;
-import com.ty.mid.framework.lock.model.FailOnLockStrategy;
-import com.ty.mid.framework.lock.model.LockInfo;
-import com.ty.mid.framework.lock.model.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.enums.LockImplementer;
+import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
@@ -24,9 +23,6 @@ import java.util.Objects;
 @Slf4j
 public class LockInfoProvider {
 
-    private static final String LOCK_NAME_PREFIX = "lock";
-    private static final String LOCK_NAME_SEPARATOR = ":";
-    private static final Logger logger = LoggerFactory.getLogger(LockInfoProvider.class);
     @Autowired
     private LockConfig lockConfig;
     @Autowired
@@ -45,11 +41,9 @@ public class LockInfoProvider {
                     "This may cause dead lock in some circumstances.", lockName);
         }
         //lock厂商实现类型
-        LockConfig.LockImplementer implementer = getValueOrDefault(LockConfig.LockImplementer.EMPTY, lock.implementer(), lockConfig.getImplementer());
+        LockImplementer implementer = getValueOrDefault(LockImplementer.EMPTY, lock.implementer(), lockConfig.getImplementer());
         //是否支持上下文感知
 
-        BooleanEnum supportTransactionBoolean = getValueOrDefault(BooleanEnum.NULL, lock.supportTransaction(), BooleanEnum.booleanOf(lockConfig.isSupportTransaction()));
-        boolean supportTransaction = supportTransactionBoolean.getValue();
         //是否支持本地lock二级缓存
         BooleanEnum withLocalCacheBoolean = getValueOrDefault(BooleanEnum.NULL, lock.withLocalCache(), BooleanEnum.booleanOf(lockConfig.isWithLocalCache()));
         Boolean withLocalCache = withLocalCacheBoolean.getValue();
@@ -70,7 +64,6 @@ public class LockInfoProvider {
         lockInfo.setWaitTime(waitTime);
         lockInfo.setLeaseTime(leaseTime);
         lockInfo.setTimeUnit(lock.timeUnit());
-        lockInfo.setSupportTransaction(supportTransaction);
         lockInfo.setWithLocalCache(withLocalCache);
         lockInfo.setType(lock.lockType());
 
@@ -81,9 +74,45 @@ public class LockInfoProvider {
 
         lockInfo.setReleaseTimeoutStrategy(releaseTimeoutStrategy);
         lockInfo.setCustomReleaseTimeoutStrategy(lock.customReleaseTimeoutStrategy());
+        lockInfo.setLockTransactionStrategy(lockConfig.getTransactionStrategy());
 
         lockInfo.setExceptionClass(exceptionClass);
         lockInfo.setExceptionMsg(exceptionMsg);
+        return lockInfo;
+    }
+
+    public LockInfo transform2(LockConfig lockConfig, String type, String lockKey) {
+        //锁的名字，锁的粒度就是这里控制的
+        String lockName = doGetLockName(lockKey);
+        long leaseTime = lockConfig.getLeaseTime();
+        //如果占用锁的时间设计不合理，则打印相应的警告提示
+        if (leaseTime == -1 && log.isWarnEnabled()) {
+            log.warn("Trying to acquire Lock({}) with no expiration, " +
+                    "lock will keep prolong the lock expiration while the lock is still holding by current thread. " +
+                    "This may cause dead lock in some circumstances.", lockName);
+        }
+
+        LockInfo lockInfo = new LockInfo();
+        lockInfo.setImplementer(lockConfig.getImplementer());
+        lockInfo.setName(lockName);
+        lockInfo.setWaitTime(lockConfig.getWaitTime());
+        lockInfo.setLeaseTime(leaseTime);
+        lockInfo.setTimeUnit(lockConfig.getTimeUnit());
+        lockInfo.setWithLocalCache(lockConfig.isWithLocalCache());
+        lockInfo.setType(null);
+
+        lockInfo.setLockFailStrategy(lockConfig.getLockFailStrategy());
+        lockInfo.setCustomLockFailStrategy("");
+
+        lockInfo.setLockExceptionStrategy(lockConfig.getExceptionOnLockStrategy());
+
+        lockInfo.setReleaseTimeoutStrategy(lockConfig.getReleaseTimeoutStrategy());
+        lockInfo.setCustomReleaseTimeoutStrategy("");
+        lockInfo.setLockTransactionStrategy(lockConfig.getTransactionStrategy());
+        lockInfo.setCycleLockStrategy(lockConfig.getCycleLockStrategy());
+
+        lockInfo.setExceptionClass(lockConfig.getExceptionClass());
+        lockInfo.setExceptionMsg(lockConfig.getExceptionMsg());
         return lockInfo;
     }
 
@@ -102,7 +131,7 @@ public class LockInfoProvider {
     @SuppressWarnings("unchecked")
     private Class<? extends RuntimeException> getExceptionClass(Lock lock, LockConfig lockConfig) {
         if (StringUtils.isEmpty(lock.exceptionClass())) {
-            return lockConfig.getExceptionClass();
+            return Objects.isNull(lockConfig.getExceptionClass()) ? RuntimeException.class : lockConfig.getExceptionClass();
         }
         try {
             return (Class<? extends RuntimeException>) Class.forName(lock.exceptionClass());
@@ -119,14 +148,18 @@ public class LockInfoProvider {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         String businessKeyName = businessKeyProvider.getKeyName(joinPoint, lock);
         //锁的名字，锁的粒度就是这里控制的
-        return LOCK_NAME_PREFIX + LOCK_NAME_SEPARATOR + getNameWhenEmpty(businessKeyName, signature);
+        return doGetLockName(getNameWhenEmpty(businessKeyName, signature));
+    }
+
+    private String doGetLockName(String handledLockKey) {
+        return SafeGetUtil.getString(lockConfig.getLockNamePrefix()).concat(SafeGetUtil.getString(lockConfig.getLockNameSeparator())).concat(handledLockKey);
     }
 
     /**
      * 获取锁的name，如果没有指定，则按全类名拼接方法名处理
      *
-     * @param annotationName
-     * @param signature
+     * @param annotationName annotationName
+     * @param signature signature
      * @return
      */
     private String getNameWhenEmpty(String annotationName, MethodSignature signature) {

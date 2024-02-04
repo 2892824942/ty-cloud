@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
  * @param <K>
  * @param <V>
  */
-@Deprecated
 public interface Cache<K, V> {
     @Nullable
     Collection<V> getCollection(K key);
@@ -69,5 +68,8 @@ public interface Cache<K, V> {
     Date getExpireAt(K key);
 
     boolean renewCache(K cacheKey, long renewTime, TimeUnit timeUnit);
+
+    @Nullable
+    Collection<V> getAll();
 
 }

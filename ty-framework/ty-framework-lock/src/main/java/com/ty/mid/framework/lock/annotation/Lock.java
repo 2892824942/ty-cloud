@@ -3,10 +3,11 @@ package com.ty.mid.framework.lock.annotation;
 
 import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.enums.LockType;
-import com.ty.mid.framework.lock.model.ExceptionOnLockStrategy;
-import com.ty.mid.framework.lock.model.FailOnLockStrategy;
-import com.ty.mid.framework.lock.model.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
+import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
 
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;
@@ -42,7 +43,7 @@ public @interface Lock {
      *
      * @return LockConfig.LockImplementer
      */
-    LockConfig.LockImplementer implementer() default LockConfig.LockImplementer.EMPTY;
+    LockImplementer implementer() default LockImplementer.EMPTY;
 
     /**
      * 锁类型，默认可重入锁
@@ -144,8 +145,8 @@ public @interface Lock {
      * 比如：com.ty.mid.framework.common.exception.FrameworkException
      * 注意：必须是RuntimeException的子类
      *
-     * @see FailOnLockStrategy#FAIL_FAST
-     * @see ReleaseTimeoutStrategy#FAIL_FAST
+     * @see FailOnLockStrategy#THROWING
+     * @see ReleaseTimeoutStrategy#THROWING
      */
     String exceptionClass() default "";
 
@@ -154,8 +155,8 @@ public @interface Lock {
      * 仅当LockFailStrategy.FAIL_FAST或者ReleaseTimeoutStrategy.FAIL_FAST 生效  暂时不支持二者同时设置
      * 优先级：注解exceptionClass>lockConfig exceptionClass>系统默认
      *
-     * @see FailOnLockStrategy#FAIL_FAST
-     * @see ReleaseTimeoutStrategy#FAIL_FAST
+     * @see FailOnLockStrategy#THROWING
+     * @see ReleaseTimeoutStrategy#THROWING
      */
     String exceptionMsg() default "";
 

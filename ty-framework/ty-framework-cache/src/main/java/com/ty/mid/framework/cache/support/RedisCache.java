@@ -123,6 +123,11 @@ public class RedisCache<K, IK, V> implements HashCache<K, IK, V> {
         return false;
     }
 
+    @Override
+    public Collection<V> getAll() {
+        return null;
+    }
+
 //    private RedisTemplate<K, V> redisTemplate;
 //
 //    public RedisCache(RedisTemplate<K, V> redisTemplate) {

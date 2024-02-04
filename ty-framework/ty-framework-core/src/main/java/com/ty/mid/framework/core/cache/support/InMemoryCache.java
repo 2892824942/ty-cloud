@@ -13,7 +13,6 @@ import java.util.concurrent.TimeUnit;
 
 @NoArgsConstructor
 @Slf4j
-@Deprecated
 public class InMemoryCache<K, IK, T> implements HashCache<K, IK, T> {
     ExpireCacheInMemory<K, T> cacheInMemory = new ExpireCacheInMemory<>();
     ExpireCacheInMemory<K, Collection<T>> cacheCollectionInMemory = new ExpireCacheInMemory<>();
@@ -222,5 +221,11 @@ public class InMemoryCache<K, IK, T> implements HashCache<K, IK, T> {
         }
         cacheInMemory.setCacheComputeIfAbsent(cacheKey, cacheValue, timeUnit, renewTime);
         return true;
+    }
+
+    @Override
+    public Collection<T> getAll() {
+        return cacheInMemory.getCacheMapType()
+                .values();
     }
 }

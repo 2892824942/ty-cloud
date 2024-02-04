@@ -1,7 +1,7 @@
 package com.ty.mid.framework.lock.adapter.support;
 
 import com.ty.mid.framework.lock.adapter.LockAdapter;
-import com.ty.mid.framework.lock.model.LockInfo;
+import com.ty.mid.framework.lock.core.LockInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 

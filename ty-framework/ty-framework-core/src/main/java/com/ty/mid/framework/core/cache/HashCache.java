@@ -4,7 +4,6 @@ import org.springframework.lang.Nullable;
 
 import java.util.Map;
 
-@Deprecated
 public interface HashCache<K, IK, V> extends Cache<K, V> {
 
     @Nullable
