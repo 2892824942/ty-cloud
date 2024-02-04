@@ -1,6 +1,7 @@
 package com.ty.mid.framework.lock.parser;
 
 import com.ty.mid.framework.common.constant.BooleanEnum;
+import com.ty.mid.framework.lock.annotation.FailFastLock;
 import com.ty.mid.framework.lock.annotation.LocalLock;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.enums.LockImplementer;
@@ -32,6 +33,7 @@ public class LocalLockParser extends AbstractLockParser<LocalLock> {
         stringObjectMap.put("timeUnit", TimeUnit.SECONDS);
         stringObjectMap.put("withLocalCache", BooleanEnum.FALSE);
         stringObjectMap.put("implementer", LockImplementer.JVM);
+        stringObjectMap.put("annotationClass", LocalLock.class);
         return (Lock) AnnotationParser.annotationForMap(Lock.class, stringObjectMap);
     }
 }

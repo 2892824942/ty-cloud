@@ -30,6 +30,7 @@ public class FailFastLockParser extends AbstractLockParser<FailFastLock> {
         stringObjectMap.put("keys", lockAnnotation.keys());
         stringObjectMap.put("waitTime", 0L);
         stringObjectMap.put("timeUnit", TimeUnit.SECONDS);
+        stringObjectMap.put("annotationClass", FailFastLock.class);
         return (Lock) AnnotationParser.annotationForMap(Lock.class, stringObjectMap);
     }
 }

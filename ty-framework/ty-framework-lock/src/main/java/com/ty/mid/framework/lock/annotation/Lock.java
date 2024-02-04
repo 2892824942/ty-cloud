@@ -153,11 +153,18 @@ public @interface Lock {
     /**
      * 获取锁失败时，报错的错误信息
      * 仅当LockFailStrategy.FAIL_FAST或者ReleaseTimeoutStrategy.FAIL_FAST 生效  暂时不支持二者同时设置
-     * 优先级：注解exceptionClass>lockConfig exceptionClass>系统默认
+     * 优先级：注解exceptionMsg>lockConfig exceptionMsg>系统默认
      *
      * @see FailOnLockStrategy#THROWING
      * @see ReleaseTimeoutStrategy#THROWING
      */
     String exceptionMsg() default "";
+
+
+
+    /**
+     * 当前注解所属的类,用于多语义的lock注解区分具体注解类型,方便底层做定制逻辑处理
+     */
+    Class<?> annotationClass() default Lock.class;
 
 }

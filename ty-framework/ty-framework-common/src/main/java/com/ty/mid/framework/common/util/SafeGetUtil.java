@@ -23,8 +23,12 @@ public class SafeGetUtil {
         return get(obj, function, "");
     }
 
-    public static  String getString(String obj) {
+    public static String getString(String obj) {
         return get(obj);
+    }
+
+    public static String getOrDefault(String obj, String defaultStr) {
+        return StrUtil.isNotEmpty(obj) ? obj : defaultStr;
     }
 
     public static <K> String getKVStringValue(KVResp<K, String> kVResp) {
@@ -55,4 +59,5 @@ public class SafeGetUtil {
     public static String get(String obj) {
         return Optional.ofNullable(obj).orElse(StrUtil.EMPTY);
     }
+
 }

@@ -1,5 +1,6 @@
 package ty.framework.lock.test;
 
+import com.ty.mid.framework.lock.annotation.AntiReLock;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
@@ -135,5 +136,15 @@ public class TimeoutService {
     private String customReleaseTimeout(String foo, String bar) {
 
         throw new IllegalStateException("customReleaseTimeout");
+    }
+
+    @AntiReLock(name = "foo-service", waitTime = 1)
+    public void foo11() {
+        try {
+            log.info("acquire lock");
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

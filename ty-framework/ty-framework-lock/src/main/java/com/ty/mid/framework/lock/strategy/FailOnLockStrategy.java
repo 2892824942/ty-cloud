@@ -3,7 +3,7 @@ package com.ty.mid.framework.lock.strategy;
 
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.lock.core.LockInfo;
-import com.ty.mid.framework.lock.handler.LockException;
+import com.ty.mid.framework.lock.exception.LockException;
 import com.ty.mid.framework.lock.handler.lock.FailOnLockCustomerHandler;
 import com.ty.mid.framework.lock.handler.lock.FailOnLockHandler;
 import lombok.extern.slf4j.Slf4j;

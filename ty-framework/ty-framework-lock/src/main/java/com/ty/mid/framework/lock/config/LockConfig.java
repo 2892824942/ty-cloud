@@ -1,8 +1,11 @@
 package com.ty.mid.framework.lock.config;
 
+import com.ty.mid.framework.lock.annotation.Lock;
+import com.ty.mid.framework.lock.core.LockInfoProvider;
 import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.strategy.*;
 import lombok.Data;
+import org.aspectj.lang.JoinPoint;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.concurrent.TimeUnit;
@@ -74,6 +77,7 @@ public class LockConfig {
      * 比如：com.ty.mid.framework.common.exception.FrameworkException
      * 注意：必须是RuntimeException的子类
      *
+     * 关于系统默认msg
      * @see FailOnLockStrategy#THROWING
      * @see ReleaseTimeoutStrategy#THROWING
      */
@@ -81,14 +85,34 @@ public class LockConfig {
     /**
      * 获取锁失败时，报错的错误信息
      * 仅当LockFailStrategy.FAIL_FAST或者ReleaseTimeoutStrategy.FAIL_FAST 生效  此处设置二者都会生效
-     * 优先级：注解exceptionClass>lockConfig exceptionClass>系统默认
+     * 优先级：注解exceptionClass>lockConfig.exceptionClass>系统默认
      *
+     * 关于系统默认msg
      * @see FailOnLockStrategy#THROWING
      * @see ReleaseTimeoutStrategy#THROWING
      */
     private String exceptionMsg;
 
     //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓其他相关配置↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+
+    /**
+     * 此配置仅对@AntiReLock生效
+     *
+     * AntiReLock是为了更好的语义以及针对web层防重这一类业务做的注解,可和@FailFastLock在Msg以及防重方面大部分相同,
+     * 但是又存在业务自定义的内容,比如msg可能不一致(需要更好的用户体验msg),部分业务可能需要有容忍的防重锁(waitTime>0)等
+     *
+     * 仅当LockFailStrategy.FAIL_FAST或者ReleaseTimeoutStrategy.FAIL_FAST 生效  暂时不支持二者同时设置
+     * 对于基础实现Lock的优先级：注解exceptionMsg>lockConfig.exceptionMsg>系统默认
+     * 本类的message优先级:注解exceptionMsg>LockConfig.antiReLockMsg>lockConfig.exceptionMsg>系统默认
+     *
+     * 关于优先级
+     * @see LockInfoProvider#getExceptionMsg(Lock, LockConfig)
+     *
+     * 关于系统默认msg
+     * @see FailOnLockStrategy#THROWING
+     * @see ReleaseTimeoutStrategy#THROWING
+     */
+    private String antiReLockMsg="";
 
     private String lockNamePrefix = "lock";
 

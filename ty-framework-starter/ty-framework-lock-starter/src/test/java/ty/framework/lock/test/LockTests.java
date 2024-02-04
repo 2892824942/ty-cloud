@@ -356,6 +356,33 @@ public class LockTests {
 
     }
 
+    /**
+     * 测试AntiRelock自定义异常
+     */
+    @Test
+    public void lockTimeoutAntiReLockException() throws InterruptedException {
+
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        CountDownLatch countDownLatch = new CountDownLatch(10);
+        for (int i = 0; i < 10; i++) {
+            executorService.submit(() -> {
+                countDownLatch.countDown();
+                try {
+                    timeoutService.foo11();
+                } catch (Exception e) {
+                    log.error("执行异常：", e);
+                }
+
+            });
+        }
+        countDownLatch.await();
+
+        TimeUnit.MILLISECONDS.sleep(10000);
+
+        timeoutService.foo9();
+
+    }
+
 
     /**
      * 测试注解子类 FailFastLock
@@ -363,6 +390,16 @@ public class LockTests {
     @Test
     public void subClassFailFastLockAnno() {
         String result = testService.getValueWithFailFastLock(new User());
+        assertEquals(result, "success");
+
+    }
+
+    /**
+     * 测试注解子类 AntiReLock
+     */
+    @Test
+    public void subClassAntiReLockAnno() {
+        String result = testService.getValueWithAntiReLock(new User());
         assertEquals(result, "success");
 
     }

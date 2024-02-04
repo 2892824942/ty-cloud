@@ -1,9 +1,6 @@
 package ty.framework.lock.test;
 
-import com.ty.mid.framework.lock.annotation.FailFastLock;
-import com.ty.mid.framework.lock.annotation.LocalLock;
-import com.ty.mid.framework.lock.annotation.Lock;
-import com.ty.mid.framework.lock.annotation.LockKey;
+import com.ty.mid.framework.lock.annotation.*;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
 import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.stereotype.Service;
@@ -44,6 +41,16 @@ public class TestService {
      */
     @FailFastLock
     public String getValueWithFailFastLock(User user) {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return "success";
+    }
+
+    @AntiReLock
+    public String getValueWithAntiReLock(User user) {
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {

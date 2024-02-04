@@ -5,6 +5,7 @@ import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.lock.config.spi.LockSpiClassLoader;
 import com.ty.mid.framework.lock.core.LockInfo;
+import com.ty.mid.framework.lock.exception.LockException;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Constructor;

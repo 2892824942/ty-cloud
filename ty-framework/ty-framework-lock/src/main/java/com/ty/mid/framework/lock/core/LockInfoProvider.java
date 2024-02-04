@@ -1,8 +1,10 @@
 package com.ty.mid.framework.lock.core;
 
+import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.SafeGetUtil;
+import com.ty.mid.framework.lock.annotation.AntiReLock;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.enums.LockImplementer;
@@ -56,7 +58,6 @@ public class LockInfoProvider {
         ReleaseTimeoutStrategy releaseTimeoutStrategy = getValueOrDefault(ReleaseTimeoutStrategy.EMPTY, lock.releaseTimeoutStrategy(), lockConfig.getReleaseTimeoutStrategy());
 
         Class<? extends RuntimeException> exceptionClass = this.getExceptionClass(lock, lockConfig);
-        String exceptionMsg = StringUtils.isEmpty(lock.exceptionMsg()) ? lockConfig.getExceptionMsg() : lock.exceptionMsg();
 
         LockInfo lockInfo = new LockInfo();
         lockInfo.setImplementer(implementer);
@@ -77,7 +78,7 @@ public class LockInfoProvider {
         lockInfo.setLockTransactionStrategy(lockConfig.getTransactionStrategy());
 
         lockInfo.setExceptionClass(exceptionClass);
-        lockInfo.setExceptionMsg(exceptionMsg);
+        lockInfo.setExceptionMsg(getExceptionMsg(lock, lockConfig));
         return lockInfo;
     }
 
@@ -126,6 +127,21 @@ public class LockInfoProvider {
             }
         }
         return nowValue;
+    }
+
+
+    private String getExceptionMsg(Lock lock,LockConfig lockConfig) {
+        String msg;
+        if (Objects.equals(lock.annotationClass(), AntiReLock.class)) {
+            //lock.exceptionMsg > lockConfig.antiReLockMsg > lockConfig.exceptionMsg > 系统默认
+            String antiReLockMsg = SafeGetUtil.getOrDefault(lockConfig.getAntiReLockMsg(), lockConfig.getExceptionMsg());
+            msg = SafeGetUtil.getOrDefault(lock.exceptionMsg(), antiReLockMsg);
+        }else {
+            //lock.exceptionMsg > lockConfig.exceptionMsg > 系统默认
+            msg = SafeGetUtil.getOrDefault(lock.exceptionMsg(), lockConfig.getExceptionMsg());
+        }
+
+        return msg;
     }
 
     @SuppressWarnings("unchecked")

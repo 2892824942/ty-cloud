@@ -5,6 +5,7 @@ import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.aspect.AbstractAspect;
 import com.ty.mid.framework.lock.adapter.LockAdapter;
+import com.ty.mid.framework.lock.annotation.AntiReLock;
 import com.ty.mid.framework.lock.annotation.FailFastLock;
 import com.ty.mid.framework.lock.annotation.LocalLock;
 import com.ty.mid.framework.lock.annotation.Lock;
@@ -12,6 +13,7 @@ import com.ty.mid.framework.lock.exception.LockInvocationException;
 import com.ty.mid.framework.lock.factory.AdapterLockFactory;
 import com.ty.mid.framework.lock.factory.LockFactory;
 import com.ty.mid.framework.lock.manager.LockManagerKeeper;
+import com.ty.mid.framework.lock.parser.AntiReLockParser;
 import com.ty.mid.framework.lock.parser.FailFastLockParser;
 import com.ty.mid.framework.lock.parser.LocalLockParser;
 import com.ty.mid.framework.lock.registry.AbstractDecorateLockRegistry;
@@ -86,12 +88,21 @@ public class LockAspect extends AbstractAspect {
     public void localLockPointcut() {
     }
 
+    @Pointcut("@annotation(com.ty.mid.framework.lock.annotation.AntiReLock)")
+    public void antiReLockPointcut() {
+    }
+
+
     private Lock convert2LockAnnotation(ProceedingJoinPoint joinPoint) {
         Method method = this.resolveMethod(joinPoint);
         log.debug("check api Lock from class: {}, method: {}", method.getDeclaringClass().getName(), method.getName());
         // get annotation
         Lock Lock = super.findAnnotation(method, Lock.class);
         if (Objects.nonNull(Lock)) {
+            AntiReLock antiReLock = super.findAnnotation(method, AntiReLock.class);
+            if (Objects.nonNull(antiReLock)) {
+                return AntiReLockParser.getInstance().convert(antiReLock, joinPoint);
+            }
             FailFastLock failFastLock = super.findAnnotation(method, FailFastLock.class);
             if (Objects.nonNull(failFastLock)) {
                 return FailFastLockParser.getInstance().convert(failFastLock, joinPoint);
@@ -106,7 +117,7 @@ public class LockAspect extends AbstractAspect {
 
     }
 
-    @Around("lockPointcutMain() || FailFastLockPointcut() || localLockPointcut() ")
+    @Around("lockPointcutMain() || antiReLockPointcut() || FailFastLockPointcut() || localLockPointcut() ")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         log.debug("lock aspect excuse");
         Lock annoLock = this.convert2LockAnnotation(joinPoint);
