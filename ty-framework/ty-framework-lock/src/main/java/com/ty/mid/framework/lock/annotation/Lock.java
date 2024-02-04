@@ -145,8 +145,8 @@ public @interface Lock {
      * 比如：com.ty.mid.framework.common.exception.FrameworkException
      * 注意：必须是RuntimeException的子类
      *
-     * @see FailOnLockStrategy#FAIL_FAST
-     * @see ReleaseTimeoutStrategy#FAIL_FAST
+     * @see FailOnLockStrategy#THROWING
+     * @see ReleaseTimeoutStrategy#THROWING
      */
     String exceptionClass() default "";
 
@@ -155,8 +155,8 @@ public @interface Lock {
      * 仅当LockFailStrategy.FAIL_FAST或者ReleaseTimeoutStrategy.FAIL_FAST 生效  暂时不支持二者同时设置
      * 优先级：注解exceptionClass>lockConfig exceptionClass>系统默认
      *
-     * @see FailOnLockStrategy#FAIL_FAST
-     * @see ReleaseTimeoutStrategy#FAIL_FAST
+     * @see FailOnLockStrategy#THROWING
+     * @see ReleaseTimeoutStrategy#THROWING
      */
     String exceptionMsg() default "";
 

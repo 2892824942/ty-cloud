@@ -3,10 +3,7 @@ package com.ty.mid.framework.lock.core;
 import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.enums.LockType;
 import com.ty.mid.framework.lock.registry.TypeLockRegistry;
-import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
-import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
-import com.ty.mid.framework.lock.strategy.LockTransactionStrategy;
-import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.strategy.*;
 import lombok.Data;
 
 import java.util.concurrent.TimeUnit;
@@ -40,9 +37,13 @@ public class LockInfo {
      */
     ReleaseTimeoutStrategy releaseTimeoutStrategy;
     /**
-     * 当lock存在于事务上下文中的策略
+     * 当lock存在于事务上下文中的策略(开启supportTransaction生效)
      */
     LockTransactionStrategy lockTransactionStrategy;
+    /**
+     * 当lock存在于事务上下文中的策略
+     */
+    CycleLockStrategy cycleLockStrategy;
     /**
      * 自定义释放锁时已超时的处理策略
      * 注意：定义的方法参数需要和注解所在的方法参数保持一致
@@ -51,17 +52,15 @@ public class LockInfo {
      */
     String customReleaseTimeoutStrategy;
     /**
-     * lock厂商实现类型
-     */
-    private LockImplementer implementer;
-    /**
-     * 是否支持上下文感知
-     */
-    private Boolean supportTransaction;
-    /**
      * 是否支持本地lock二级缓存
      */
     private Boolean withLocalCache;
+    /**
+     * lock厂商实现类型
+     */
+    private LockImplementer implementer;
+
+
     /**
      * lock 的类型
      * 注意：如果全局注入的LockRegistry 不是此框架TypeLockRegistry的子类，则此字段失效

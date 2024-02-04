@@ -1,5 +1,6 @@
 package com.ty.mid.framework.common.util;
 
+import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.common.pojo.KVResp;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,10 @@ public class SafeGetUtil {
 
     public static <K> String getString(K obj, Function<K, String> function) {
         return get(obj, function, "");
+    }
+
+    public static  String getString(String obj) {
+        return get(obj);
     }
 
     public static <K> String getKVStringValue(KVResp<K, String> kVResp) {
@@ -45,5 +50,9 @@ public class SafeGetUtil {
 
     public static <K, V> Map<K, V> get(Map<K, V> obj) {
         return Optional.ofNullable(obj).orElse(Collections.emptyMap());
+    }
+
+    public static String get(String obj) {
+        return Optional.ofNullable(obj).orElse(StrUtil.EMPTY);
     }
 }

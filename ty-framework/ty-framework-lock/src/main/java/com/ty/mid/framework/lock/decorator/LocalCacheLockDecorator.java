@@ -18,22 +18,22 @@ public class LocalCacheLockDecorator extends AbstractLockDecorator {
     @Override
     public void lock() {
         this.localLock.lock();
-        distributedLock.lock();
+        realLock.lock();
     }
 
     @Override
     public void lockInterruptibly() throws InterruptedException {
         try {
             this.localLock.lockInterruptibly();
-            this.distributedLock.lockInterruptibly();
+            this.realLock.lockInterruptibly();
         } catch (InterruptedException interruptedException) {
             this.localLock.unlock();
-            this.distributedLock.unlock();
+            this.realLock.unlock();
             Thread.currentThread().interrupt();
             throw interruptedException;
         } catch (Exception e) {
             this.localLock.unlock();
-            this.distributedLock.unlock();
+            this.realLock.unlock();
             this.rethrowAsLockException(e);
         }
     }
@@ -65,7 +65,7 @@ public class LocalCacheLockDecorator extends AbstractLockDecorator {
         long during = System.currentTimeMillis() - startTime;
         try {
             //等待时间转接
-            boolean acquired = distributedLock.tryLock(Math.max(unit.toMillis(time) - during, 0L), TimeUnit.MILLISECONDS);
+            boolean acquired = realLock.tryLock(Math.max(unit.toMillis(time) - during, 0L), TimeUnit.MILLISECONDS);
             if (!acquired) {
                 this.localLock.unlock();
             }
@@ -85,7 +85,7 @@ public class LocalCacheLockDecorator extends AbstractLockDecorator {
         }
         if (this.localLock.getHoldCount() >= 1) {
             this.localLock.unlock();
-            distributedLock.unlock();
+            realLock.unlock();
         }
     }
 

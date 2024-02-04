@@ -24,7 +24,7 @@ public class ZkLock implements Lock {
         try {
             interProcessLock.acquire();
         } catch (Exception e) {
-            log.error("get lock error,impl:zk,error:",e);
+            log.error("get lock error,impl:zk,error:", e);
             throw new FrameworkException("get lock error,impl:zk,error:");
         }
     }
@@ -42,7 +42,7 @@ public class ZkLock implements Lock {
                 }
             }
         } catch (Exception e) {
-            log.error("get lock error,impl:zk,error:",e);
+            log.error("get lock error,impl:zk,error:", e);
             throw new FrameworkException("get lock error,impl:zk");
         }
 
@@ -54,7 +54,7 @@ public class ZkLock implements Lock {
             interProcessLock.acquire();
             return Boolean.TRUE;
         } catch (Exception e) {
-            log.error("get tryLock error,impl:zk,error:",e);
+            log.error("get tryLock error,impl:zk,error:", e);
             throw new FrameworkException("get lock error,impl:zk");
         }
     }
@@ -64,7 +64,7 @@ public class ZkLock implements Lock {
         try {
             return interProcessLock.acquire(time, unit);
         } catch (Exception e) {
-            log.error("get lock error,impl:zk,error:",e);
+            log.error("get lock error,impl:zk,error:", e);
             throw new FrameworkException("get lock error,impl:zk");
         }
 
@@ -75,7 +75,7 @@ public class ZkLock implements Lock {
         try {
             interProcessLock.release();
         } catch (Exception e) {
-            log.error("release lock error,impl:zk,error:",e);
+            log.error("release lock error,impl:zk,error:", e);
             throw new FrameworkException("release lock error,impl:zk");
         }
     }

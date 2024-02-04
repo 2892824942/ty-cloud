@@ -1,4 +1,4 @@
-package com.ty.mid.framework.lock.handler;
+package com.ty.mid.framework.lock.exception;
 
 /**
  * @author

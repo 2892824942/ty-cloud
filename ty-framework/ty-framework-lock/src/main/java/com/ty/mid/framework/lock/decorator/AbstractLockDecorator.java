@@ -13,12 +13,12 @@ public abstract class AbstractLockDecorator implements Lock {
 
 
     protected LockInfo lockInfo;
-    protected Lock distributedLock;
+    protected Lock realLock;
     private String prefix = "dec:lock";
 
 
-    public AbstractLockDecorator(Lock distributedLock, LockInfo lockInfo) {
-        this.distributedLock = distributedLock;
+    public AbstractLockDecorator(Lock realLock, LockInfo lockInfo) {
+        this.realLock = realLock;
         this.lockInfo = lockInfo;
     }
 

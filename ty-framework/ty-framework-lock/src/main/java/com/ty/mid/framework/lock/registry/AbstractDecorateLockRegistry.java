@@ -5,13 +5,17 @@ import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.core.LockInfoProvider;
 import com.ty.mid.framework.lock.decorator.LocalCacheLockDecorator;
 import com.ty.mid.framework.lock.decorator.TransactionLockDecorator;
+import com.ty.mid.framework.lock.decorator.cycle.CycleDetectingLockDecorator;
 import com.ty.mid.framework.lock.enums.LockType;
 import com.ty.mid.framework.lock.factory.LockFactory;
+import com.ty.mid.framework.lock.strategy.CycleLockStrategy;
+import com.ty.mid.framework.lock.strategy.LockTransactionStrategy;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 
@@ -36,8 +40,12 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
         if (lockInfo.getWithLocalCache()) {
             lock = new LocalCacheLockDecorator(lock, lockInfo);
         }
-        if (lockInfo.getSupportTransaction()) {
+        if (!Objects.equals(lockInfo.getLockTransactionStrategy(), LockTransactionStrategy.DISABLED)) {
             lock = new TransactionLockDecorator(lock, lockInfo);
+        }
+
+        if (!Objects.equals(lockInfo.getCycleLockStrategy(), CycleLockStrategy.DISABLED)) {
+            lock = new CycleDetectingLockDecorator(lock, lockInfo);
         }
         return lock;
     }

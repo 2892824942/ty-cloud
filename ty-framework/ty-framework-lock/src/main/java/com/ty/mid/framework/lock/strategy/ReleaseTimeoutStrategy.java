@@ -35,7 +35,7 @@ public enum ReleaseTimeoutStrategy implements ReleaseTimeoutHandler {
     /**
      * 快速失败,可自定义异常类及报错信息
      */
-    FAIL_FAST() {
+    THROWING() {
         @Override
         public void handle(LockInfo lockInfo) {
 

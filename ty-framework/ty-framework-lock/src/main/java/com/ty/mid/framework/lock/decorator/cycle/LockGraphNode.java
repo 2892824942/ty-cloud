@@ -3,6 +3,9 @@ package com.ty.mid.framework.lock.decorator.cycle;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.MapMaker;
 import com.google.common.collect.Sets;
+import com.ty.mid.framework.lock.exception.ExampleStackTrace;
+import com.ty.mid.framework.lock.exception.PotentialDeadlockException;
+import com.ty.mid.framework.lock.strategy.CycleLockStrategy;
 
 import javax.annotation.CheckForNull;
 import java.util.List;
@@ -10,9 +13,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
-   * A {@code LockGraphNode} associated with each lock instance keeps track of the directed edges in
-   * the lock acquisition graph.
-   */
+ * A {@code LockGraphNode} associated with each lock instance keeps track of the directed edges in
+ * the lock acquisition graph.
+ */
 public class LockGraphNode {
 
     /**
@@ -21,29 +24,29 @@ public class LockGraphNode {
      * they are no longer referenced.
      */
     final Map<LockGraphNode, ExampleStackTrace> allowedPriorLocks =
-        new MapMaker().weakKeys().makeMap();
+            new MapMaker().weakKeys().makeMap();
 
     /**
      * The map tracking lock nodes that can cause a lock acquisition cycle if acquired before this
      * node.
      */
     final Map<LockGraphNode, PotentialDeadlockException> disallowedPriorLocks =
-        new MapMaker().weakKeys().makeMap();
+            new MapMaker().weakKeys().makeMap();
 
     final String lockName;
 
     public LockGraphNode(String lockName) {
-      this.lockName = Preconditions.checkNotNull(lockName);
+        this.lockName = Preconditions.checkNotNull(lockName);
     }
 
-    String getLockName() {
-      return lockName;
+    public String getLockName() {
+        return lockName;
     }
 
-    void checkAcquiredLocks(Policy policy, List<LockGraphNode> acquiredLocks) {
-      for (LockGraphNode acquiredLock : acquiredLocks) {
-        checkAcquiredLock(policy, acquiredLock);
-      }
+    void checkAcquiredLocks(CycleLockStrategy strategy, List<LockGraphNode> acquiredLocks) {
+        for (LockGraphNode acquiredLock : acquiredLocks) {
+            checkAcquiredLock(strategy, acquiredLock);
+        }
     }
 
     /**
@@ -55,65 +58,66 @@ public class LockGraphNode {
      * {@code acquiredLock}, or in the {@code disallowedPriorLocks} map, in which case it is not
      * safe.
      */
-    void checkAcquiredLock(Policy policy, LockGraphNode acquiredLock) {
-      // checkAcquiredLock() should never be invoked by a lock that has already
-      // been acquired. For unordered locks, aboutToAcquire() ensures this by
-      // checking isAcquiredByCurrentThread(). For ordered locks, however, this
-      // can happen because multiple locks may share the same LockGraphNode. In
-      // this situation, throw an IllegalStateException as defined by contract
-      // described in the documentation of WithExplicitOrdering.
+    void checkAcquiredLock(CycleLockStrategy strategy, LockGraphNode acquiredLock) {
+        // checkAcquiredLock() should never be invoked by a lock that has already
+        // been acquired. For unordered locks, aboutToAcquire() ensures this by
+        // checking isAcquiredByCurrentThread(). For ordered locks, however, this
+        // can happen because multiple locks may share the same LockGraphNode. In
+        // this situation, throw an IllegalStateException as defined by contract
+        // described in the documentation of WithExplicitOrdering.
 //      Preconditions.checkState(
 //          this != acquiredLock,
 //          "Attempted to acquire multiple locks with the same rank %s",
 //          acquiredLock.getLockName());
 
-      if (allowedPriorLocks.containsKey(acquiredLock)) {
-        // The acquisition ordering from "acquiredLock" to "this" has already
-        // been verified as safe. In a properly written application, this is
-        // the common case.
-        return;
-      }
-      PotentialDeadlockException previousDeadlockException = disallowedPriorLocks.get(acquiredLock);
-      if (previousDeadlockException != null) {
-        // Previously determined to be an unsafe lock acquisition.
-        // Create a new PotentialDeadlockException with the same causal chain
-        // (the example cycle) as that of the cached exception.
-        PotentialDeadlockException exception =
-            new PotentialDeadlockException(
-                acquiredLock, this, previousDeadlockException.getConflictingStackTrace());
-        policy.handlePotentialDeadlock(exception);
-        return;
-      }
-      // Otherwise, it's the first time seeing this lock relationship. Look for
-      // a path from the acquiredLock to this.
-             Set<LockGraphNode> seen = Sets.newIdentityHashSet();
-       ExampleStackTrace path = acquiredLock.findPathTo(this, seen);
+        if (allowedPriorLocks.containsKey(acquiredLock)) {
+            // The acquisition ordering from "acquiredLock" to "this" has already
+            // been verified as safe. In a properly written application, this is
+            // the common case.
+            return;
+        }
+        PotentialDeadlockException previousDeadlockException = disallowedPriorLocks.get(acquiredLock);
+        if (previousDeadlockException != null) {
+            // Previously determined to be an unsafe lock acquisition.
+            // Create a new PotentialDeadlockException with the same causal chain
+            // (the example cycle) as that of the cached exception.
+            PotentialDeadlockException exception =
+                    new PotentialDeadlockException(
+                            acquiredLock, this, previousDeadlockException.getConflictingStackTrace());
+            strategy.handlePotentialDeadlock(exception);
+            return;
+        }
+        // Otherwise, it's the first time seeing this lock relationship. Look for
+        // a path from the acquiredLock to this.
+        Set<LockGraphNode> seen = Sets.newIdentityHashSet();
+        ExampleStackTrace path = acquiredLock.findPathTo(this, seen);
 
-      if (path == null) {
-        // this can be safely acquired after the acquiredLock.
-        //
-        // Note that there is a race condition here which can result in missing
-        // a cyclic edge: it's possible for two threads to simultaneous find
-        // "safe" edges which together form a cycle. Preventing this race
-        // condition efficiently without _introducing_ deadlock is probably
-        // tricky. For now, just accept the race condition---missing a warning
-        // now and then is still better than having no deadlock detection.
-        allowedPriorLocks.put(acquiredLock, new ExampleStackTrace(acquiredLock, this));
-      } else {
-        // Unsafe acquisition order detected. Create and cache a
-        // PotentialDeadlockException.
-        PotentialDeadlockException exception =
-            new PotentialDeadlockException(acquiredLock, this, path);
-        disallowedPriorLocks.put(acquiredLock, exception);
-        policy.handlePotentialDeadlock(exception);
-      }
+        if (path == null) {
+            // this can be safely acquired after the acquiredLock.
+            //
+            // Note that there is a race condition here which can result in missing
+            // a cyclic edge: it's possible for two threads to simultaneous find
+            // "safe" edges which together form a cycle. Preventing this race
+            // condition efficiently without _introducing_ deadlock is probably
+            // tricky. For now, just accept the race condition---missing a warning
+            // now and then is still better than having no deadlock detection.
+            allowedPriorLocks.put(acquiredLock, new ExampleStackTrace(acquiredLock, this));
+        } else {
+            // Unsafe acquisition order detected. Create and cache a
+            // PotentialDeadlockException.
+            PotentialDeadlockException exception =
+                    new PotentialDeadlockException(acquiredLock, this, path);
+            disallowedPriorLocks.put(acquiredLock, exception);
+            strategy.handlePotentialDeadlock(exception);
+        }
     }
+
     /**
      * Performs a depth-first traversal of the graph edges defined by each node's {@code
      * allowedPriorLocks} to find a path between {@code this} and the specified {@code lock}.
      *
      * @return If a path was found, a chained {@link ExampleStackTrace} illustrating the path to the
-     *     {@code lock}, or {@code null} if no path was found.
+     * {@code lock}, or {@code null} if no path was found.
      */
     @CheckForNull
     public ExampleStackTrace findPathTo(LockGraphNode node, Set<LockGraphNode> seen) {

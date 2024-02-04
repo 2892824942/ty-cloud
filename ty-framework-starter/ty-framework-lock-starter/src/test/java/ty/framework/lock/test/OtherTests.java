@@ -5,6 +5,7 @@ import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.decorator.cycle.CycleDetectingLockDecorator;
 import com.ty.mid.framework.lock.decorator.cycle.LockGraphNode;
 import com.ty.mid.framework.lock.lock.ZkLock;
+import com.ty.mid.framework.lock.strategy.CycleLockStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessLock;
@@ -78,7 +79,9 @@ public class OtherTests {
 //        ReentrantLock bbbb = cycleDetectingLockFactory.newReentrantLock("bbbb");
         LockInfo lockInfoA = new LockInfo();
         lockInfoA.setName("aaaa");
+        lockInfoA.setCycleLockStrategy(CycleLockStrategy.THROWING);
         LockInfo lockInfoB = new LockInfo();
+        lockInfoB.setCycleLockStrategy(CycleLockStrategy.THROWING);
         lockInfoB.setName("bbbb");
 
         Runnable runnable1 = () -> {

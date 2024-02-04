@@ -44,7 +44,7 @@ public enum FailOnLockStrategy implements FailOnLockHandler {
     /**
      * 快速失败
      */
-    FAIL_FAST() {
+    THROWING() {
         @Override
         public boolean handle(LockInfo lockInfo, Lock lock, JoinPoint joinPoint) {
 

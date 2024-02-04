@@ -192,7 +192,7 @@ public class ExpireCacheInMemory<K, V> {
         nowCacheValue = cacheObjectMap.computeIfAbsent(cacheKey, a -> cacheObj);
         if (nowCacheValue.equals(cacheObj)) {
             //set成功一个新的值
-            log.info("have computeIfAbsent set new key:{}", cacheKey);
+            log.debug("have computeIfAbsent set new key:{}", cacheKey);
         }
         return nowCacheValue.getCacheValue();
 

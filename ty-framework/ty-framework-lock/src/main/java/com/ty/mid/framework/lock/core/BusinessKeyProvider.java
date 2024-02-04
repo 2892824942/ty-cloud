@@ -1,7 +1,10 @@
 package com.ty.mid.framework.lock.core;
 
+import cn.hutool.core.util.StrUtil;
+import com.ty.mid.framework.common.util.SafeGetUtil;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.annotation.LockKey;
+import com.ty.mid.framework.lock.config.LockConfig;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
@@ -14,6 +17,7 @@ import org.springframework.expression.spel.support.StandardEvaluationContext;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
@@ -24,24 +28,25 @@ import java.util.List;
  * Content :获取用户定义业务key
  */
 public class BusinessKeyProvider {
+    @Resource
+    private LockConfig lockConfig;
 
-    private ParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
+    private final ParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
 
-    private ExpressionParser parser = new SpelExpressionParser();
+    private final ExpressionParser parser = new SpelExpressionParser();
 
     public String getKeyName(JoinPoint joinPoint, Lock lock) {
         Method method = getMethod(joinPoint);
         List<String> keyList = new ArrayList<>();
         //名称为空，不做任何处理
-        if (org.apache.commons.lang3.StringUtils.isNotEmpty(lock.name())) {
+        if (StrUtil.isNotEmpty(lock.name())) {
             keyList.add(lock.name());
         }
         List<String> definitionKeys = getSpelDefinitionKey(lock.keys(), method, joinPoint.getArgs());
         keyList.addAll(definitionKeys);
         List<String> parameterKeys = getParameterKey(method.getParameters(), joinPoint.getArgs());
         keyList.addAll(parameterKeys);
-        //用户指定的参数，如果为空，使用"null"代替，为了更显眼。
-        return StringUtils.collectionToDelimitedString(keyList, ":");
+        return StringUtils.collectionToDelimitedString(keyList, SafeGetUtil.getString(lockConfig.getLockNameSeparator()));
     }
 
     private Method getMethod(JoinPoint joinPoint) {
@@ -83,6 +88,7 @@ public class BusinessKeyProvider {
                     parameterValue = parser.parseExpression(keyAnnotation.value()).getValue(context);
 
                 }
+                //用户指定的参数，如果为空，使用"null"代替，为了更显眼。
                 parameterKey.add(ObjectUtils.nullSafeToString(parameterValue));
             }
         }

@@ -1,6 +1,9 @@
 package ty.framework.lock.test;
 
+import com.ty.mid.framework.lock.config.LockConfig;
+import com.ty.mid.framework.lock.decorator.cycle.CycleDetectingLockDecorator;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,6 +16,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -27,6 +31,8 @@ public class LockTests {
     TimeoutService timeoutService;
     @Autowired
     LockRegistry lockRegistry;
+    @Autowired
+    LockConfig lockConfig;
 
     /**
      * 代码方式
@@ -40,6 +46,7 @@ public class LockTests {
             boolean b = lock.tryLock(2, TimeUnit.SECONDS);
             if (b) {
                 //do your business code
+                log.info("当前lockRegistry:{}, lockConfig:{}",lockRegistry.getClass().getSimpleName(),lockConfig);
             }
         } finally {
             lock.unlock();
@@ -367,6 +374,49 @@ public class LockTests {
     public void subClassLocalLockAnno() {
         String result = testService.getValueWithLocalLock(new User());
         assertEquals(result, "success");
+
+    }
+
+    @Test
+    public void testNormalApiThreadDeadLock() throws Exception {
+        Runnable runnable1 = () -> {
+            Lock aaaa = lockRegistry.obtain("aaaa");
+            Lock bbbb = lockRegistry.obtain("bbbb");
+            try {
+                aaaa.lock();
+                bbbb.lock();
+            } catch (Exception e) {
+                throw e;
+            } finally {
+                aaaa.unlock();
+                bbbb.unlock();
+            }
+            System.out.println("r1加解锁完毕");
+        };
+        runnable1.run();
+
+
+        Runnable runnable2=() -> {
+            Lock aaaa = lockRegistry.obtain("aaaa");
+            Lock bbbb = lockRegistry.obtain("bbbb");
+            try {
+                bbbb.lock();
+                aaaa.lock();
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
+            } finally {
+
+                bbbb.unlock();
+                aaaa.unlock();
+            }
+            System.out.println("r2加解锁完毕");
+        };
+        runnable2.run();
+
+        Thread.sleep(1000);
+
+
 
     }
 }

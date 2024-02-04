@@ -2,6 +2,7 @@ package com.ty.mid.framework.lock.core;
 
 import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.common.exception.FrameworkException;
+import com.ty.mid.framework.common.util.SafeGetUtil;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.enums.LockImplementer;
@@ -12,8 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Objects;
@@ -24,9 +23,6 @@ import java.util.Objects;
 @Slf4j
 public class LockInfoProvider {
 
-    private static final String LOCK_NAME_PREFIX = "lock";
-    private static final String LOCK_NAME_SEPARATOR = ":";
-    private static final Logger logger = LoggerFactory.getLogger(LockInfoProvider.class);
     @Autowired
     private LockConfig lockConfig;
     @Autowired
@@ -48,8 +44,6 @@ public class LockInfoProvider {
         LockImplementer implementer = getValueOrDefault(LockImplementer.EMPTY, lock.implementer(), lockConfig.getImplementer());
         //是否支持上下文感知
 
-        BooleanEnum supportTransactionBoolean = getValueOrDefault(BooleanEnum.NULL, lock.supportTransaction(), BooleanEnum.booleanOf(lockConfig.isSupportTransaction()));
-        boolean supportTransaction = supportTransactionBoolean.getValue();
         //是否支持本地lock二级缓存
         BooleanEnum withLocalCacheBoolean = getValueOrDefault(BooleanEnum.NULL, lock.withLocalCache(), BooleanEnum.booleanOf(lockConfig.isWithLocalCache()));
         Boolean withLocalCache = withLocalCacheBoolean.getValue();
@@ -70,7 +64,6 @@ public class LockInfoProvider {
         lockInfo.setWaitTime(waitTime);
         lockInfo.setLeaseTime(leaseTime);
         lockInfo.setTimeUnit(lock.timeUnit());
-        lockInfo.setSupportTransaction(supportTransaction);
         lockInfo.setWithLocalCache(withLocalCache);
         lockInfo.setType(lock.lockType());
 
@@ -105,7 +98,6 @@ public class LockInfoProvider {
         lockInfo.setWaitTime(lockConfig.getWaitTime());
         lockInfo.setLeaseTime(leaseTime);
         lockInfo.setTimeUnit(lockConfig.getTimeUnit());
-        lockInfo.setSupportTransaction(lockConfig.isSupportTransaction());
         lockInfo.setWithLocalCache(lockConfig.isWithLocalCache());
         lockInfo.setType(null);
 
@@ -117,6 +109,7 @@ public class LockInfoProvider {
         lockInfo.setReleaseTimeoutStrategy(lockConfig.getReleaseTimeoutStrategy());
         lockInfo.setCustomReleaseTimeoutStrategy("");
         lockInfo.setLockTransactionStrategy(lockConfig.getTransactionStrategy());
+        lockInfo.setCycleLockStrategy(lockConfig.getCycleLockStrategy());
 
         lockInfo.setExceptionClass(lockConfig.getExceptionClass());
         lockInfo.setExceptionMsg(lockConfig.getExceptionMsg());
@@ -159,14 +152,14 @@ public class LockInfoProvider {
     }
 
     private String doGetLockName(String handledLockKey) {
-        return LOCK_NAME_PREFIX + LOCK_NAME_SEPARATOR + handledLockKey;
+        return SafeGetUtil.getString(lockConfig.getLockNamePrefix()).concat(SafeGetUtil.getString(lockConfig.getLockNameSeparator())).concat(handledLockKey);
     }
 
     /**
      * 获取锁的name，如果没有指定，则按全类名拼接方法名处理
      *
-     * @param annotationName
-     * @param signature
+     * @param annotationName annotationName
+     * @param signature signature
      * @return
      */
     private String getNameWhenEmpty(String annotationName, MethodSignature signature) {

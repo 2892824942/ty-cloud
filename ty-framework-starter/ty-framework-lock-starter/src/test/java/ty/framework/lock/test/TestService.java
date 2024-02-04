@@ -7,10 +7,8 @@ import com.ty.mid.framework.lock.annotation.LockKey;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
 import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by suyouliang on 2022/03/26.
@@ -19,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 public class TestService {
     @Resource
     LockRegistry lockRegistry;
-    @Lock(waitTime = 10, keys = {"#param"},  lockFailStrategy = FailOnLockStrategy.FAIL_FAST)
+    @Lock(waitTime = 10, keys = {"#param"},  lockFailStrategy = FailOnLockStrategy.THROWING)
     public String getValue(String param) throws Exception {
         if ("sleep".equals(param)) {//线程休眠或者断点阻塞，达到一直占用锁的测试效果
             Thread.sleep(100 * 10);
