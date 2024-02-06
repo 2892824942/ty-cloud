@@ -8,10 +8,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 @Slf4j
-public class RedissonLockAdapterDecorator extends AbstractLockDecorator {
+public class LockAdapterDecorator extends AbstractLockDecorator {
     protected LockAdapter lockAdapter;
 
-    public RedissonLockAdapterDecorator(Lock distributedLock, LockInfo lockInfo, LockAdapter lockAdapter) {
+    public LockAdapterDecorator(Lock distributedLock, LockInfo lockInfo, LockAdapter lockAdapter) {
         super(distributedLock, lockInfo);
         this.lockAdapter = lockAdapter;
     }

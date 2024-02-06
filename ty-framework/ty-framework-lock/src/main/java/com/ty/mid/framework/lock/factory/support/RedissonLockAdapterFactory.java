@@ -10,12 +10,15 @@ import org.redisson.api.RedissonClient;
  */
 public class RedissonLockAdapterFactory extends RedissonLockFactory implements AdapterLockFactory {
 
+    private final LockAdapter redissonLockAdapter = new RedissonLockAdapter();
+
     public RedissonLockAdapterFactory(RedissonClient redissonClient) {
         super(redissonClient);
     }
 
     @Override
     public LockAdapter getAdapter() {
-        return new RedissonLockAdapter();
+        return redissonLockAdapter;
     }
+
 }

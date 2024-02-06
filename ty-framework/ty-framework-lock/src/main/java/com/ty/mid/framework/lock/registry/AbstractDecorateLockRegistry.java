@@ -6,10 +6,11 @@ import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.core.LockInfoProvider;
 import com.ty.mid.framework.lock.decorator.LocalCacheLockDecorator;
 import com.ty.mid.framework.lock.decorator.LockProcessHandleDecorator;
-import com.ty.mid.framework.lock.decorator.RedissonLockAdapterDecorator;
+import com.ty.mid.framework.lock.decorator.LockAdapterDecorator;
 import com.ty.mid.framework.lock.decorator.TransactionLockDecorator;
 import com.ty.mid.framework.lock.decorator.cycle.CycleDetectingLockDecorator;
 import com.ty.mid.framework.lock.enums.LockType;
+import com.ty.mid.framework.lock.factory.AdapterLockFactory;
 import com.ty.mid.framework.lock.factory.LockFactory;
 import com.ty.mid.framework.lock.factory.support.RedissonLockAdapterFactory;
 import com.ty.mid.framework.lock.strategy.CycleLockStrategy;
@@ -44,8 +45,9 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
                 .map(LockType::getCode).orElse(null), lockInfo.getName());
 
         //首先装载adapterFactory对应处理器
-        if (lockFactory instanceof RedissonLockAdapterFactory) {
-            lock = new RedissonLockAdapterDecorator(lock, lockInfo, (LockAdapter) lockFactory);
+        if (lockFactory instanceof AdapterLockFactory) {
+            AdapterLockFactory adapterLockFactory = (AdapterLockFactory) lockFactory;
+            lock = new LockAdapterDecorator(lock, lockInfo, adapterLockFactory.getAdapter());
         }
         //然后装载过程处理装饰器
         lock = new LockProcessHandleDecorator(lock, lockInfo);
