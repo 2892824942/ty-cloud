@@ -106,7 +106,7 @@ public class LockProcessHandleDecorator extends AbstractLockDecorator {
 
 
     /**
-     * 处理自定义释放锁时已超时
+     * 处理自定义释放锁时异常
      * TODO 更改为SpringEL
      */
     private void handleCustomReleaseException(String releaseExceptionHandler, JoinPoint joinPoint) throws Throwable {
