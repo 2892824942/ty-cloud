@@ -21,10 +21,6 @@ public enum LockType {
      * 写锁
      */
     Write("write"),
-    /**
-     * 自旋锁
-     */
-    Spin("spin"),
     ;
     private String code;
 
