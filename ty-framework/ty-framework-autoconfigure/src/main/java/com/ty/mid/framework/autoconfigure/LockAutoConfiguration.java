@@ -11,13 +11,13 @@ import com.ty.mid.framework.lock.factory.support.TypeLockManagerKeeper;
 import com.ty.mid.framework.lock.handler.LockHandler;
 import com.ty.mid.framework.lock.handler.lock.ExceptionOnLockCustomerHandler;
 import com.ty.mid.framework.lock.handler.lock.FailOnLockCustomerHandler;
-import com.ty.mid.framework.lock.handler.release.ReleaseTimeoutCustomerHandler;
+import com.ty.mid.framework.lock.handler.release.ReleaseExceptionCustomerHandler;
 import com.ty.mid.framework.lock.manager.AbstractTypeLockManager;
 import com.ty.mid.framework.lock.manager.LockManagerKeeper;
 import com.ty.mid.framework.lock.manager.support.JvmLockManager;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
-import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.strategy.ReleaseExceptionStrategy;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -86,7 +86,7 @@ public class LockAutoConfiguration {
     private void loadStrategy(LockConfig lockConfig) {
         doLoadStrategy(FailOnLockCustomerHandler.class, FailOnLockStrategy.CUSTOMER == lockConfig.getLockFailStrategy());
         doLoadStrategy(ExceptionOnLockCustomerHandler.class, ExceptionOnLockStrategy.CUSTOMER == lockConfig.getExceptionOnLockStrategy());
-        doLoadStrategy(ReleaseTimeoutCustomerHandler.class, ReleaseTimeoutStrategy.CUSTOMER == lockConfig.getReleaseTimeoutStrategy());
+        doLoadStrategy(ReleaseExceptionCustomerHandler.class, ReleaseExceptionStrategy.CUSTOMER == lockConfig.getReleaseExceptionStrategy());
     }
 
     private void doLoadStrategy(Class<? extends LockHandler> lockHandlerClass, boolean validate) {

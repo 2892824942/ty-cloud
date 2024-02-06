@@ -11,8 +11,20 @@ import java.util.concurrent.locks.Lock;
  * 具体的Lock实现可基于此接口，定制自己的加锁和解锁的逻辑
  */
 public interface LockAdapter {
-
     boolean acquire(Lock lock, LockInfo lockInfo);
+
+    /**
+     * 时间都不设置
+     *
+     * @param lock
+     * @param lockInfo
+     * @return
+     */
+    boolean acquireNoTime(Lock lock, LockInfo lockInfo);
+
+    boolean acquireNoWaitTime(Lock lock, LockInfo lockInfo);
+
+    boolean acquireInterruptibly(Lock lock, LockInfo lockInfo) throws InterruptedException;
 
     boolean release(Lock lock, LockInfo lockInfo);
 }

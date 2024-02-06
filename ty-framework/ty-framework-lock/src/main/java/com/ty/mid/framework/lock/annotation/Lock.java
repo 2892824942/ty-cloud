@@ -7,7 +7,7 @@ import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.enums.LockType;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
-import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.strategy.ReleaseExceptionStrategy;
 
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;
@@ -125,7 +125,7 @@ public @interface Lock {
      *
      * @return releaseTimeoutStrategy
      */
-    ReleaseTimeoutStrategy releaseTimeoutStrategy() default ReleaseTimeoutStrategy.EMPTY;
+    ReleaseExceptionStrategy releaseTimeoutStrategy() default ReleaseExceptionStrategy.EMPTY;
 
 
     /**
@@ -146,7 +146,7 @@ public @interface Lock {
      * 注意：必须是RuntimeException的子类
      *
      * @see FailOnLockStrategy#THROWING
-     * @see ReleaseTimeoutStrategy#THROWING
+     * @see ReleaseExceptionStrategy#THROWING
      */
     String exceptionClass() default "";
 
@@ -156,10 +156,9 @@ public @interface Lock {
      * 优先级：注解exceptionMsg>lockConfig exceptionMsg>系统默认
      *
      * @see FailOnLockStrategy#THROWING
-     * @see ReleaseTimeoutStrategy#THROWING
+     * @see ReleaseExceptionStrategy#THROWING
      */
     String exceptionMsg() default "";
-
 
 
     /**

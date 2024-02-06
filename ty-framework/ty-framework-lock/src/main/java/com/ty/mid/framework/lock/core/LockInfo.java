@@ -5,6 +5,7 @@ import com.ty.mid.framework.lock.enums.LockType;
 import com.ty.mid.framework.lock.registry.TypeLockRegistry;
 import com.ty.mid.framework.lock.strategy.*;
 import lombok.Data;
+import org.aspectj.lang.JoinPoint;
 
 import java.util.concurrent.TimeUnit;
 
@@ -35,22 +36,21 @@ public class LockInfo {
     /**
      * 释放锁时已超时的处理策略
      */
-    ReleaseTimeoutStrategy releaseTimeoutStrategy;
+    ReleaseExceptionStrategy releaseExceptionStrategy;
     /**
      * 当lock存在于事务上下文中的策略(开启supportTransaction生效)
      */
     LockTransactionStrategy lockTransactionStrategy;
     /**
-     * 当lock存在于事务上下文中的策略
+     * 当lock可能形成死锁时的策略
      */
     CycleLockStrategy cycleLockStrategy;
     /**
      * 自定义释放锁时已超时的处理策略
-     * 注意：定义的方法参数需要和注解所在的方法参数保持一致
      * 此方式与releaseTimeoutStrategy中的CUSTOM不同点在于：此方式可对方法具体参数做定制化的处理策略，后者更适合做全局的默认处理
      * 优先级：customReleaseTimeoutStrategy>releaseTimeoutStrategy>lockConfig
      */
-    String customReleaseTimeoutStrategy;
+    String customReleaseExceptionStrategy;
     /**
      * 是否支持本地lock二级缓存
      */
@@ -85,10 +85,13 @@ public class LockInfo {
      * 获取锁失败时，报错的错误信息
      */
     private String exceptionMsg;
+    /**
+     * 注解使用时,上下文的JoinPoint,当api调用时为空
+     */
+    private JoinPoint joinPoint;
 
     public LockInfo() {
     }
-
 
     @Override
     public String toString() {

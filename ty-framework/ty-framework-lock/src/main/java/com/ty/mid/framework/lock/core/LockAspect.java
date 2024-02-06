@@ -4,14 +4,10 @@ import cn.hutool.core.map.MapUtil;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.aspect.AbstractAspect;
-import com.ty.mid.framework.lock.adapter.LockAdapter;
 import com.ty.mid.framework.lock.annotation.AntiReLock;
 import com.ty.mid.framework.lock.annotation.FailFastLock;
 import com.ty.mid.framework.lock.annotation.LocalLock;
 import com.ty.mid.framework.lock.annotation.Lock;
-import com.ty.mid.framework.lock.exception.LockInvocationException;
-import com.ty.mid.framework.lock.factory.AdapterLockFactory;
-import com.ty.mid.framework.lock.factory.LockFactory;
 import com.ty.mid.framework.lock.manager.LockManagerKeeper;
 import com.ty.mid.framework.lock.parser.AntiReLockParser;
 import com.ty.mid.framework.lock.parser.FailFastLockParser;
@@ -20,17 +16,14 @@ import com.ty.mid.framework.lock.registry.AbstractDecorateLockRegistry;
 import com.ty.mid.framework.lock.registry.TypeLockRegistry;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.core.annotation.Order;
 import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -134,36 +127,9 @@ public class LockAspect extends AbstractAspect {
             lockResMap.putIfAbsent(currentLock, lockContext);
         }
         java.util.concurrent.locks.Lock lockObj = Objects.isNull(lockContext.getLock()) ? this.getLock(lockInfo) : lockContext.getLock();
-        boolean lockResult = true;
 
-        try {
-            lockResult = this.acquireLock(lockObj, lockInfo);
-        } catch (Exception e) {
-            //注意:降级处理策略的返回值，会作为是否获取到锁的标志，允许无锁降级执行业务逻辑
-            //如果注解自定义了获取锁失败的处理策略，则执行自定义的处理策略,注意:处理策略的返回值，会作为方法执行的返回值返回
-            Object result = lockInfo.getLockExceptionStrategy().handle(lockInfo, lockObj, joinPoint, e);
-            if (Objects.nonNull(result)) {
-                return result;
-            }
-            //到这里，说明用户选择降级保障业务逻辑，这里进行无锁执行业务逻辑
-            lockContext.downgrade = Boolean.TRUE;
-        }
+        lockObj.tryLock(lockInfo.getWaitTime(), lockInfo.getTimeUnit());
 
-        //如果获取锁失败了，则进入失败的处理逻辑
-        if (!lockResult) {
-            log.debug("Timeout while acquiring Lock({})", lockInfo.getName());
-            //如果注解自定义了获取锁失败的处理策略，则执行自定义的处理策略,注意:处理策略的返回值，会作为方法执行的返回值返回
-            if (!StringUtils.isEmpty(lockInfo.getCustomLockFailStrategy())) {
-                return handleCustomLockFail(lockInfo.getCustomLockFailStrategy(), joinPoint);
-
-            }
-            //如果注解级别没有定义处理策略，则使用全局的处理策略
-            boolean handleResult = lockInfo.getLockFailStrategy().handle(lockInfo, lockObj, joinPoint);
-            if (!handleResult) {
-                return null;
-            }
-
-        }
         lockContext.setLock(lockObj);
         lockContext.setRes(true);
 
@@ -191,48 +157,6 @@ public class LockAspect extends AbstractAspect {
     }
 
     /**
-     * 处理自定义加锁失败策略
-     */
-    private Object handleCustomLockFail(String lockFailCustermerHandler, JoinPoint joinPoint) throws Throwable {
-
-        // prepare invocation context
-        Method currentMethod = ((MethodSignature) joinPoint.getSignature()).getMethod();
-        Object target = joinPoint.getTarget();
-        Method handleMethod;
-        try {
-            handleMethod = joinPoint.getTarget().getClass().getDeclaredMethod(lockFailCustermerHandler, currentMethod.getParameterTypes());
-            handleMethod.setAccessible(true);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Illegal annotation param customLockTimeoutStrategy", e);
-        }
-        Object[] args = joinPoint.getArgs();
-
-        // invoke
-        Object res;
-        try {
-            res = handleMethod.invoke(target, args);
-        } catch (IllegalAccessException e) {
-            throw new LockInvocationException("Fail to invoke custom lock timeout handler: " + lockFailCustermerHandler, e);
-        } catch (InvocationTargetException e) {
-            throw e.getTargetException();
-        }
-
-        return res;
-    }
-
-    private LockAdapter getAdapter(LockInfo lockInfo) {
-        LockFactory lockFactory = lockManagerKeeper.getLockFactory(lockInfo.getImplementer());
-        if (lockFactory instanceof AdapterLockFactory) {
-            AdapterLockFactory adapterLockFactory = (AdapterLockFactory) lockFactory;
-            LockAdapter adapter = adapterLockFactory.getAdapter();
-            if (Objects.nonNull(adapter)) {
-                return adapter;
-            }
-        }
-        return null;
-    }
-
-    /**
      * 1.获取锁，如果定义的LockRegistry 不是TypeLockRegistry的子类，则锁的类型lockType字段将失效
      * 2.如想使用自定义锁类型，需注册LockRegistry的实例为TypeLockRegistry的子类
      * 3.如果注解中没有指定 厂商，是否支持事务，是否支持本地缓存，则根据全局设置lockConfig确定
@@ -254,18 +178,6 @@ public class LockAspect extends AbstractAspect {
         return lockRegistry.obtain(lockInfo.getName());
     }
 
-    /**
-     * 加锁,优先使用lock的适配器定义的加锁方法，如果没有定义适配器，则默认使用java lock的tryLock方法
-     * 注意：默认情况下，由于java的tryLock没有leaseTime（持有锁有效期）参数，此时设置的leaseTime参数将无效
-     */
-    private boolean acquireLock(java.util.concurrent.locks.Lock lock, LockInfo lockInfo) throws Throwable {
-        LockAdapter adapter = this.getAdapter(lockInfo);
-        if (Objects.isNull(adapter)) {
-            //没有定义适配器的，默认使用java定义tryLock方法，此时：leaseTime参数将无效
-            return lock.tryLock(lockInfo.getWaitTime(), lockInfo.getTimeUnit());
-        }
-        return adapter.acquire(lock, lockInfo);
-    }
 
     /**
      * 释放锁
@@ -278,33 +190,8 @@ public class LockAspect extends AbstractAspect {
         }
 
         if (lockContext.getRes()) {
-            try {
-                LockAdapter adapter = this.getAdapter(lockContext.lockInfo);
-                java.util.concurrent.locks.Lock nowLock = lockContext.getLock();
-                if (Objects.isNull(adapter)) {
-                    //没有定义适配器的，默认使用java定义tryLock方法，此时：leaseTime参数将无效
-                    nowLock.unlock();
-                } else {
-                    boolean release = adapter.release(nowLock, lockContext.getLockInfo());
-                    if (!release) {
-                        handleReleaseTimeout(lockContext.getLockInfo(), joinPoint);
-                    }
-                }
-
-            } catch (Exception e) {
-                log.warn("exception when unlock，e:", e);
-
-                if (lockContext.getDowngrade().equals(Boolean.TRUE)) {
-                    //如果为降级逻辑，则释放锁的异常处理逻辑失效
-                    return;
-                }
-                // avoid release lock twice when exception happens below
-                lockContext.setRes(false);
-                handleReleaseTimeout(lockContext.getLockInfo(), joinPoint);
-            }
-            // avoid release lock twice when exception happens below
-            lockContext.setRes(false);
-            log.debug("lock release error,lockContext:{}", lockContext);
+            java.util.concurrent.locks.Lock nowLock = lockContext.getLock();
+            nowLock.unlock();
         }
         log.debug("lock release successful,lockContext:{}", lockContext);
     }
@@ -334,46 +221,6 @@ public class LockAspect extends AbstractAspect {
      */
     private String getCurrentLockId(JoinPoint joinPoint, Lock lock) {
         return getCurrentLockId(lockInfoProvider.getLockName(joinPoint, lock));
-    }
-
-    /**
-     * 处理释放锁时已超时
-     */
-    private void handleReleaseTimeout(LockInfo lockInfo, JoinPoint joinPoint) throws Throwable {
-
-        if (log.isWarnEnabled()) {
-            log.warn("Timeout while release Lock({})", lockInfo.getName());
-        }
-        if (!StringUtils.isEmpty(lockInfo.getCustomReleaseTimeoutStrategy())) {
-            handleCustomReleaseTimeout(lockInfo.getCustomReleaseTimeoutStrategy(), joinPoint);
-            return;
-        }
-        lockInfo.getReleaseTimeoutStrategy().handle(lockInfo);
-    }
-
-    /**
-     * 处理自定义释放锁时已超时
-     */
-    private void handleCustomReleaseTimeout(String releaseTimeoutHandler, JoinPoint joinPoint) throws Throwable {
-
-        Method currentMethod = ((MethodSignature) joinPoint.getSignature()).getMethod();
-        Object target = joinPoint.getTarget();
-        Method handleMethod = null;
-        try {
-            handleMethod = joinPoint.getTarget().getClass().getDeclaredMethod(releaseTimeoutHandler, currentMethod.getParameterTypes());
-            handleMethod.setAccessible(true);
-        } catch (NoSuchMethodException e) {
-            throw new IllegalArgumentException("Illegal annotation param customReleaseTimeoutStrategy", e);
-        }
-        Object[] args = joinPoint.getArgs();
-
-        try {
-            handleMethod.invoke(target, args);
-        } catch (IllegalAccessException e) {
-            throw new LockInvocationException("Fail to invoke custom release timeout handler: " + releaseTimeoutHandler, e);
-        } catch (InvocationTargetException e) {
-            throw e.getTargetException();
-        }
     }
 
     /**

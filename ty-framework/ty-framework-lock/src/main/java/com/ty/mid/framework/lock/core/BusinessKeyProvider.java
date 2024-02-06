@@ -28,12 +28,10 @@ import java.util.List;
  * Content :获取用户定义业务key
  */
 public class BusinessKeyProvider {
+    private final ParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
+    private final ExpressionParser parser = new SpelExpressionParser();
     @Resource
     private LockConfig lockConfig;
-
-    private final ParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
-
-    private final ExpressionParser parser = new SpelExpressionParser();
 
     public String getKeyName(JoinPoint joinPoint, Lock lock) {
         Method method = getMethod(joinPoint);

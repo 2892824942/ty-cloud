@@ -13,6 +13,24 @@ import java.util.concurrent.locks.Lock;
  * @since 2022/4/15
  **/
 public interface ExceptionOnLockHandler extends LockHandler {
-
+    /**
+     * 注解方式处理接口
+     *
+     * @param lockInfo
+     * @param lock
+     * @param joinPoint
+     * @param ex
+     * @return
+     */
     Object handle(LockInfo lockInfo, Lock lock, JoinPoint joinPoint, Exception ex);
+
+    /**
+     * Api方式处理接口
+     *
+     * @param lockInfo
+     * @param lock
+     * @param ex
+     * @return
+     */
+    Object handle(LockInfo lockInfo, Lock lock, Exception ex);
 }

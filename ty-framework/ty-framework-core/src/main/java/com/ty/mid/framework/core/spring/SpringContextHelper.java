@@ -1,6 +1,7 @@
 package com.ty.mid.framework.core.spring;
 
 import com.ty.mid.framework.common.lang.NonNull;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -16,13 +17,9 @@ import java.util.Map;
 @Slf4j
 public class SpringContextHelper implements ApplicationContextAware {
 
+    @Getter
     private static ApplicationContext context;
     private static ConfigurableEnvironment env;
-
-    public static ApplicationContext getContext() {
-        return context;
-
-    }
 
     /**
      * 根据类型获取bean

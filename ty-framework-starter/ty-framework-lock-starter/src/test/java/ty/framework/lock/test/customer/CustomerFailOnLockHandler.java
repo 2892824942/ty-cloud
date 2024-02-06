@@ -14,4 +14,10 @@ public class CustomerFailOnLockHandler extends FailOnLockCustomerHandler {
         log.error("自定义的CustomerFailOnLockHandler执行了！！");
         return false;
     }
+
+    @Override
+    public boolean handle(LockInfo lockInfo, Lock lock) {
+        log.error("自定义的CustomerFailOnLockHandler执行了！！");
+        return false;
+    }
 }

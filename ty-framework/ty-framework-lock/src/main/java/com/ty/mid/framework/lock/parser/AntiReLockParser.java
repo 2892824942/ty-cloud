@@ -1,16 +1,12 @@
 package com.ty.mid.framework.lock.parser;
 
-import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.lock.annotation.AntiReLock;
-import com.ty.mid.framework.lock.annotation.LocalLock;
 import com.ty.mid.framework.lock.annotation.Lock;
-import com.ty.mid.framework.lock.enums.LockImplementer;
 import org.aspectj.lang.JoinPoint;
 import sun.reflect.annotation.AnnotationParser;
 import sun.reflect.annotation.AnnotationType;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class AntiReLockParser extends AbstractLockParser<AntiReLock> {
     static AntiReLockParser antiReLockParser = new AntiReLockParser();

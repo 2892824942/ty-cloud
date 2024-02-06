@@ -26,6 +26,11 @@ public enum ExceptionOnLockStrategy implements ExceptionOnLockHandler {
         public Object handle(LockInfo lockInfo, Lock lock, JoinPoint joinPoint, Exception ex) {
             throw new FrameworkException("LockFailStrategy.EMPTY is a type used to distinguish the default value and should not be used for actual business");
         }
+
+        @Override
+        public Object handle(LockInfo lockInfo, Lock lock, Exception ex) {
+            return handle(lockInfo, lock, null, ex);
+        }
     },
 
 
@@ -38,6 +43,11 @@ public enum ExceptionOnLockStrategy implements ExceptionOnLockHandler {
             log.warn("Exception to acquire Lock:{} with timeout:{}ms,ex:", lockInfo.getName(), lockInfo.getTimeUnit().toMillis(lockInfo.getWaitTime()), ex);
             throw new LockException(ex);
         }
+
+        @Override
+        public Object handle(LockInfo lockInfo, Lock lock, Exception ex) {
+            return handle(lockInfo, lock, null, ex);
+        }
     },
 
 
@@ -49,6 +59,12 @@ public enum ExceptionOnLockStrategy implements ExceptionOnLockHandler {
         public Object handle(LockInfo lockInfo, Lock lock, JoinPoint joinPoint, Exception ex) {
             ExceptionOnLockCustomerHandler exceptionOnLockCustomerHandler = super.getCustomerHandler(ExceptionOnLockCustomerHandler.class);
             return exceptionOnLockCustomerHandler.handle(lockInfo, lock, joinPoint, ex);
+        }
+
+        @Override
+        public Object handle(LockInfo lockInfo, Lock lock, Exception ex) {
+            ExceptionOnLockCustomerHandler exceptionOnLockCustomerHandler = super.getCustomerHandler(ExceptionOnLockCustomerHandler.class);
+            return exceptionOnLockCustomerHandler.handle(lockInfo, lock, ex);
         }
     }
 }

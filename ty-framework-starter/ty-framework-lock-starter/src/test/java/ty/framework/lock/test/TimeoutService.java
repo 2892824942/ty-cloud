@@ -3,7 +3,7 @@ package ty.framework.lock.test;
 import com.ty.mid.framework.lock.annotation.AntiReLock;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
-import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.strategy.ReleaseExceptionStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ public class TimeoutService {
 
     private static final Logger log = LoggerFactory.getLogger(TimeoutService.class);
 
-    @Lock(name = "foo-service", leaseTime = 3000, releaseTimeoutStrategy = ReleaseTimeoutStrategy.THROWING)
+    @Lock(name = "foo-service", leaseTime = 3000, releaseTimeoutStrategy = ReleaseExceptionStrategy.THROWING)
     public void foo1() {
         try {
             log.info("foo1 acquire lock");
@@ -90,7 +90,7 @@ public class TimeoutService {
         }
     }
 
-    @Lock(name = "foo-service", leaseTime = 1, waitTime = 10000, releaseTimeoutStrategy = ReleaseTimeoutStrategy.THROWING)
+    @Lock(name = "foo-service", leaseTime = 1, waitTime = 10000, releaseTimeoutStrategy = ReleaseExceptionStrategy.THROWING)
     public void foo7(String foo, String bar) {
         try {
             TimeUnit.SECONDS.sleep(2);

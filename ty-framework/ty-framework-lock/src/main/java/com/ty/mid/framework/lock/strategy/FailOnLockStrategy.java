@@ -27,6 +27,11 @@ public enum FailOnLockStrategy implements FailOnLockHandler {
         public boolean handle(LockInfo lockInfo, Lock lock, JoinPoint joinPoint) {
             throw new FrameworkException("LockFailStrategy.EMPTY is a type used to distinguish the default value and should not be used for actual business");
         }
+
+        @Override
+        public boolean handle(LockInfo lockInfo, Lock lock) {
+            return handle(lockInfo, lock, null);
+        }
     },
 
     /**
@@ -38,6 +43,11 @@ public enum FailOnLockStrategy implements FailOnLockHandler {
             // do nothing
             log.warn("LockTimeoutStrategy handle excute when lock fail ,lockInfo:{}", lockInfo);
             return false;
+        }
+
+        @Override
+        public boolean handle(LockInfo lockInfo, Lock lock) {
+            return handle(lockInfo, lock, null);
         }
     },
 
@@ -52,6 +62,11 @@ public enum FailOnLockStrategy implements FailOnLockHandler {
             log.warn(errorMsg);
             handleCustomException(lockInfo, errorMsg);
             return false;
+        }
+
+        @Override
+        public boolean handle(LockInfo lockInfo, Lock lock) {
+            return handle(lockInfo, lock, null);
         }
     },
 
@@ -87,6 +102,11 @@ public enum FailOnLockStrategy implements FailOnLockHandler {
             }
             return true;
         }
+
+        @Override
+        public boolean handle(LockInfo lockInfo, Lock lock) {
+            return handle(lockInfo, lock, null);
+        }
     },
 
     /**
@@ -97,6 +117,12 @@ public enum FailOnLockStrategy implements FailOnLockHandler {
         public boolean handle(LockInfo lockInfo, Lock lock, JoinPoint joinPoint) {
             FailOnLockCustomerHandler failOnLockCustomerHandler = super.getCustomerHandler(FailOnLockCustomerHandler.class);
             return failOnLockCustomerHandler.handle(lockInfo, lock, joinPoint);
+        }
+
+        @Override
+        public boolean handle(LockInfo lockInfo, Lock lock) {
+            FailOnLockCustomerHandler failOnLockCustomerHandler = super.getCustomerHandler(FailOnLockCustomerHandler.class);
+            return failOnLockCustomerHandler.handle(lockInfo, lock);
         }
     }
 }

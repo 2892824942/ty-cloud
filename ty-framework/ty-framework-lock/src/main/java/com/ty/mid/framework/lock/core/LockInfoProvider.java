@@ -1,6 +1,5 @@
 package com.ty.mid.framework.lock.core;
 
-import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.SafeGetUtil;
@@ -10,7 +9,7 @@ import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.strategy.ExceptionOnLockStrategy;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;
-import com.ty.mid.framework.lock.strategy.ReleaseTimeoutStrategy;
+import com.ty.mid.framework.lock.strategy.ReleaseExceptionStrategy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
@@ -55,11 +54,12 @@ public class LockInfoProvider {
         //加锁异常的处理策略
         ExceptionOnLockStrategy lockExceptionStrategy = getValueOrDefault(ExceptionOnLockStrategy.EMPTY, lock.lockExceptionStrategy(), lockConfig.getExceptionOnLockStrategy());
         //释放锁时已超时的处理策略
-        ReleaseTimeoutStrategy releaseTimeoutStrategy = getValueOrDefault(ReleaseTimeoutStrategy.EMPTY, lock.releaseTimeoutStrategy(), lockConfig.getReleaseTimeoutStrategy());
+        ReleaseExceptionStrategy releaseExceptionStrategy = getValueOrDefault(ReleaseExceptionStrategy.EMPTY, lock.releaseTimeoutStrategy(), lockConfig.getReleaseExceptionStrategy());
 
         Class<? extends RuntimeException> exceptionClass = this.getExceptionClass(lock, lockConfig);
 
         LockInfo lockInfo = new LockInfo();
+        lockInfo.setJoinPoint(joinPoint);
         lockInfo.setImplementer(implementer);
         lockInfo.setName(lockName);
         lockInfo.setWaitTime(waitTime);
@@ -73,8 +73,8 @@ public class LockInfoProvider {
 
         lockInfo.setLockExceptionStrategy(lockExceptionStrategy);
 
-        lockInfo.setReleaseTimeoutStrategy(releaseTimeoutStrategy);
-        lockInfo.setCustomReleaseTimeoutStrategy(lock.customReleaseTimeoutStrategy());
+        lockInfo.setReleaseExceptionStrategy(releaseExceptionStrategy);
+        lockInfo.setCustomReleaseExceptionStrategy(lock.customReleaseTimeoutStrategy());
         lockInfo.setLockTransactionStrategy(lockConfig.getTransactionStrategy());
 
         lockInfo.setExceptionClass(exceptionClass);
@@ -107,8 +107,8 @@ public class LockInfoProvider {
 
         lockInfo.setLockExceptionStrategy(lockConfig.getExceptionOnLockStrategy());
 
-        lockInfo.setReleaseTimeoutStrategy(lockConfig.getReleaseTimeoutStrategy());
-        lockInfo.setCustomReleaseTimeoutStrategy("");
+        lockInfo.setReleaseExceptionStrategy(lockConfig.getReleaseExceptionStrategy());
+        lockInfo.setCustomReleaseExceptionStrategy("");
         lockInfo.setLockTransactionStrategy(lockConfig.getTransactionStrategy());
         lockInfo.setCycleLockStrategy(lockConfig.getCycleLockStrategy());
 
@@ -130,13 +130,13 @@ public class LockInfoProvider {
     }
 
 
-    private String getExceptionMsg(Lock lock,LockConfig lockConfig) {
+    private String getExceptionMsg(Lock lock, LockConfig lockConfig) {
         String msg;
         if (Objects.equals(lock.annotationClass(), AntiReLock.class)) {
             //lock.exceptionMsg > lockConfig.antiReLockMsg > lockConfig.exceptionMsg > 系统默认
             String antiReLockMsg = SafeGetUtil.getOrDefault(lockConfig.getAntiReLockMsg(), lockConfig.getExceptionMsg());
             msg = SafeGetUtil.getOrDefault(lock.exceptionMsg(), antiReLockMsg);
-        }else {
+        } else {
             //lock.exceptionMsg > lockConfig.exceptionMsg > 系统默认
             msg = SafeGetUtil.getOrDefault(lock.exceptionMsg(), lockConfig.getExceptionMsg());
         }
@@ -175,7 +175,7 @@ public class LockInfoProvider {
      * 获取锁的name，如果没有指定，则按全类名拼接方法名处理
      *
      * @param annotationName annotationName
-     * @param signature signature
+     * @param signature      signature
      * @return
      */
     private String getNameWhenEmpty(String annotationName, MethodSignature signature) {

@@ -1,6 +1,7 @@
 package com.ty.mid.framework.lock.decorator;
 
 import com.ty.mid.framework.lock.core.LockInfo;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.CannotAcquireLockException;
 import org.springframework.util.StringUtils;
@@ -13,6 +14,7 @@ public abstract class AbstractLockDecorator implements Lock {
 
 
     protected LockInfo lockInfo;
+    @Getter
     protected Lock realLock;
     private String prefix = "dec:lock";
 
