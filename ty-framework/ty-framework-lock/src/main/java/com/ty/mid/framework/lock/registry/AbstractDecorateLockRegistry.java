@@ -1,18 +1,13 @@
 package com.ty.mid.framework.lock.registry;
 
-import com.ty.mid.framework.lock.adapter.LockAdapter;
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.core.LockInfoProvider;
-import com.ty.mid.framework.lock.decorator.LocalCacheLockDecorator;
-import com.ty.mid.framework.lock.decorator.LockProcessHandleDecorator;
-import com.ty.mid.framework.lock.decorator.LockAdapterDecorator;
-import com.ty.mid.framework.lock.decorator.TransactionLockDecorator;
+import com.ty.mid.framework.lock.decorator.*;
 import com.ty.mid.framework.lock.decorator.cycle.CycleDetectingLockDecorator;
 import com.ty.mid.framework.lock.enums.LockType;
 import com.ty.mid.framework.lock.factory.AdapterLockFactory;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.factory.support.RedissonLockAdapterFactory;
 import com.ty.mid.framework.lock.strategy.CycleLockStrategy;
 import com.ty.mid.framework.lock.strategy.LockTransactionStrategy;
 import lombok.Getter;
@@ -22,6 +17,7 @@ import org.springframework.util.Assert;
 import javax.annotation.Resource;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.concurrent.locks.Lock;
 
 @Slf4j
@@ -43,6 +39,7 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
     public Lock doGetLock(LockInfo lockInfo) {
         Lock lock = lockFactory.getLock(Optional.ofNullable(lockInfo.getType())
                 .map(LockType::getCode).orElse(null), lockInfo.getName());
+        log.debug("1.success obtain lock:{}", lock.getClass().getSimpleName());
 
         //首先装载adapterFactory对应处理器
         if (lockFactory instanceof AdapterLockFactory) {
@@ -62,6 +59,7 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
         if (!Objects.equals(lockInfo.getCycleLockStrategy(), CycleLockStrategy.DISABLED)) {
             lock = new CycleDetectingLockDecorator(lock, lockInfo);
         }
+        printLog(lock);
         return lock;
     }
 
@@ -76,5 +74,21 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
         String lockKeyStr = lockKey.toString();
         LockInfo lockInfo = lockInfoProvider.transform2(lockConfig, type, lockKeyStr);
         return doGetLock(lockInfo);
+    }
+
+    private void printLog(Lock lock) {
+        if (log.isDebugEnabled()) {
+            StringJoiner stringJoiner = new StringJoiner("->");
+            stringJoiner.add("2.lock decorator chain is ");
+            Lock innerLock = lock;
+            do {
+                AbstractLockDecorator abstractLockDecorator = (AbstractLockDecorator) innerLock;
+                stringJoiner.add("["+abstractLockDecorator.getClass().getSimpleName()+"]");
+                innerLock = abstractLockDecorator.getRealLock();
+            } while (innerLock instanceof AbstractLockDecorator);
+            stringJoiner.add("[" + innerLock.getClass().getSimpleName() + "]");
+
+            log.debug(stringJoiner.toString());
+        }
     }
 }

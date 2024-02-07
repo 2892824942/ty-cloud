@@ -22,16 +22,13 @@ import java.util.concurrent.locks.ReentrantLock;
 @Slf4j
 public class OtherTests {
 
-    @Autowired
-    CuratorFramework curatorClient;
-
     /**
      * 代码方式
      *
      * @throws Exception
      */
     @Test
-    public void testLock() throws Exception {
+    public void testLock(@Autowired CuratorFramework curatorClient) throws Exception {
         InterProcessLock interProcessLock = new InterProcessMutex(curatorClient, "/test");
         Lock lock = new ZkLock(interProcessLock);
         try {

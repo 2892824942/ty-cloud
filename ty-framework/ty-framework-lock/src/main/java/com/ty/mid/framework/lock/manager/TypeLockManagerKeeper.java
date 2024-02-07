@@ -1,4 +1,4 @@
-package com.ty.mid.framework.lock.factory.support;
+package com.ty.mid.framework.lock.manager;
 
 import com.ty.mid.framework.lock.enums.LockImplementer;
 import com.ty.mid.framework.lock.factory.LockFactory;

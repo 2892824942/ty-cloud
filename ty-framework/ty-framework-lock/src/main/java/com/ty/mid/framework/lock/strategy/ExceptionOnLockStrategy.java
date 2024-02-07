@@ -40,7 +40,7 @@ public enum ExceptionOnLockStrategy implements ExceptionOnLockHandler {
     THROWING() {
         @Override
         public Object handle(LockInfo lockInfo, Lock lock, JoinPoint joinPoint, Exception ex) {
-            log.warn("Exception to acquire Lock:{} with timeout:{}ms,ex:", lockInfo.getName(), lockInfo.getTimeUnit().toMillis(lockInfo.getWaitTime()), ex);
+            log.warn("Exception to acquire Lock:{}", lockInfo.getName(), ex);
             throw new LockException(ex);
         }
 

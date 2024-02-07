@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 public class TestService {
     @Resource
     LockRegistry lockRegistry;
-    @Lock(waitTime = 10, keys = {"#param"},  lockFailStrategy = FailOnLockStrategy.THROWING)
+    @Lock(waitTime = 1, keys = {"#param"},  lockFailStrategy = FailOnLockStrategy.THROWING)
     public String getValue(String param) throws Exception {
         if ("sleep".equals(param)) {//线程休眠或者断点阻塞，达到一直占用锁的测试效果
             Thread.sleep(100 * 10);

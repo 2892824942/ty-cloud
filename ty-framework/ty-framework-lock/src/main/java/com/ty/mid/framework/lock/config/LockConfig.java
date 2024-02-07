@@ -1,5 +1,6 @@
 package com.ty.mid.framework.lock.config;
 
+import com.ty.mid.framework.core.config.AbstractConfig;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.core.LockInfoProvider;
 import com.ty.mid.framework.lock.enums.LockImplementer;
@@ -14,9 +15,9 @@ import java.util.concurrent.TimeUnit;
  */
 @ConfigurationProperties(prefix = LockConfig.PREFIX)
 @Data
-public class LockConfig {
+public class LockConfig extends AbstractConfig {
 
-    public static final String PREFIX = "application.lock";
+    public static final String PREFIX = FRAMEWORK_PREFIX + "lock";
     /**
      * 默认的时间单位:秒
      */

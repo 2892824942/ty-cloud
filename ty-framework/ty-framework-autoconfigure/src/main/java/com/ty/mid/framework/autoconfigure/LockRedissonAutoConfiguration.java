@@ -2,6 +2,8 @@ package com.ty.mid.framework.autoconfigure;
 
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.factory.LockFactory;
+import com.ty.mid.framework.lock.factory.support.RedissonLockAdapterFactory;
+import com.ty.mid.framework.lock.factory.support.RedissonLockFactory;
 import com.ty.mid.framework.lock.manager.AbstractTypeLockManager;
 import com.ty.mid.framework.lock.manager.LockManagerKeeper;
 import com.ty.mid.framework.lock.manager.support.JvmLockManager;
@@ -38,7 +40,9 @@ public class LockRedissonAutoConfiguration {
             typeLockManagers = new ArrayList<>();
             typeLockManagers.add(new JvmLockManager());
         }
-        RedisLockManager redisLockManager = new RedisLockManager(redissonClient);
+        //使用Redisson方言示例
+        RedissonLockFactory redissonLockAdapterFactory = new RedissonLockAdapterFactory(redissonClient);
+        RedisLockManager redisLockManager = new RedisLockManager(redissonClient,redissonLockAdapterFactory);
         typeLockManagers.add(redisLockManager);
         return redisLockManager;
     }

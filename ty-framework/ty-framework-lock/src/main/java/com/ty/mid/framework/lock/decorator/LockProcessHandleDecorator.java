@@ -28,6 +28,7 @@ public class LockProcessHandleDecorator extends AbstractLockDecorator {
     public void lock() {
         try {
             super.realLock.lock();
+            printLog(1, true);
         } catch (Exception e) {
             //如果注解自定义了获取锁异常的处理策略，则执行自定义的处理策略
             lockInfo.getLockExceptionStrategy().handle(lockInfo, null, null, e);
@@ -38,6 +39,7 @@ public class LockProcessHandleDecorator extends AbstractLockDecorator {
     public void lockInterruptibly() throws InterruptedException {
         try {
             super.realLock.lockInterruptibly();
+            printLog(1, true);
         } catch (Exception e) {
             if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
@@ -55,6 +57,8 @@ public class LockProcessHandleDecorator extends AbstractLockDecorator {
             if (!result) {
                 lockInfo.getLockFailStrategy().handle(lockInfo, realLock, null);
             }
+            printLog(1, result);
+            return result;
         } catch (Exception e) {
             //如果注解自定义了获取锁异常的处理策略，则执行自定义的处理策略
             lockInfo.getLockExceptionStrategy().handle(lockInfo, null, null, e);
@@ -77,14 +81,16 @@ public class LockProcessHandleDecorator extends AbstractLockDecorator {
             if (!result) {
                 lockInfo.getLockFailStrategy().handle(lockInfo, realLock, null);
             }
+            printLog(1, result);
+            return result;
         } catch (Exception e) {
             if (e instanceof InterruptedException) {
                 Thread.currentThread().interrupt();
             }
             //如果注解自定义了获取锁异常的处理策略，则执行自定义的处理策略
             lockInfo.getLockExceptionStrategy().handle(lockInfo, realLock, null, e);
+            return false;
         }
-        return false;
     }
 
 
@@ -93,8 +99,9 @@ public class LockProcessHandleDecorator extends AbstractLockDecorator {
     public void unlock() {
         try {
             super.realLock.unlock();
+            printLog(2, true);
         } catch (Exception e) {
-            log.warn("Timeout while release Lock({})", lockInfo.getName());
+            log.warn("Exception while release Lock({})", lockInfo.getName());
 
             if (!StringUtils.isEmpty(lockInfo.getCustomReleaseExceptionStrategy())) {
                 handleCustomReleaseException(lockInfo.getCustomReleaseExceptionStrategy(), lockInfo.getJoinPoint());
@@ -128,6 +135,22 @@ public class LockProcessHandleDecorator extends AbstractLockDecorator {
             throw new LockInvocationException("Fail to invoke customReleaseExceptionHandler: " + releaseExceptionHandler, e);
         } catch (InvocationTargetException e) {
             throw e.getTargetException();
+        }
+    }
+
+
+    private void printLog(int type,boolean result){
+        if (log.isDebugEnabled()){
+            if (type==1){
+                if (result){
+                    log.debug("3.lock successful,lockKey:{}",lockInfo.getName());
+                }else {
+                    log.debug("3.lock fail,lockKey:{}",lockInfo.getName());
+                }
+
+            }else {
+                log.debug("4.unlock successful,lockKey:{}",lockInfo.getName());
+            }
         }
     }
 

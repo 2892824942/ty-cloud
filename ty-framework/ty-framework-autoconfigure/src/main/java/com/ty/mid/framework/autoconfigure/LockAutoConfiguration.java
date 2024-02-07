@@ -7,7 +7,7 @@ import com.ty.mid.framework.lock.core.BusinessKeyProvider;
 import com.ty.mid.framework.lock.core.LockAspect;
 import com.ty.mid.framework.lock.core.LockInfoProvider;
 import com.ty.mid.framework.lock.factory.LockFactory;
-import com.ty.mid.framework.lock.factory.support.TypeLockManagerKeeper;
+import com.ty.mid.framework.lock.manager.TypeLockManagerKeeper;
 import com.ty.mid.framework.lock.handler.LockHandler;
 import com.ty.mid.framework.lock.handler.lock.ExceptionOnLockCustomerHandler;
 import com.ty.mid.framework.lock.handler.lock.FailOnLockCustomerHandler;

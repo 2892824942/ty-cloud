@@ -88,7 +88,7 @@ public class LockAspect extends AbstractAspect {
 
     private Lock convert2LockAnnotation(ProceedingJoinPoint joinPoint) {
         Method method = this.resolveMethod(joinPoint);
-        log.debug("check api Lock from class: {}, method: {}", method.getDeclaringClass().getName(), method.getName());
+        log.debug("check api Lock from:{}#{}", method.getDeclaringClass().getName(), method.getName());
         // get annotation
         Lock Lock = super.findAnnotation(method, Lock.class);
         if (Objects.nonNull(Lock)) {
@@ -133,7 +133,7 @@ public class LockAspect extends AbstractAspect {
         lockContext.setLock(lockObj);
         lockContext.setRes(true);
 
-        log.debug("success get lock ,lockInfo:{}", lockInfo);
+        log.debug("lock acquire successful,lockInfo:{}", lockInfo);
 
 
         return joinPoint.proceed();
@@ -232,7 +232,6 @@ public class LockAspect extends AbstractAspect {
         private LockInfo lockInfo;
         private java.util.concurrent.locks.Lock lock;
         private Boolean res;
-        private Boolean downgrade = Boolean.FALSE;
 
         LockContext(LockInfo lockInfo, ProceedingJoinPoint joinPoint, Boolean res) {
             this.lockInfo = lockInfo;

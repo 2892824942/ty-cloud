@@ -1,4 +1,4 @@
-application:
+framework:
   lock:
     enable: true
     exception-class: ty.framework.lock.test.customer.exception.Customer2Exception
@@ -11,7 +11,7 @@ application:
     lock-name-separator: "-"
     anti-re-lock-msg:  "重复加锁特定异常"
   zookeeper:
-    address: 127.0.0.1:2181 #zookeeper连接地址
+#    address: 127.0.0.1:2181 #zookeeper连接地址
     connection-time-out: 10000 #连接超时时间 毫秒
     session-time-out: 10000 #session超时时间 毫秒
     sleep-time-out: 3000 #重试初试时间 毫秒

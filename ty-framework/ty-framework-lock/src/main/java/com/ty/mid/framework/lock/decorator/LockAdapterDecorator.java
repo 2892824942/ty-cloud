@@ -14,6 +14,9 @@ public class LockAdapterDecorator extends AbstractLockDecorator {
     public LockAdapterDecorator(Lock distributedLock, LockInfo lockInfo, LockAdapter lockAdapter) {
         super(distributedLock, lockInfo);
         this.lockAdapter = lockAdapter;
+        if (log.isDebugEnabled()){
+            log.debug("lock adapter opened,now implement is:{}",lockAdapter.getClass().getSimpleName());
+        }
     }
 
     @Override

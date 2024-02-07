@@ -81,7 +81,8 @@ public class LocalCacheLockDecorator extends AbstractLockDecorator {
     @Override
     public void unlock() {
         if (!this.localLock.isHeldByCurrentThread()) {
-            throw new IllegalStateException("You do not own lock at " + this.lockInfo.getName());
+            //本地锁未持有,直接忽略
+            return;
         }
         if (this.localLock.getHoldCount() >= 1) {
             this.localLock.unlock();

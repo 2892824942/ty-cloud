@@ -44,7 +44,7 @@ public abstract class AbstractAspect {
         T annotation = AnnotationUtils.findAnnotation(annotatedElement, annotationClass);
         long end = System.currentTimeMillis();
 
-        log.debug("find annotation on {}, used {}ms, is annotation find: {}", annotatedElement.toString(), (end - start), annotatedElement != null);
+        //log.debug("find annotation on {}, used {}ms, is annotation find: {}", annotatedElement.toString(), (end - start), annotatedElement != null);
 
         return annotation;
     }
