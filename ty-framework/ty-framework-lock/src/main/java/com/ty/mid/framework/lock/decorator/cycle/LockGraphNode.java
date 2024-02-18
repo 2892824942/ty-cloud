@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A {@code LockGraphNode} associated with each lock instance keeps track of the directed edges in
@@ -88,7 +87,7 @@ public class LockGraphNode {
         }
         // Otherwise, it's the first time seeing this lock relationship. Look for
         // a path from the acquiredLock to this.
-        Set<LockGraphNode> seen =  new HashSet<>();
+        Set<LockGraphNode> seen = new HashSet<>();
         ExampleStackTrace path = acquiredLock.findPathTo(this, seen);
 
         if (path == null) {

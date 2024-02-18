@@ -83,7 +83,7 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
             List<String> strList = new ArrayList<>();
             do {
                 AbstractLockDecorator abstractLockDecorator = (AbstractLockDecorator) innerLock;
-                strList.add("["+abstractLockDecorator.getClass().getSimpleName()+"]");
+                strList.add("[" + abstractLockDecorator.getClass().getSimpleName() + "]");
                 innerLock = abstractLockDecorator.getRealLock();
             } while (innerLock instanceof AbstractLockDecorator);
             strList.add("[" + innerLock.getClass().getSimpleName() + "]");

@@ -14,6 +14,7 @@ import java.util.concurrent.locks.Lock;
 public interface LockAdapter {
     /**
      * 等待和持有时间都设置
+     *
      * @param lock
      * @param lockInfo
      * @return
@@ -28,6 +29,7 @@ public interface LockAdapter {
      * @return
      */
     boolean acquireNoTime(Lock lock, LockInfo lockInfo);
+
     /**
      * 等待时间不设置
      *

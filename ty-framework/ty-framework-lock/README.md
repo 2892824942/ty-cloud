@@ -38,8 +38,6 @@ public class TestService {
 
 4. 支持锁指定的业务key，如同一个方法ID入参相同的加锁，其他的放行。业务key的获取支持Spel
 
-
-
 # 使用登记
 
 如果这个项目解决了你的实际问题，可在[https://gitee.com/kekingcn/spring-boot-Lock-starter/issues/IH4NE](http://https://gitee.com/kekingcn/spring-boot-Lock-starter/issues/IH4NE)

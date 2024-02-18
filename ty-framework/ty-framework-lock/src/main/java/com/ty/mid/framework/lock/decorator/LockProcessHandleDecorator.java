@@ -139,17 +139,17 @@ public class LockProcessHandleDecorator extends AbstractLockDecorator {
     }
 
 
-    private void printLog(int type,boolean result){
-        if (log.isDebugEnabled()){
-            if (type==1){
-                if (result){
-                    log.debug("3.lock successful,lockKey:{}",lockInfo.getName());
-                }else {
-                    log.debug("3.lock fail,lockKey:{}",lockInfo.getName());
+    private void printLog(int type, boolean result) {
+        if (log.isDebugEnabled()) {
+            if (type == 1) {
+                if (result) {
+                    log.debug("3.lock successful,lockKey:{}", lockInfo.getName());
+                } else {
+                    log.debug("3.lock fail,lockKey:{}", lockInfo.getName());
                 }
 
-            }else {
-                log.debug("4.unlock successful,lockKey:{}",lockInfo.getName());
+            } else {
+                log.debug("4.unlock successful,lockKey:{}", lockInfo.getName());
             }
         }
     }

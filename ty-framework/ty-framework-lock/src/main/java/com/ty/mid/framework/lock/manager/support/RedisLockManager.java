@@ -12,7 +12,7 @@ public class RedisLockManager extends AbstractTypeLockManager {
     RedissonClient redissonClient;
     LockFactory lockFactory;
 
-    public RedisLockManager(RedissonClient redissonClient,RedissonLockFactory redissonLockFactory) {
+    public RedisLockManager(RedissonClient redissonClient, RedissonLockFactory redissonLockFactory) {
         this.redissonClient = redissonClient;
         this.lockFactory = redissonLockFactory;
     }

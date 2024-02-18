@@ -35,16 +35,16 @@ public class LockRedissonAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RedisLockManager redisLockManager(LockManagerKeeper LockManagerKeeper, RedissonClient redissonClient,LockConfig lockConfig) {
+    public RedisLockManager redisLockManager(LockManagerKeeper LockManagerKeeper, RedissonClient redissonClient, LockConfig lockConfig) {
         List<AbstractTypeLockManager> typeLockManagers = LockManagerKeeper.getTypeLockManagers();
         if (typeLockManagers == null) {
             typeLockManagers = new ArrayList<>();
             typeLockManagers.add(new JvmLockManager());
         }
         //是否开启方言支持
-        RedissonLockFactory redissonLockFactory=BooleanUtil.isTrue(lockConfig.getDialect())
+        RedissonLockFactory redissonLockFactory = BooleanUtil.isTrue(lockConfig.getDialect())
                 ? new RedissonLockAdapterFactory(redissonClient) : new RedissonLockFactory(redissonClient);
-        RedisLockManager redisLockManager = new RedisLockManager(redissonClient,redissonLockFactory);
+        RedisLockManager redisLockManager = new RedisLockManager(redissonClient, redissonLockFactory);
         typeLockManagers.add(redisLockManager);
         return redisLockManager;
     }
