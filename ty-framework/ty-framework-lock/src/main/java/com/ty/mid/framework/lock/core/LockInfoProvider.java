@@ -76,6 +76,7 @@ public class LockInfoProvider {
         lockInfo.setReleaseExceptionStrategy(releaseExceptionStrategy);
         lockInfo.setCustomReleaseExceptionStrategy(lock.customReleaseTimeoutStrategy());
         lockInfo.setLockTransactionStrategy(lockConfig.getTransactionStrategy());
+        lockInfo.setCycleLockStrategy(lockConfig.getCycleLockStrategy());
 
         lockInfo.setExceptionClass(exceptionClass);
         lockInfo.setExceptionMsg(getExceptionMsg(lock, lockConfig));

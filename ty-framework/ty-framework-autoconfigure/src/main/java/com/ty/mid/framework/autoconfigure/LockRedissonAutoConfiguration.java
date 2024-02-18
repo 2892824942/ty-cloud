@@ -1,5 +1,6 @@
 package com.ty.mid.framework.autoconfigure;
 
+import cn.hutool.core.util.BooleanUtil;
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.factory.LockFactory;
 import com.ty.mid.framework.lock.factory.support.RedissonLockAdapterFactory;
@@ -34,15 +35,16 @@ public class LockRedissonAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public RedisLockManager redisLockManager(LockManagerKeeper LockManagerKeeper, RedissonClient redissonClient) {
+    public RedisLockManager redisLockManager(LockManagerKeeper LockManagerKeeper, RedissonClient redissonClient,LockConfig lockConfig) {
         List<AbstractTypeLockManager> typeLockManagers = LockManagerKeeper.getTypeLockManagers();
         if (typeLockManagers == null) {
             typeLockManagers = new ArrayList<>();
             typeLockManagers.add(new JvmLockManager());
         }
-        //使用Redisson方言示例
-        RedissonLockFactory redissonLockAdapterFactory = new RedissonLockAdapterFactory(redissonClient);
-        RedisLockManager redisLockManager = new RedisLockManager(redissonClient,redissonLockAdapterFactory);
+        //是否开启方言支持
+        RedissonLockFactory redissonLockFactory=BooleanUtil.isTrue(lockConfig.getDialect())
+                ? new RedissonLockAdapterFactory(redissonClient) : new RedissonLockFactory(redissonClient);
+        RedisLockManager redisLockManager = new RedisLockManager(redissonClient,redissonLockFactory);
         typeLockManagers.add(redisLockManager);
         return redisLockManager;
     }

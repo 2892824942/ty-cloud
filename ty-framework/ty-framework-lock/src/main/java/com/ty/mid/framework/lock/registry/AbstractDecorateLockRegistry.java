@@ -1,5 +1,6 @@
 package com.ty.mid.framework.lock.registry;
 
+import cn.hutool.core.collection.CollUtil;
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.core.LockInfoProvider;
@@ -15,9 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.concurrent.locks.Lock;
 
 @Slf4j
@@ -81,13 +80,15 @@ public abstract class AbstractDecorateLockRegistry implements TypeLockRegistry {
             StringJoiner stringJoiner = new StringJoiner("->");
             stringJoiner.add("2.lock decorator chain is ");
             Lock innerLock = lock;
+            List<String> strList = new ArrayList<>();
             do {
                 AbstractLockDecorator abstractLockDecorator = (AbstractLockDecorator) innerLock;
-                stringJoiner.add("["+abstractLockDecorator.getClass().getSimpleName()+"]");
+                strList.add("["+abstractLockDecorator.getClass().getSimpleName()+"]");
                 innerLock = abstractLockDecorator.getRealLock();
             } while (innerLock instanceof AbstractLockDecorator);
-            stringJoiner.add("[" + innerLock.getClass().getSimpleName() + "]");
-
+            strList.add("[" + innerLock.getClass().getSimpleName() + "]");
+            List<String> reverseStr = CollUtil.reverse(strList);
+            reverseStr.forEach(stringJoiner::add);
             log.debug(stringJoiner.toString());
         }
     }

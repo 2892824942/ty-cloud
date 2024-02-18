@@ -216,7 +216,7 @@ public class CollectionUtils {
     }
 
     public static boolean containsAny(Collection<?> source, Collection<?> candidates) {
-        return CollectionUtils.containsAny(source, candidates);
+        return CollUtil.containsAny(source, candidates);
     }
 
     public static <T> T getFirst(List<T> from) {

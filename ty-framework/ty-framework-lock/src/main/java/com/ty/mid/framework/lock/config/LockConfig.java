@@ -120,6 +120,12 @@ public class LockConfig extends AbstractConfig {
     private String lockNamePrefix = "lock";
 
     private String lockNameSeparator = ":";
+    /**
+     * 方言支持开关
+     * 对于redisson,tryLock方法是支持等待时间设置的,如需支持这种方言,开启此开关,对应注解及全局配置中等待时间参数将生效
+     * 注:目前仅支持Redisson
+     */
+    private Boolean dialect = Boolean.FALSE;
 
 
 }

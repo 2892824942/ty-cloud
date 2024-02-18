@@ -1,10 +1,11 @@
 package com.ty.mid.framework.lock.exception;
 
-import com.google.common.collect.ImmutableSet;
+import com.ty.mid.framework.common.util.collection.SetUtils;
 import com.ty.mid.framework.lock.decorator.cycle.CycleDetectingLockDecorator;
 import com.ty.mid.framework.lock.decorator.cycle.LockGraphNode;
 
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * A Throwable used to record a stack trace that illustrates an example of a specific lock
@@ -21,8 +22,8 @@ import java.util.Arrays;
  */
 public class ExampleStackTrace extends IllegalStateException {
 
-    static final ImmutableSet<String> EXCLUDED_CLASS_NAMES =
-            ImmutableSet.of(
+    static final Set<String> EXCLUDED_CLASS_NAMES =
+            SetUtils.asSet(
                     CycleDetectingLockDecorator.class.getName(),
                     ExampleStackTrace.class.getName(),
                     LockGraphNode.class.getName());

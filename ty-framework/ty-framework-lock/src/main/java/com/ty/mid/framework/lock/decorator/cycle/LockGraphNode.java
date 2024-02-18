@@ -1,16 +1,18 @@
 package com.ty.mid.framework.lock.decorator.cycle;
 
-import com.google.common.base.Preconditions;
-import com.google.common.collect.MapMaker;
-import com.google.common.collect.Sets;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.map.WeakConcurrentMap;
 import com.ty.mid.framework.lock.exception.ExampleStackTrace;
 import com.ty.mid.framework.lock.exception.PotentialDeadlockException;
 import com.ty.mid.framework.lock.strategy.CycleLockStrategy;
+import lombok.Getter;
 
 import javax.annotation.CheckForNull;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * A {@code LockGraphNode} associated with each lock instance keeps track of the directed edges in
@@ -24,23 +26,20 @@ public class LockGraphNode {
      * they are no longer referenced.
      */
     final Map<LockGraphNode, ExampleStackTrace> allowedPriorLocks =
-            new MapMaker().weakKeys().makeMap();
+            new WeakConcurrentMap<>();
 
     /**
      * The map tracking lock nodes that can cause a lock acquisition cycle if acquired before this
      * node.
      */
     final Map<LockGraphNode, PotentialDeadlockException> disallowedPriorLocks =
-            new MapMaker().weakKeys().makeMap();
+            new WeakConcurrentMap<>();
 
+    @Getter
     final String lockName;
 
     public LockGraphNode(String lockName) {
-        this.lockName = Preconditions.checkNotNull(lockName);
-    }
-
-    public String getLockName() {
-        return lockName;
+        this.lockName = Assert.notBlank(lockName);
     }
 
     void checkAcquiredLocks(CycleLockStrategy strategy, List<LockGraphNode> acquiredLocks) {
@@ -89,7 +88,7 @@ public class LockGraphNode {
         }
         // Otherwise, it's the first time seeing this lock relationship. Look for
         // a path from the acquiredLock to this.
-        Set<LockGraphNode> seen = Sets.newIdentityHashSet();
+        Set<LockGraphNode> seen =  new HashSet<>();
         ExampleStackTrace path = acquiredLock.findPathTo(this, seen);
 
         if (path == null) {
