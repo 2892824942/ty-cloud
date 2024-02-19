@@ -1,5 +1,6 @@
 package com.ty.mid.framework.common.exception;
 
+import com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,9 +16,10 @@ import lombok.EqualsAndHashCode;
 @Builder
 public class BaseException extends RuntimeException {
 
-    protected String code;
+    protected String code= GlobalErrorCodeEnum.EXCEPTION.getCode();
 
     protected String message;
+
 
     public BaseException(String code, String message) {
         super(message);

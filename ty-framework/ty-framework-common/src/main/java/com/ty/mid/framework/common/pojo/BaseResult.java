@@ -1,15 +1,14 @@
 package com.ty.mid.framework.common.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ty.mid.framework.common.constant.BaseCodeEnum;
-import com.ty.mid.framework.common.constant.CommonCodeEnum;
+import com.ty.mid.framework.common.constant.BaseCode;
+import com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum;
 import com.ty.mid.framework.common.exception.BaseException;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -75,13 +74,21 @@ public class BaseResult<T> implements Serializable, Result<T> {
 
     public static <T> BaseResult<T> fail(String message) {
         BaseResult<T> result = new BaseResult<>();
-        result.setCode(CommonCodeEnum.FAIL.getCode());
+        result.setCode(GlobalErrorCodeEnum.FAIL.getCode());
         result.setMessage(message);
         return result;
     }
     public static <T> BaseResult<T> fail(String errorCode, String message) {
         BaseResult<T> result = new BaseResult<>();
         result.setCode(errorCode);
+        result.setMessage(message);
+
+        return result;
+    }
+
+    public static <T> BaseResult<T> fail(int errorCode, String message) {
+        BaseResult<T> result = new BaseResult<>();
+        result.setCode(String.valueOf(errorCode));
         result.setMessage(message);
 
         return result;
@@ -108,9 +115,9 @@ public class BaseResult<T> implements Serializable, Result<T> {
      * @param <T>
      */
 
-    public static <T> BaseResult<T> fail(BaseCodeEnum baseCodeEnum) {
+    public static <T> BaseResult<T> fail(BaseCode baseCodeEnum) {
         BaseResult<T> result = new BaseResult<>();
-        result.setCode(CommonCodeEnum.FAIL.getCode());
+        result.setCode(GlobalErrorCodeEnum.FAIL.getCode());
         result.setCode(baseCodeEnum.getCode());
         result.setMessage(baseCodeEnum.getMessage());
         return result;

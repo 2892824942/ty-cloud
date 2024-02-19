@@ -1,6 +1,5 @@
 package com.ty.mid.framework.idempotent.service.support;
 
-import com.ty.mid.framework.core.util.LockUtils;
 import com.ty.mid.framework.core.util.StringUtils;
 import com.ty.mid.framework.idempotent.constant.IdempotentConstant;
 import com.ty.mid.framework.idempotent.exception.AlreadyExecutedIdempotentException;
@@ -71,7 +70,7 @@ public abstract class AbstractIdempotentService implements IdempotentService {
             throw new IdempotentServiceException(e);
         } finally {
             // close lock
-            LockUtils.unlockQuietly(lock);
+            lock.unlock();
         }
 
     }

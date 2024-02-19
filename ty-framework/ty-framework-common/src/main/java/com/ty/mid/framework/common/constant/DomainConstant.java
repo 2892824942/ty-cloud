@@ -2,6 +2,13 @@ package com.ty.mid.framework.common.constant;
 
 public interface DomainConstant {
 
+    interface System {
+        /**
+         * RPC API 的前缀
+         */
+        String RPC_API_PREFIX ="/rpc-api";
+    }
+
     interface Fields {
         String ID = "id";
 

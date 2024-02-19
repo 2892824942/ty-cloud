@@ -1,4 +1,4 @@
-package com.ty.mid.framework.web.config;
+package com.ty.mid.framework.autoconfigure;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ty.mid.framework.web.annotation.MvcInterceptor;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import java.util.Collection;
 
 @Configuration
-public class SpringMvcConfig implements WebMvcConfigurer, ApplicationContextAware {
+public class SpringMvcAutoConfig implements WebMvcConfigurer, ApplicationContextAware {
 
     private ApplicationContext context;
 

@@ -1,1 +1,4 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.ty.mid.framework.autoconfigure.EventBusAutoConfiguration,\
+  com.ty.mid.framework.autoconfigure.SwaggerAutoConfiguration.\
+  com.ty.mid.framework.autoconfigure.WebAutoConfiguration
