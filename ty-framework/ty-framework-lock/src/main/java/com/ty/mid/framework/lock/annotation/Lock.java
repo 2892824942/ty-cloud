@@ -79,11 +79,6 @@ public @interface Lock {
     TimeUnit timeUnit() default TimeUnit.SECONDS;
 
     /**
-     * 是否支持上下文感知
-     */
-    BooleanEnum supportTransaction() default BooleanEnum.NULL;
-
-    /**
      * 是否支持本地lock二级缓存
      */
     BooleanEnum withLocalCache() default BooleanEnum.NULL;
