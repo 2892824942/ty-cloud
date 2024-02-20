@@ -19,6 +19,7 @@
 <!-- TOC -->
 
 # 项目特点
+开源地址:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-lock/README.md
 
 1. 集成分布式锁能力,starter依赖即可使用分布式锁能力
 2. 抽象分布式锁的集成，方便快速切换分布式锁方案(目前支持jvm,redis,zookeeper)
