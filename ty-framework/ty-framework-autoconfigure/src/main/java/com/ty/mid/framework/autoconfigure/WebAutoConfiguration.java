@@ -1,13 +1,18 @@
 package com.ty.mid.framework.autoconfigure;
 
+import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.common.constant.WebFilterOrderEnum;
+import com.ty.mid.framework.core.bus.EventPublisher;
+import com.ty.mid.framework.core.config.AbstractConfig;
 import com.ty.mid.framework.web.config.WebConfig;
+import com.ty.mid.framework.web.core.filter.ApiAccessLogFilter;
 import com.ty.mid.framework.web.core.filter.CacheRequestBodyFilter;
 import com.ty.mid.framework.web.core.handler.GlobalExceptionHandler;
 import com.ty.mid.framework.web.core.handler.GlobalResponseBodyHandler;
 import com.ty.mid.framework.web.core.service.ApiLogService;
 import com.ty.mid.framework.web.core.util.WebFrameworkUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -15,6 +20,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.util.AntPathMatcher;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
@@ -25,6 +31,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
 import javax.servlet.Filter;
+import java.util.Map;
+
+import static com.ty.mid.framework.core.config.AbstractConfig.FRAMEWORK_PREFIX;
+import static com.ty.mid.framework.web.config.WebConfig.PREFIX;
 
 @EnableConfigurationProperties(WebConfig.class)
 public class WebAutoConfiguration implements WebMvcConfigurer {
@@ -39,9 +49,14 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
-        configurePathMatch(configurer, webConfig.getAdminApi());
-        configurePathMatch(configurer, webConfig.getAppApi());
+        Map<String, WebConfig.Api> customApi = webConfig.getCustomApi();
+        if (CollectionUtils.isEmpty(customApi)){
+            return;
+        }
+        //为定义的每个API设置前缀
+        customApi.forEach((k, v) ->configurePathMatch(configurer,v));
     }
+
 
     /**
      * 设置 API 前缀，仅仅匹配 controller 包下的
@@ -53,6 +68,11 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
         AntPathMatcher antPathMatcher = new AntPathMatcher(".");
         configurer.addPathPrefix(api.getPrefix(), clazz -> clazz.isAnnotationPresent(RestController.class)
                 && antPathMatcher.match(api.getController(), clazz.getPackage().getName())); // 仅仅匹配 controller 包
+    }
+
+    @Bean
+    public ApiLogService apiLogService(EventPublisher eventPublisher) {
+        return new ApiLogService(eventPublisher);
     }
 
     @Bean
@@ -73,11 +93,21 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
     }
 
     // ========== Filter 相关 ==========
-
+    /**
+     * 创建 ApiAccessLogFilter Bean，记录 API 请求日志
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = WebConfig.PREFIX, name = "enable-api-log", havingValue = "true")
+    public FilterRegistrationBean<ApiAccessLogFilter> apiAccessLogFilter(WebConfig webConfig,ApiLogService apiLogService,
+                                                                         @Value("${spring.application.name}") String applicationName) {
+        ApiAccessLogFilter filter = new ApiAccessLogFilter(webConfig, apiLogService,applicationName);
+        return createFilterBean(filter, WebFilterOrderEnum.API_ACCESS_LOG_FILTER);
+    }
     /**
      * 创建 CorsFilter Bean，解决跨域问题
      */
     @Bean
+    @ConditionalOnProperty(prefix = WebConfig.PREFIX, name = "enable-cors", havingValue = "true")
     public FilterRegistrationBean<CorsFilter> corsFilterBean() {
         // 创建 CorsConfiguration 对象
         CorsConfiguration config = new CorsConfiguration();
@@ -112,6 +142,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
      * @param restTemplateBuilder {@link RestTemplateAutoConfiguration#restTemplateBuilder}
      */
     @Bean
+    @ConditionalOnMissingBean
     public RestTemplate restTemplate(RestTemplateBuilder restTemplateBuilder) {
         return restTemplateBuilder.build();
     }

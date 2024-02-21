@@ -1,18 +1,21 @@
 package com.ty.mid.framework.web.swagger.config;
 
+import com.ty.mid.framework.core.config.AbstractConfig;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.validation.constraints.NotEmpty;
+
+import static com.ty.mid.framework.core.config.AbstractConfig.FRAMEWORK_PREFIX;
 
 /**
  * Swagger 配置属性
  *
  * @author 芋道源码
  */
-@ConfigurationProperties("yudao.swagger")
+@ConfigurationProperties(FRAMEWORK_PREFIX + "swagger")
 @Data
-public class SwaggerConfig {
+public class SwaggerConfig extends AbstractConfig {
 
     /**
      * 标题

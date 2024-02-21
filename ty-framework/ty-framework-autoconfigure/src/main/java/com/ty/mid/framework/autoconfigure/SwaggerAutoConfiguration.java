@@ -40,7 +40,6 @@ import static com.ty.mid.framework.web.core.util.WebFrameworkUtils.HEADER_TENANT
 @ConditionalOnClass({OpenAPI.class})
 @EnableConfigurationProperties(SwaggerConfig.class)
 @ConditionalOnProperty(prefix = "springdoc.api-docs", name = "enabled", havingValue = "true", matchIfMissing = true)
-// 设置为 false 时，禁用
 public class SwaggerAutoConfiguration {
 
     // ========== 全局 OpenAPI 配置 ==========
@@ -116,7 +115,6 @@ public class SwaggerAutoConfiguration {
     public static GroupedOpenApi buildGroupedOpenApi(String group, String path) {
         return GroupedOpenApi.builder()
                 .group(group)
-                .pathsToMatch("/admin-api/" + path + "/**", "/app-api/" + path + "/**")
                 .addOperationCustomizer((operation, handlerMethod) -> operation
                         .addParametersItem(buildTenantHeaderParameter())
                         .addParametersItem(buildSecurityHeaderParameter()))

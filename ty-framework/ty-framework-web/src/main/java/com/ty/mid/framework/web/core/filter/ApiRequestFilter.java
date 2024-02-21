@@ -3,12 +3,14 @@ package com.ty.mid.framework.web.core.filter;
 import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.web.config.WebConfig;
 import lombok.RequiredArgsConstructor;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
- * 过滤 /admin-api、/app-api 等 API 请求的过滤器
+ * 过滤 API 请求的过滤器
  *
  * @author 芋道源码
  */
@@ -19,9 +21,14 @@ public abstract class ApiRequestFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        // 只过滤 API 请求的地址
-        return !StrUtil.startWithAny(request.getRequestURI(), webConfig.getAdminApi().getPrefix(),
-                webConfig.getAppApi().getPrefix());
+        Map<String, WebConfig.Api> customApi = webConfig.getCustomApi();
+        if (CollectionUtils.isEmpty(customApi)){
+            //如果没有定义任何的api前缀,全部拦截
+            return Boolean.FALSE;
+        }
+        // 只拦截定义
+        return customApi.entrySet().stream().noneMatch(entry -> StrUtil.startWithAny(request.getRequestURI(), entry.getValue().getPrefix()));
+
     }
 
 }

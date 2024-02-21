@@ -3,7 +3,7 @@ framework:
     enable: true
     exception-class: ty.framework.lock.test.customer.exception.Customer2Exception
     exception-msg: "我是全局默认的快速失败信息"
-    implementer: redis
+    implementer: zookeeper
     transaction-strategy: throwing
     with-local-cache: true
     cycle-lock-strategy: throwing
@@ -11,7 +11,7 @@ framework:
     lock-name-separator: "-"
     anti-re-lock-msg:  "重复加锁特定异常"
   zookeeper:
-#    address: 127.0.0.1:2181 #zookeeper连接地址
+    address: 127.0.0.1:2181 #zookeeper连接地址
     connection-time-out: 10000 #连接超时时间 毫秒
     session-time-out: 10000 #session超时时间 毫秒
     sleep-time-out: 3000 #重试初试时间 毫秒
@@ -20,7 +20,16 @@ framework:
 
 spring:
   redis:
-    host: localhost
+    database: 0
+    host: 121.40.156.55
+    port: 6379
+    password: '7g4QmjBwDU'
+    timeout: 1200
+    pool:
+      max-active: 8
+      max-idle: 8
+      max-wait: -1
+      min-idle: 0
 logging:
   level:
     com.ty.mid.framework.lock: debug

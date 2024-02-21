@@ -1,8 +1,8 @@
-package com.ty.mid.framework.application.runner.config;
+package com.ty.mid.framework.autoconfigure;
 
 
-import com.ty.mid.framework.application.runner.core.ApplicationRunnerLauncher;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
+import com.ty.mid.framework.web.ApplicationRunnerLauncher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

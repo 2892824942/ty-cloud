@@ -39,8 +39,9 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
     @Resource
     private ApiLogService apiLogService;
 
-    public ApiAccessLogFilter(WebConfig webConfig, String applicationName) {
+    public ApiAccessLogFilter(WebConfig webConfig, ApiLogService apiLogService, String applicationName) {
         super(webConfig);
+        this.apiLogService = apiLogService;
         this.applicationName = applicationName;
     }
 
