@@ -93,7 +93,7 @@ public class ApplicationRunnerLauncher implements ApplicationRunner {
 
         //获取swagger地址
         String swaggerIndex = "swagger-ui.html";
-        return StrUtil.format("SwaggerIndex: \t\t{}/{}\n\t", getFullServiceUrl(protocol, env), swaggerIndex);
+        return StrUtil.format("SwaggerIndex: \t{}/{}\n\t", getFullServiceUrl(protocol, env), swaggerIndex);
     }
 
     private String getSwaggerDoc(String protocol, ConfigurableEnvironment env) {
@@ -103,7 +103,7 @@ public class ApplicationRunnerLauncher implements ApplicationRunner {
 
         //获取swagger地址
         String swaggerDoc = SafeGetUtil.getOrDefault(env.getProperty("springdoc.api-docs.path", String.class), "v3/api-docs");
-        return StrUtil.format("SwaggerDoc: \t\t{}/{}\n\t", getFullServiceUrl(protocol, env), swaggerDoc);
+        return StrUtil.format("SwaggerDoc: \t{}/{}\n\t", getFullServiceUrl(protocol, env), swaggerDoc);
     }
 
     private boolean isSupportSwagger(ConfigurableEnvironment env) {
