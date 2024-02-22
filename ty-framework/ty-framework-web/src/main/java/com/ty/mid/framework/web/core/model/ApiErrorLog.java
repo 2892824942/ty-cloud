@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * @author 芋道源码
  */
 @Data
-public class ApiErrorLog extends ApiLog{
+public class ApiErrorLog extends ApiLog {
 
     /**
      * 异常时间

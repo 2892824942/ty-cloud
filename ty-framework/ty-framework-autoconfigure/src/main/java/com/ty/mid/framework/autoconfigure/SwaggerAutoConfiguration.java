@@ -1,5 +1,9 @@
 package com.ty.mid.framework.autoconfigure;
 
+import cn.hutool.core.collection.CollUtil;
+import com.ty.mid.framework.core.spring.SpringContextHelper;
+import com.ty.mid.framework.web.config.WebConfig;
+import com.ty.mid.framework.web.swagger.SwaggerUtil;
 import com.ty.mid.framework.web.swagger.config.SwaggerConfig;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -15,12 +19,19 @@ import org.springdoc.core.*;
 import org.springdoc.core.customizers.OpenApiBuilderCustomizer;
 import org.springdoc.core.customizers.ServerBaseUrlCustomizer;
 import org.springdoc.core.providers.JavadocProvider;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
+import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.http.HttpHeaders;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,7 +49,7 @@ import static com.ty.mid.framework.web.core.util.WebFrameworkUtils.HEADER_TENANT
  * @author 芋道源码
  */
 @ConditionalOnClass({OpenAPI.class})
-@EnableConfigurationProperties(SwaggerConfig.class)
+@EnableConfigurationProperties({SwaggerConfig.class,WebConfig.class})
 @ConditionalOnProperty(prefix = "springdoc.api-docs", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class SwaggerAutoConfiguration {
 
@@ -105,49 +116,9 @@ public class SwaggerAutoConfiguration {
      */
     @Bean
     public GroupedOpenApi allGroupedOpenApi() {
-        return buildGroupedOpenApi("all", "");
+        return SwaggerUtil.buildGroupedOpenApi("all", "");
     }
 
-    public static GroupedOpenApi buildGroupedOpenApi(String group) {
-        return buildGroupedOpenApi(group, group);
-    }
-
-    public static GroupedOpenApi buildGroupedOpenApi(String group, String path) {
-        return GroupedOpenApi.builder()
-                .group(group)
-                .addOperationCustomizer((operation, handlerMethod) -> operation
-                        .addParametersItem(buildTenantHeaderParameter())
-                        .addParametersItem(buildSecurityHeaderParameter()))
-                .build();
-    }
-
-    /**
-     * 构建 Tenant 租户编号请求头参数
-     *
-     * @return 多租户参数
-     */
-    private static Parameter buildTenantHeaderParameter() {
-        return new Parameter()
-                .name(HEADER_TENANT_ID) // header 名
-                .description("租户编号") // 描述
-                .in(String.valueOf(SecurityScheme.In.HEADER)) // 请求 header
-                .schema(new IntegerSchema()._default(1L).name(HEADER_TENANT_ID).description("租户编号")); // 默认：使用租户编号为 1
-    }
-
-    /**
-     * 构建 Authorization 认证请求头参数
-     * <p>
-     * 解决 Knife4j <a href="https://gitee.com/xiaoym/knife4j/issues/I69QBU">Authorize 未生效，请求header里未包含参数</a>
-     *
-     * @return 认证参数
-     */
-    private static Parameter buildSecurityHeaderParameter() {
-        return new Parameter()
-                .name(HttpHeaders.AUTHORIZATION) // header 名
-                .description("认证 Token") // 描述
-                .in(String.valueOf(SecurityScheme.In.HEADER)) // 请求 header
-                .schema(new StringSchema()._default("Bearer test1").name(HEADER_TENANT_ID).description("认证 Token")); // 默认：使用用户编号为 1
-    }
 
 }
 

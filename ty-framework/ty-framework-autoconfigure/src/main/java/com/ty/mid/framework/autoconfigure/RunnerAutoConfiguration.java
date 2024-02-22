@@ -19,6 +19,9 @@ public class RunnerAutoConfiguration {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private
+
     @Bean
     @ConditionalOnMissingBean
     SpringContextHelper springContextHelper() {

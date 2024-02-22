@@ -22,7 +22,7 @@ public abstract class ApiRequestFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         Map<String, WebConfig.Api> customApi = webConfig.getCustomApi();
-        if (CollectionUtils.isEmpty(customApi)){
+        if (CollectionUtils.isEmpty(customApi)) {
             //如果没有定义任何的api前缀,全部拦截
             return Boolean.FALSE;
         }

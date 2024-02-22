@@ -167,11 +167,6 @@
             </dependency>
             <dependency>
                 <groupId>com.ty</groupId>
-                <artifactId> ty-framework-application-runner</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ty</groupId>
                 <artifactId>ty-framework-autoconfigure</artifactId>
                 <version>${revision}</version>
             </dependency>
@@ -229,11 +224,6 @@
             <dependency>
                 <groupId>com.ty</groupId>
                 <artifactId>ty-framework-service-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.ty</groupId>
-                <artifactId>ty-framework-application-runner-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

@@ -35,7 +35,7 @@ public abstract class BaseDO implements Auditable<Long>, Serializable {
     /**
      * 更新者
      */
-    @Schema(description = " 更新者")
+    @Schema(description = "更新者")
     @TableField(fill = FieldFill.INSERT_UPDATE, jdbcType = JdbcType.VARCHAR)
     private Long updater;
 

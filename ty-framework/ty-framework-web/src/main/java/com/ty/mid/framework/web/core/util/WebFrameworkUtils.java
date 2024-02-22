@@ -3,7 +3,6 @@ package com.ty.mid.framework.web.core.util;
 import cn.hutool.core.util.NumberUtil;
 import com.ty.mid.framework.common.constant.DomainConstant;
 import com.ty.mid.framework.common.constant.TerminalEnum;
-import com.ty.mid.framework.common.constant.UserTypeEnum;
 import com.ty.mid.framework.common.pojo.BaseResult;
 import com.ty.mid.framework.web.config.WebConfig;
 import org.springframework.web.context.request.RequestAttributes;
@@ -20,20 +19,16 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class WebFrameworkUtils {
 
-    private static final String REQUEST_ATTRIBUTE_LOGIN_USER_ID = "login_user_id";
-    private static final String REQUEST_ATTRIBUTE_LOGIN_USER_TYPE = "login_user_type";
-
-    private static final String REQUEST_ATTRIBUTE_COMMON_RESULT = "common_result";
-
     public static final String HEADER_TENANT_ID = "tenant-id";
-
     /**
      * 终端的 Header
      *
      * @see TerminalEnum
      */
     public static final String HEADER_TERMINAL = "terminal";
-
+    private static final String REQUEST_ATTRIBUTE_LOGIN_USER_ID = "login_user_id";
+    private static final String REQUEST_ATTRIBUTE_LOGIN_USER_TYPE = "login_user_type";
+    private static final String REQUEST_ATTRIBUTE_COMMON_RESULT = "common_result";
     private static WebConfig properties;
 
     public WebFrameworkUtils(WebConfig webConfig) {
@@ -59,7 +54,7 @@ public class WebFrameworkUtils {
     /**
      * 设置用户类型
      *
-     * @param request 请求
+     * @param request  请求
      * @param userType 用户类型
      */
     public static void setLoginUserType(ServletRequest request, Integer userType) {
@@ -147,7 +142,7 @@ public class WebFrameworkUtils {
 
     /**
      * 判断是否为 RPC 请求
-     *
+     * <p>
      * 约定大于配置，只要以 Api 结尾，都认为是 RPC 接口
      *
      * @param className 类名

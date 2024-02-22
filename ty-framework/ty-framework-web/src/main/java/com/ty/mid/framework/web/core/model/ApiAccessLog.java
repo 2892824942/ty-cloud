@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
  * @author 芋道源码
  */
 @Data
-public class ApiAccessLog extends ApiLog{
+public class ApiAccessLog extends ApiLog {
     /**
      * 开始请求时间
      */

@@ -14,7 +14,10 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.TimeZone;
 
 /**
  * 项目启动成功后，提供文档相关的地址
@@ -60,6 +63,7 @@ public class ApplicationRunnerLauncher implements ApplicationRunner {
         return getLocal(protocol, env).concat(getExternal(protocol, env))
                 .concat(getSwaggerIndex(protocol, env))
                 .concat(getSwaggerDoc(protocol, env))
+                .concat(getKnife4jDoc(protocol, env))
                 .concat(getActuator(protocol, env));
     }
 
@@ -71,23 +75,29 @@ public class ApplicationRunnerLauncher implements ApplicationRunner {
     private String getActuator(String protocol, ConfigurableEnvironment env) {
         Boolean enable = env.getProperty("management.endpoints.beans.enabled", Boolean.class);
         if (Objects.isNull(enable) || enable) {
-            return StrUtil.format("External: \t\t{}://{}:{}\n\t", protocol, env.getProperty("management.server.port")
-                    , Optional.ofNullable(env.getProperty("management.endpoints.web.base-path")).orElse("/actuator"));
+            try {
+                return StrUtil.format("Actuator: \t\t{}://{}:{}{}\n\t"
+                        , protocol
+                        , InetAddress.getLocalHost().getHostAddress()
+                        , SafeGetUtil.getOrDefault(env.getProperty("management.server.port"), env.getProperty("local.server.port"))
+                        , SafeGetUtil.getOrDefault(env.getProperty("management.endpoints.web.base-path"), "/actuator"));
+            } catch (UnknownHostException e) {
+                log.warn("UnKnowHost", e);
+            }
         }
         return StrUtil.EMPTY;
     }
 
     private String getExternal(String protocol, ConfigurableEnvironment env) {
-        try {
-            return StrUtil.format("External: \t\t{}://{}:{}\n\t", protocol, InetAddress.getLocalHost().getHostAddress(), env.getProperty("local.server.port"));
-        } catch (UnknownHostException e) {
-            log.warn("UnKnowHost", e);
-        }
-        return StrUtil.EMPTY;
+        return StrUtil.format("External: \t\t{}\n\t", getExternalUrl(protocol, env));
     }
 
     private String getSwaggerIndex(String protocol, ConfigurableEnvironment env) {
         if (!isSupportSwagger(env)) {
+            return StrUtil.EMPTY;
+        }
+        if (isSupportKnife4j(env)) {
+            //开启knife默认不显示swagger
             return StrUtil.EMPTY;
         }
 
@@ -100,10 +110,28 @@ public class ApplicationRunnerLauncher implements ApplicationRunner {
         if (!isSupportSwagger(env)) {
             return StrUtil.EMPTY;
         }
+        if (isSupportKnife4j(env)) {
+            //开启knife默认不显示swagger
+            return StrUtil.EMPTY;
+        }
 
         //获取swagger地址
         String swaggerDoc = SafeGetUtil.getOrDefault(env.getProperty("springdoc.api-docs.path", String.class), "v3/api-docs");
         return StrUtil.format("SwaggerDoc: \t{}/{}\n\t", getFullServiceUrl(protocol, env), swaggerDoc);
+    }
+
+    private String getKnife4jDoc(String protocol, ConfigurableEnvironment env) {
+        if (!isSupportKnife4j(env)) {
+            //开启knife默认不显示swagger
+            return StrUtil.EMPTY;
+        }
+
+        //获取knife4j地址
+        Boolean enableHomeCustom = env.getProperty("knife4j.setting.enable-home-custom", Boolean.class);
+        String knifeSwaggerDoc = BooleanUtil.isTrue(enableHomeCustom)
+                ? SafeGetUtil.getOrDefault(env.getProperty("knife4j.setting.home-custom-path", String.class), "doc.html")
+                : "doc.html";
+        return StrUtil.format("Knife4jIndex: \t{}/{}\n\t", getFullServiceUrl(protocol, env), knifeSwaggerDoc);
     }
 
     private boolean isSupportSwagger(ConfigurableEnvironment env) {
@@ -117,6 +145,21 @@ public class ApplicationRunnerLauncher implements ApplicationRunner {
         }
         Boolean apiDocsEnabled = env.getProperty("springdoc.api-docs.enabled", Boolean.class);
         return Objects.isNull(apiDocsEnabled) || apiDocsEnabled;
+    }
+
+    private boolean isSupportKnife4j(ConfigurableEnvironment env) {
+
+        Boolean knife4jEnable = env.getProperty("knife4j.enable", Boolean.class);
+        return BooleanUtil.isTrue(knife4jEnable);
+    }
+
+    private String getExternalUrl(String protocol, ConfigurableEnvironment env) {
+        try {
+            return StrUtil.format("{}://{}:{}", protocol, InetAddress.getLocalHost().getHostAddress(), env.getProperty("local.server.port"));
+        } catch (UnknownHostException e) {
+            log.warn("UnKnowHost", e);
+        }
+        return StrUtil.EMPTY;
     }
 
     private String getFullServiceUrl(String protocol, ConfigurableEnvironment env) {

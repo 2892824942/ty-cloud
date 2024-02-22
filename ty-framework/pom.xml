@@ -13,7 +13,6 @@
         <module>ty-framework-core</module>
         <module>ty-framework-idempotent</module>
         <module>ty-framework-api-switcher</module>
-        <module>ty-framework-application-runner</module>
         <module>ty-framework-security</module>
         <module>ty-framework-common</module>
         <module>ty-framework-web</module>

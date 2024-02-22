@@ -1,6 +1,5 @@
 package com.ty.mid.framework.web.config;
 
-import com.ty.mid.framework.common.constant.BooleanEnum;
 import com.ty.mid.framework.core.config.AbstractConfig;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.ty.mid.framework.web.config.WebConfig.PREFIX;
@@ -28,7 +26,7 @@ public class WebConfig extends AbstractConfig {
      * @return
      */
 
-    private Map<String, Api> customApi = new HashMap<>();
+    private Map<String, Api> customApi;
 
 
     private boolean enableApiLog;
