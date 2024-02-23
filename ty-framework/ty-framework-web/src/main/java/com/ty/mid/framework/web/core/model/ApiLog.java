@@ -1,9 +1,11 @@
 package com.ty.mid.framework.web.core.model;
 
+import com.ty.mid.framework.common.pojo.BaseResult;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * API 访问日志
@@ -12,7 +14,15 @@ import java.io.Serializable;
  */
 @Data
 public class ApiLog implements Serializable {
-
+    /**
+     * 结果码
+     */
+    @NotNull(message = "错误码不能为空")
+    private String resultCode;
+    /**
+     * 结果提示
+     */
+    private String resultMsg;
     /**
      * 链路追踪编号
      */
@@ -45,7 +55,12 @@ public class ApiLog implements Serializable {
      * 请求参数
      */
     @NotNull(message = "请求参数不能为空")
-    private String requestParams;
+    private Map<String, Object> requestParams;
+
+    /**
+     * 返回结果
+     */
+    private BaseResult<?> result;
     /**
      * 用户 IP
      */
@@ -56,15 +71,5 @@ public class ApiLog implements Serializable {
      */
     @NotNull(message = "User-Agent 不能为空")
     private String userAgent;
-
-    /**
-     * 结果码
-     */
-    @NotNull(message = "错误码不能为空")
-    private String resultCode;
-    /**
-     * 结果提示
-     */
-    private String resultMsg;
 
 }

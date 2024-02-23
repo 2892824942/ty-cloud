@@ -1,13 +1,15 @@
 package com.ty.mid.framework.web.core.filter;
 
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.web.config.WebConfig;
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.CollectionUtils;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Map;
+import javax.validation.constraints.NotNull;
+import java.util.Arrays;
 
 /**
  * 过滤 API 请求的过滤器
@@ -17,18 +19,20 @@ import java.util.Map;
 @RequiredArgsConstructor
 public abstract class ApiRequestFilter extends OncePerRequestFilter {
 
+    private static final String PATH_SEPARATOR = "/";
+    private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher(PATH_SEPARATOR);
     protected final WebConfig webConfig;
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
-        Map<String, WebConfig.Api> customApi = webConfig.getCustomApi();
-        if (CollectionUtils.isEmpty(customApi)) {
-            //如果没有定义任何的api前缀,全部拦截
-            return Boolean.FALSE;
-        }
-        // 只拦截定义
-        return customApi.entrySet().stream().noneMatch(entry -> StrUtil.startWithAny(request.getRequestURI(), entry.getValue().getPrefix()));
+        WebConfig.ApiLog apiLog = webConfig.getApiLog();
+        @NotNull String[] excludeUriArray = ArrayUtil.addAll(apiLog.getExcludeUri(), apiLog.getAdditionalExcludeUri());
 
+        return Arrays.stream(excludeUriArray).anyMatch(excludeUri -> {
+            //如果配置忘记加上"/",自动加上
+            excludeUri = StrUtil.startWith(excludeUri, PATH_SEPARATOR) ? excludeUri : PATH_SEPARATOR.concat(excludeUri);
+            return ANT_PATH_MATCHER.match(excludeUri, request.getRequestURI());
+        });
     }
 
 }

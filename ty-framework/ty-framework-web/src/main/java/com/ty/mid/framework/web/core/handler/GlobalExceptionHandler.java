@@ -4,6 +4,7 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.ServletUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.ty.mid.framework.common.exception.ServiceException;
 import com.ty.mid.framework.common.pojo.BaseResult;
 import com.ty.mid.framework.common.util.JsonUtils;
@@ -256,8 +257,9 @@ public class GlobalExceptionHandler {
         errorLog.setRequestUrl(request.getRequestURI());
         Map<String, Object> requestParams = MapUtil.<String, Object>builder()
                 .put("query", ServletUtil.getParamMap(request))
-                .put("body", ServletUtil.getBody(request)).build();
-        errorLog.setRequestParams(JsonUtils.toJson(requestParams));
+                .put("body", JsonUtils.parseObject(ServletUtils.getBody(request), new TypeReference<Map<String, Object>>() {
+                })).build();
+        errorLog.setRequestParams(requestParams);
         errorLog.setRequestMethod(request.getMethod());
         errorLog.setUserAgent(ServletUtils.getUserAgent(request));
         errorLog.setUserIp(ServletUtil.getClientIP(request));

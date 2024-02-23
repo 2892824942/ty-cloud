@@ -3,6 +3,7 @@ package com.ty.mid.framework.web.core.filter;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.map.MapUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum;
 import com.ty.mid.framework.common.pojo.BaseResult;
 import com.ty.mid.framework.common.util.JsonUtils;
@@ -51,22 +52,25 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
         LocalDateTime beginTime = LocalDateTime.now();
         // 提前获得参数，避免 XssFilter 过滤处理
         Map<String, String> queryString = ServletUtils.getParamMap(request);
-        String requestBody = ServletUtils.isJsonRequest(request) ? ServletUtils.getBody(request) : null;
+        //解析出的requestBody中有很多\r\n以及空字符,这里处理
+        Map<String, Object> bodyMap = JsonUtils.parseObject(ServletUtils.getBody(request), new TypeReference<Map<String, Object>>() {
+        });
+
 
         try {
             // 继续过滤器
             filterChain.doFilter(request, response);
             // 正常执行，记录日志
-            createApiAccessLog(request, beginTime, queryString, requestBody, null);
+            createApiAccessLog(request, beginTime, queryString, bodyMap, null);
         } catch (Exception ex) {
             // 异常执行，记录日志
-            createApiAccessLog(request, beginTime, queryString, requestBody, ex);
+            createApiAccessLog(request, beginTime, queryString, bodyMap, ex);
             throw ex;
         }
     }
 
     private void createApiAccessLog(HttpServletRequest request, LocalDateTime beginTime,
-                                    Map<String, String> queryString, String requestBody, Exception ex) {
+                                    Map<String, String> queryString, Map<String, Object> requestBody, Exception ex) {
         ApiAccessLog accessLog = new ApiAccessLog();
         try {
             this.buildApiAccessLogDTO(accessLog, request, beginTime, queryString, requestBody, ex);
@@ -77,7 +81,7 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
     }
 
     private void buildApiAccessLogDTO(ApiAccessLog accessLog, HttpServletRequest request, LocalDateTime beginTime,
-                                      Map<String, String> queryString, String requestBody, Exception ex) {
+                                      Map<String, String> queryString, Map<String, Object> requestBody, Exception ex) {
         // 处理用户信息
         accessLog.setUserId(WebFrameworkUtils.getLoginUserId(request));
         accessLog.setUserType(WebFrameworkUtils.getLoginUserType(request));
@@ -93,12 +97,14 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
             accessLog.setResultCode(GlobalErrorCodeEnum.SUCCESS.getCode());
             accessLog.setResultMsg("");
         }
+        accessLog.setResult(result);
         // 设置其它字段
         accessLog.setTraceId(TracerUtils.getTraceId());
         accessLog.setApplicationName(applicationName);
         accessLog.setRequestUrl(request.getRequestURI());
+
         Map<String, Object> requestParams = MapUtil.<String, Object>builder().put("query", queryString).put("body", requestBody).build();
-        accessLog.setRequestParams(JsonUtils.toJson(requestParams));
+        accessLog.setRequestParams(requestParams);
         accessLog.setRequestMethod(request.getMethod());
         accessLog.setUserAgent(ServletUtils.getUserAgent(request));
         accessLog.setUserIp(ServletUtils.getClientIP(request));
