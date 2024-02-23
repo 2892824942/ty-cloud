@@ -37,14 +37,23 @@ public class JsonUtils {
         om.setSerializationInclusion(Include.ALWAYS);
         // 设置Date类型的序列化及反序列化格式
         om.setDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-
         // 忽略空Bean转json的错误
         om.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         // 忽略未知属性，防止json字符串中存在，java对象中不存在对应属性的情况出现错误
         om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
         // 注册一个时间序列化及反序列化的处理模块，用于解决jdk8中localDateTime等的序列化问题
         om.registerModule(new JavaTimeModule());
+    }
+
+    /**
+     * 初始化 objectMapper 属性
+     * <p>
+     * 通过这样的方式，使用 Spring 创建的 ObjectMapper Bean
+     *
+     * @param objectMapper ObjectMapper 对象
+     */
+    public static void init(ObjectMapper objectMapper) {
+        JsonUtils.om = objectMapper;
     }
 
     /**

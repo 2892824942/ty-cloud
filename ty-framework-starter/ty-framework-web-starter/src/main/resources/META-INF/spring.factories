@@ -3,4 +3,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ty.mid.framework.autoconfigure.SwaggerAutoConfiguration,\
   com.ty.mid.framework.autoconfigure.WebAutoConfiguration,\
   com.ty.mid.framework.autoconfigure.RunnerAutoConfiguration,\
-  com.ty.mid.framework.autoconfigure.DynamicBeanAutoConfiguration
+  com.ty.mid.framework.autoconfigure.DynamicBeanAutoConfiguration,\
+  com.ty.mid.framework.autoconfigure.JacksonAutoConfiguration
