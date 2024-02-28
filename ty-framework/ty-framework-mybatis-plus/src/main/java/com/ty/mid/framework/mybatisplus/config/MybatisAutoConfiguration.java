@@ -14,11 +14,9 @@ import org.springframework.context.annotation.Bean;
 /**
  * MyBaits 配置类
  *
- * @author 芋道源码
+ * @author suyouliang
  */
 
-//@MapperScan(value = "${yudao.info.base-package}", annotationClass = Mapper.class,
-//        lazyInitialization = "${mybatis.lazy-initialization:false}") // Mapper 懒加载，目前仅用于单元测试
 public class MybatisAutoConfiguration {
 
     @Bean

@@ -3,6 +3,7 @@ package com.ty.mid.framework.web.core.filter;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum;
 import com.ty.mid.framework.common.pojo.BaseResult;
@@ -23,13 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.Map;
 
 
 /**
  * API 访问日志 Filter
  *
- * @author 芋道源码
+ * @author suyouliang
  */
 @Slf4j
 public class ApiAccessLogFilter extends ApiRequestFilter {
@@ -53,8 +55,10 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
         // 提前获得参数，避免 XssFilter 过滤处理
         Map<String, String> queryString = ServletUtils.getParamMap(request);
         //解析出的requestBody中有很多\r\n以及空字符,这里处理
-        Map<String, Object> bodyMap = JsonUtils.parseObject(ServletUtils.getBody(request), new TypeReference<Map<String, Object>>() {
-        });
+        Map<String, Object> bodyMap = StrUtil.isNotBlank(ServletUtils.getBody(request))
+                ? JsonUtils.parseObject(ServletUtils.getBody(request), new TypeReference<Map<String, Object>>() {
+        })
+                : Collections.emptyMap();
 
 
         try {

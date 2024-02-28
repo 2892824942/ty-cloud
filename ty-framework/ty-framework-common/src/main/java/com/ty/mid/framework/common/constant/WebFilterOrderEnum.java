@@ -5,7 +5,7 @@ package com.ty.mid.framework.common.constant;
  *
  *  考虑到每个 starter 都需要用到该工具类，所以放到 common 模块下的 enum 包下
  *
- * @author 芋道源码
+ * @author suyouliang
  */
 public interface WebFilterOrderEnum {
 

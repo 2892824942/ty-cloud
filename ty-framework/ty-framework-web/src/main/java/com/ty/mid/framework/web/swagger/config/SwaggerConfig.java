@@ -11,7 +11,7 @@ import static com.ty.mid.framework.core.config.AbstractConfig.FRAMEWORK_PREFIX;
 /**
  * Swagger 配置属性
  *
- * @author 芋道源码
+ * @author suyouliang
  */
 @ConfigurationProperties(FRAMEWORK_PREFIX + "swagger")
 @Data

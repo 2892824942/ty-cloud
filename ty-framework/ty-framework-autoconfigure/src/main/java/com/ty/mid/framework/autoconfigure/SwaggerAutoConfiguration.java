@@ -46,7 +46,7 @@ import static com.ty.mid.framework.web.core.util.WebFrameworkUtils.HEADER_TENANT
  * 1. Springdoc 文档地址：<a href="https://github.com/springdoc/springdoc-openapi">仓库</a>
  * 2. Swagger 规范，于 2015 更名为 OpenAPI 规范，本质是一个东西
  *
- * @author 芋道源码
+ * @author suyouliang
  */
 @ConditionalOnClass({OpenAPI.class})
 @EnableConfigurationProperties({SwaggerConfig.class,WebConfig.class})

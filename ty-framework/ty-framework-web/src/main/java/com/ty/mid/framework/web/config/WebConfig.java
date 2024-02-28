@@ -10,6 +10,8 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import static com.ty.mid.framework.web.config.WebConfig.PREFIX;
@@ -40,6 +42,10 @@ public class WebConfig extends AbstractConfig {
      * 系统全局api访问log配置
      */
     private ApiLog apiLog = new ApiLog();
+    /**
+     * 系统全局api访问log配置
+     */
+    private Xss xss = new Xss();
     /**
      * 是否开启uri前缀拼接,此参数主要控制所有customApi中的api.prefix
      * 当为true时:对应包所有的api的uri将会拼上api.prefix
@@ -94,7 +100,6 @@ public class WebConfig extends AbstractConfig {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    @Valid
     public static class ApiLog {
 
 
@@ -123,6 +128,22 @@ public class WebConfig extends AbstractConfig {
          */
         @NotNull
         private String[] additionalExcludeUri = new String[]{};
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public class Xss {
+
+        /**
+         * 是否开启，默认为 true
+         */
+        private boolean enable = true;
+        /**
+         * 需要排除的 URL，默认为空
+         */
+        private List<String> excludeUrls = Collections.emptyList();
 
     }
 

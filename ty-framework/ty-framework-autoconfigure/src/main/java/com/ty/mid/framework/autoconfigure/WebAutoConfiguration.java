@@ -9,6 +9,7 @@ import com.ty.mid.framework.web.core.handler.GlobalExceptionHandler;
 import com.ty.mid.framework.web.core.handler.GlobalResponseBodyHandler;
 import com.ty.mid.framework.web.core.service.ApiLogService;
 import com.ty.mid.framework.web.core.util.WebFrameworkUtils;
+import com.ty.mid.framework.web.core.util.WebUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -119,7 +120,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
     public FilterRegistrationBean<ApiAccessLogFilter> apiAccessLogFilter(WebConfig webConfig, ApiLogService apiLogService,
                                                                          @Value("${spring.application.name}") String applicationName) {
         ApiAccessLogFilter filter = new ApiAccessLogFilter(webConfig, apiLogService, applicationName);
-        return createFilterBean(filter, WebFilterOrderEnum.API_ACCESS_LOG_FILTER);
+        return WebUtil.createFilterBean(filter, WebFilterOrderEnum.API_ACCESS_LOG_FILTER);
     }
 
     /**
@@ -137,7 +138,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
         // 创建 UrlBasedCorsConfigurationSource 对象
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config); // 对接口配置跨域设置
-        return createFilterBean(new CorsFilter(source), WebFilterOrderEnum.CORS_FILTER);
+        return WebUtil.createFilterBean(new CorsFilter(source), WebFilterOrderEnum.CORS_FILTER);
     }
 
     /**
@@ -145,15 +146,9 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
      */
     @Bean
     public FilterRegistrationBean<CacheRequestBodyFilter> requestBodyCacheFilter() {
-        return createFilterBean(new CacheRequestBodyFilter(), WebFilterOrderEnum.REQUEST_BODY_CACHE_FILTER);
+        return WebUtil.createFilterBean(new CacheRequestBodyFilter(), WebFilterOrderEnum.REQUEST_BODY_CACHE_FILTER);
     }
 
-
-    public static <T extends Filter> FilterRegistrationBean<T> createFilterBean(T filter, Integer order) {
-        FilterRegistrationBean<T> bean = new FilterRegistrationBean<>(filter);
-        bean.setOrder(order);
-        return bean;
-    }
 
     /**
      * 创建 RestTemplate 实例
