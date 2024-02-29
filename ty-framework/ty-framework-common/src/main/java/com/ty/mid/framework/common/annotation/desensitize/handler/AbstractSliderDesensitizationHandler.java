@@ -1,8 +1,6 @@
 package com.ty.mid.framework.common.annotation.desensitize.handler;
 
 
-import com.ty.mid.framework.core.annotation.*;
-
 import java.lang.annotation.Annotation;
 
 /**
