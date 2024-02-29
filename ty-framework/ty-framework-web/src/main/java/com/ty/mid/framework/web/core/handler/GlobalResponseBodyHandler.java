@@ -9,7 +9,13 @@ import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
 import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.util.Objects;
 
 /**
  * 全局响应结果（ResponseBody）处理器
@@ -34,9 +40,25 @@ public class GlobalResponseBodyHandler implements ResponseBodyAdvice<Object> {
     @SuppressWarnings("NullableProblems") // 避免 IDEA 警告
     public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType, Class selectedConverterType,
                                   ServerHttpRequest request, ServerHttpResponse response) {
+
+        resetResponse();
         // 记录 Controller 结果
         WebFrameworkUtils.setCommonResult(((ServletServerHttpRequest) request).getServletRequest(), (BaseResult<?>) body);
         return body;
+    }
+
+
+    private void resetResponse(){
+        // 获取当前请求的 ServletRequestAttributes
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        if (attributes != null) {
+            // 通过 ServletRequestAttributes 获取 HttpServletResponse
+            HttpServletResponse servletResponse = attributes.getResponse();
+            if (Objects.nonNull(servletResponse)){
+                servletResponse.resetBuffer();
+            }
+        }
     }
 
 }

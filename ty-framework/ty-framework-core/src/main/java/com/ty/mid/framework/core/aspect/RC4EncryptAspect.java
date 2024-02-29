@@ -2,7 +2,7 @@ package com.ty.mid.framework.core.aspect;
 
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
-import com.ty.mid.framework.core.annotation.RC4Encrypt;
+import com.ty.mid.framework.common.annotation.desensitize.RC4Encrypt;
 import com.ty.mid.framework.core.util.DatabaseEncryptUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -40,7 +40,7 @@ public class RC4EncryptAspect extends AbstractAspect {
     public RC4EncryptAspect() {
     }
 
-    @Pointcut("@annotation(com.ty.mid.framework.core.annotation.RC4Encrypt)")
+    @Pointcut("@annotation(com.ty.mid.framework.common.annotation.desensitize.RC4Encrypt)")
     public void rc4EncryptPointcut() {
     }
 

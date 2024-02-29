@@ -1,4 +1,4 @@
-package com.ty.mid.framework.core.annotation;
+package com.ty.mid.framework.common.annotation.desensitize;
 
 import java.lang.annotation.*;
 

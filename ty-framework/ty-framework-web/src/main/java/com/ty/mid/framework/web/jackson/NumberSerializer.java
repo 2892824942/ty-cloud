@@ -1,4 +1,4 @@
-package com.ty.mid.framework.web.jackson.core.databind;
+package com.ty.mid.framework.web.jackson;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
