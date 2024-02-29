@@ -24,7 +24,7 @@ import java.lang.annotation.*;
 public @interface InEnum {
 
     /**
-     * @return 实现 EnumValuable 接口的
+     * @return 实现 KVResp 接口的
      */
     Class<? extends KVResp<?,?>> value();
 
