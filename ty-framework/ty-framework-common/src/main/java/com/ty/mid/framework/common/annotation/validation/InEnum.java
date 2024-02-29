@@ -28,7 +28,7 @@ public @interface InEnum {
      */
     Class<? extends KVResp<?,?>> value();
 
-    String message() default "必须在指定范围 {value}";
+    String message() default "枚举必须在指定范围 {value}";
 
     Class<?>[] groups() default {};
 
