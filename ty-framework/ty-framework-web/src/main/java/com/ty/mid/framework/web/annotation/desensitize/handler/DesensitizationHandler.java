@@ -1,7 +1,7 @@
-package com.ty.mid.framework.common.annotation.desensitize.handler;
+package com.ty.mid.framework.web.annotation.desensitize.handler;
 
-import com.ty.mid.framework.common.annotation.desensitize.*;
 import com.ty.mid.framework.common.exception.FrameworkException;
+import com.ty.mid.framework.web.annotation.desensitize.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

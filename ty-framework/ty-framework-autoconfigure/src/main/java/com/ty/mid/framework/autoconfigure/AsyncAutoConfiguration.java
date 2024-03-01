@@ -44,7 +44,7 @@ public class AsyncAutoConfiguration implements AsyncConfigurer {
     @Bean
     @ConditionalOnMissingBean
     public ErrorHandler errorHandler() {
-        return t -> log.error("error when async before  method:", t);
+        return t -> log.error("error when async before method:", t);
     }
 
     @Bean("asyncApplicationEventMulticaster")

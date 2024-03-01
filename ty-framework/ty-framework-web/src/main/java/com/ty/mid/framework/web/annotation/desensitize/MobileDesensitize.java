@@ -1,13 +1,12 @@
-package com.ty.mid.framework.common.annotation.desensitize;
+package com.ty.mid.framework.web.annotation.desensitize;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.ty.mid.framework.common.annotation.desensitize.handler.DefaultSliderDesensitizationHandle;
-
+import com.ty.mid.framework.web.annotation.desensitize.handler.DefaultSliderDesensitizationHandle;
 
 import java.lang.annotation.*;
 
 /**
- * 车牌号
+ * 手机号
  *
  * @author suyouliang
  */
@@ -16,7 +15,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
 @DesensitizeBy(handler = DefaultSliderDesensitizationHandle.class)
-public @interface CarLicenseDesensitize {
+public @interface MobileDesensitize {
 
     /**
      * 前缀保留长度
@@ -26,10 +25,10 @@ public @interface CarLicenseDesensitize {
     /**
      * 后缀保留长度
      */
-    int suffixKeep() default 1;
+    int suffixKeep() default 4;
 
     /**
-     * 替换规则，车牌号;比如：粤A66666 脱敏之后为粤A6***6
+     * 替换规则，手机号;比如：13248765917 脱敏之后为 132****5917
      */
     String replacer() default "*";
 

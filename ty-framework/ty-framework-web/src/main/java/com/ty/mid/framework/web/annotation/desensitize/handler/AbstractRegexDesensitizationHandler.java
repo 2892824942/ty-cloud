@@ -1,4 +1,4 @@
-package com.ty.mid.framework.common.annotation.desensitize.handler;
+package com.ty.mid.framework.web.annotation.desensitize.handler;
 
 
 import java.lang.annotation.Annotation;

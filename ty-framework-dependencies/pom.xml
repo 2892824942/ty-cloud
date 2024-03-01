@@ -680,7 +680,6 @@
                 <artifactId>reflections</artifactId>
                 <version>${reflections.version}</version>
             </dependency>
-
             <!-- 三方云服务相关 -->
 
             <dependency>

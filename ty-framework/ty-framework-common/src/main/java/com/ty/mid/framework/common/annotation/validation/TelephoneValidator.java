@@ -9,10 +9,6 @@ import javax.validation.ConstraintValidatorContext;
 public class TelephoneValidator implements ConstraintValidator<Telephone, String> {
 
     @Override
-    public void initialize(Telephone annotation) {
-    }
-
-    @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         // 如果手机号为空，默认不校验，即校验通过
         if (CharSequenceUtil.isEmpty(value)) {

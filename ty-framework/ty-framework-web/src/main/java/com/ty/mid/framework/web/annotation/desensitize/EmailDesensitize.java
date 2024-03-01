@@ -1,7 +1,7 @@
-package com.ty.mid.framework.common.annotation.desensitize;
+package com.ty.mid.framework.web.annotation.desensitize;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.ty.mid.framework.common.annotation.desensitize.handler.DefaultRegexDesensitizationHandle;
+import com.ty.mid.framework.web.annotation.desensitize.handler.DefaultRegexDesensitizationHandle;
 
 import java.lang.annotation.*;
 

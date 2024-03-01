@@ -1,9 +1,9 @@
-package com.ty.mid.framework.common.annotation.desensitize;
+package com.ty.mid.framework.web.annotation.desensitize;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.ty.mid.framework.common.annotation.desensitize.handler.DesensitizationHandler;
-import com.ty.mid.framework.common.annotation.desensitize.serializer.StringDesensitizeSerializer;
+import com.ty.mid.framework.web.annotation.desensitize.handler.DesensitizationHandler;
+import com.ty.mid.framework.web.annotation.desensitize.serializer.StringDesensitizeSerializer;
 
 import java.lang.annotation.*;
 

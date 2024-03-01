@@ -1,7 +1,7 @@
-package com.ty.mid.framework.common.annotation.desensitize.handler;
+package com.ty.mid.framework.web.annotation.desensitize.handler;
 
 
-import com.ty.mid.framework.common.annotation.desensitize.SliderDesensitize;
+import com.ty.mid.framework.web.annotation.desensitize.SliderDesensitize;
 
 import java.lang.annotation.Annotation;
 

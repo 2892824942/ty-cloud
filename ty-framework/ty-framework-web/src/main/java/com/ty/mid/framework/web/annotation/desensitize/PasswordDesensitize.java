@@ -1,13 +1,12 @@
-package com.ty.mid.framework.common.annotation.desensitize;
-
+package com.ty.mid.framework.web.annotation.desensitize;
 
 import com.fasterxml.jackson.annotation.JacksonAnnotationsInside;
-import com.ty.mid.framework.common.annotation.desensitize.handler.DefaultSliderDesensitizationHandle;
+import com.ty.mid.framework.web.annotation.desensitize.handler.DefaultSliderDesensitizationHandle;
 
 import java.lang.annotation.*;
 
 /**
- * 中文名
+ * 密码
  *
  * @author suyouliang
  */
@@ -16,12 +15,12 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
 @DesensitizeBy(handler = DefaultSliderDesensitizationHandle.class)
-public @interface ChineseNameDesensitize {
+public @interface PasswordDesensitize {
 
     /**
      * 前缀保留长度
      */
-    int prefixKeep() default 1;
+    int prefixKeep() default 0;
 
     /**
      * 后缀保留长度
@@ -29,7 +28,9 @@ public @interface ChineseNameDesensitize {
     int suffixKeep() default 0;
 
     /**
-     * 替换规则，中文名;比如：刘子豪脱敏之后为刘**
+     * 替换规则，密码;
+     *
+     * 比如：123456 脱敏之后为 ******
      */
     String replacer() default "*";
 

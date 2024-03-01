@@ -10,6 +10,7 @@ import com.ty.mid.framework.web.core.handler.GlobalResponseBodyHandler;
 import com.ty.mid.framework.web.core.service.ApiLogService;
 import com.ty.mid.framework.web.core.util.WebFrameworkUtils;
 import com.ty.mid.framework.web.core.util.WebUtil;
+import com.ty.mid.framework.web.mvc.HashedIdHandlerMethodArgumentResolver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -26,12 +27,14 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
 import javax.servlet.Filter;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 @EnableConfigurationProperties(WebConfig.class)
@@ -60,6 +63,13 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
         customApi.forEach((k, v) -> configurePathMatch(configurer, v));
     }
 
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
+        if (webConfig.getHashId().isEnable()){
+            resolvers.add(new HashedIdHandlerMethodArgumentResolver(webConfig));
+        }
+
+    }
 
     /**
      * 设置 API 前缀，仅仅匹配 controller 包下的

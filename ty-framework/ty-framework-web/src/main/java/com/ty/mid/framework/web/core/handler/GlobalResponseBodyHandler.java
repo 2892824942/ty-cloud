@@ -14,7 +14,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.OutputStream;
 import java.util.Objects;
 
 /**
@@ -48,14 +47,14 @@ public class GlobalResponseBodyHandler implements ResponseBodyAdvice<Object> {
     }
 
 
-    private void resetResponse(){
+    private void resetResponse() {
         // 获取当前请求的 ServletRequestAttributes
         ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
 
         if (attributes != null) {
             // 通过 ServletRequestAttributes 获取 HttpServletResponse
             HttpServletResponse servletResponse = attributes.getResponse();
-            if (Objects.nonNull(servletResponse)){
+            if (Objects.nonNull(servletResponse)) {
                 servletResponse.resetBuffer();
             }
         }

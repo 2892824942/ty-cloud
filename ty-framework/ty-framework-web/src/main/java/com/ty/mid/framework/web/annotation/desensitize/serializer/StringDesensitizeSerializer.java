@@ -1,4 +1,4 @@
-package com.ty.mid.framework.common.annotation.desensitize.serializer;
+package com.ty.mid.framework.web.annotation.desensitize.serializer;
 
 import cn.hutool.core.annotation.AnnotationUtil;
 import cn.hutool.core.lang.Singleton;
@@ -11,8 +11,8 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.ContextualSerializer;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
-import com.ty.mid.framework.common.annotation.desensitize.DesensitizeBy;
-import com.ty.mid.framework.common.annotation.desensitize.handler.DesensitizationHandler;
+import com.ty.mid.framework.web.annotation.desensitize.DesensitizeBy;
+import com.ty.mid.framework.web.annotation.desensitize.handler.DesensitizationHandler;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,10 +27,10 @@ import java.lang.reflect.Field;
  *
  * @author suyouliang
  */
+@Getter
 @SuppressWarnings("rawtypes")
 public class StringDesensitizeSerializer extends StdSerializer<String> implements ContextualSerializer {
 
-    @Getter
     @Setter
     private DesensitizationHandler desensitizationHandler;
 
