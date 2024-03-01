@@ -15,6 +15,8 @@ public class InEnumValidator implements ConstraintValidator<InEnum, Object> {
 
     private List<Object> keys;
 
+    private InEnum inEnum;
+
     @Override
     public void initialize(InEnum annotation) {
         KVResp<?,?>[] kvResps = annotation.value().getEnumConstants();
@@ -27,9 +29,9 @@ public class InEnumValidator implements ConstraintValidator<InEnum, Object> {
 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        // 为空时，默认不校验，即认为通过
+        // 为空时，根据属性判断是否通过，默认不通过,默认情况下无需配合NotNull使用
         if (value == null) {
-            return true;
+            return inEnum.ifNullIgnore();
         }
         // 校验通过
         if (keys.contains(value)) {

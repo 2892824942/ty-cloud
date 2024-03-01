@@ -30,6 +30,14 @@ public @interface InEnum {
 
     String message() default "枚举必须在指定范围 {value}";
 
+    /**
+     * 如果为空,是否忽略验证
+     * true:忽略
+     * false:抛出异常
+     * @return
+     */
+    boolean ifNullIgnore() default false;
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
