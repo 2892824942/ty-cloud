@@ -3,6 +3,7 @@ package com.ty.mid.framework.cache;
 import com.ty.mid.framework.cache.service.GlobalCacheTestService;
 import com.ty.mid.framework.cache.service.SimpleCacheTestService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cache.CacheManager;
 
@@ -10,9 +11,13 @@ import org.springframework.cache.CacheManager;
 @Slf4j
 public class BaseCacheTests {
 
-    public GlobalCacheTestService cacheTestService;
-    public SimpleCacheTestService simpleCacheTestService;
-    public CacheManager cacheManager;
+    @Autowired
+    GlobalCacheTestService cacheTestService;
+
+    @Autowired
+    SimpleCacheTestService simpleCacheTestService;
+    @Autowired
+    CacheManager cacheManager;
 
     //    @Autowired
 //    GlobalCacheTestService cacheTestService;

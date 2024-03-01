@@ -16,7 +16,7 @@ import java.util.Objects;
 public class MultiCacheManagerKeeper implements CacheManager {
     final Map<String, CacheManager> cacheNameMangerMap = new HashMap<>();
     CachePlusConfig cacheConfig;
-    private ObjectProvider<CacheManager> cacheManagers;
+    private final ObjectProvider<CacheManager> cacheManagers;
 
 
     public MultiCacheManagerKeeper(CachePlusConfig cacheConfig, ObjectProvider<CacheManager> cacheManagers) {
@@ -28,15 +28,13 @@ public class MultiCacheManagerKeeper implements CacheManager {
     public Cache getCache(String name) {
 
         CacheManager cacheManager = this.getManagerByCacheName(name);
-        log.debug("cache------------:cacheNameMangerMap:{},cacheManagers:{}", cacheNameMangerMap.keySet(), cacheManagers.stream().toArray());
+        log.debug("cache:cacheNameMangerMap:{},cacheManagers:{}", cacheNameMangerMap.keySet(), cacheManagers.stream().toArray());
 
-
-        log.debug("cacheNames------------:getCacheNames:{}", cacheManagers.stream().map(CacheManager::getCacheNames).flatMap(Collection::stream).toArray());
-
+        log.debug("cacheNames:getCacheNames:{}", cacheManagers.stream().map(CacheManager::getCacheNames).flatMap(Collection::stream).toArray());
+        //TODO 增加一个default配置,而不是直接报异常
         //代码配置优先级最高
         if (Objects.nonNull(cacheManager)) {
-
-            log.debug("cache name match cacheManage by code,name:{},manager:{}", name, cacheManager);
+            log.debug("cache name match cacheManage name:{},manager:{}", name, cacheManager.getClass().getSimpleName());
             return cacheManager.getCache(name);
         }
         throw new FrameworkException("not match cache manager from cacheName:" + name);

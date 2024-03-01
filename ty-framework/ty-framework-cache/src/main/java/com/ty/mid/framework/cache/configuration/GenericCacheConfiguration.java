@@ -14,37 +14,33 @@
  * limitations under the License.
  */
 
-package com.ty.mid.framework.cache.configration;
+package com.ty.mid.framework.cache.configuration;
 
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.cache.CacheManager;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.cache.Cache;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
- * Simplest cache configuration, usually used as a fallback.
+ * Generic cache configuration based on arbitrary {@link Cache} instances defined in the
+ * context.
  *
  * @author Stephane Nicoll
  */
+@ConditionalOnBean(Cache.class)
 @AutoConfigureBefore({CacheAutoConfiguration.class})
-@ConditionalOnMissingBean(CacheManager.class)
-public class SimpleCacheConfiguration {
+public class GenericCacheConfiguration {
 
     @Bean
-    ConcurrentMapCacheManager concurrentMapCacheManager(CacheProperties cacheProperties,
-                                                        CacheManagerCustomizers cacheManagerCustomizers) {
-        ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager();
-        List<String> cacheNames = cacheProperties.getCacheNames();
-        if (!cacheNames.isEmpty()) {
-            cacheManager.setCacheNames(cacheNames);
-        }
-        return cacheManagerCustomizers.customize(cacheManager);
+    SimpleCacheManager simpleCacheManager(CacheManagerCustomizers customizers, Collection<Cache> caches) {
+        SimpleCacheManager cacheManager = new SimpleCacheManager();
+        cacheManager.setCaches(caches);
+        return customizers.customize(cacheManager);
     }
 
 }

@@ -4,6 +4,7 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
 import com.ty.mid.framework.cache.config.redisson.LocalCachedMapOptions;
 import com.ty.mid.framework.cache.constant.CachePlusType;
+import com.ty.mid.framework.core.config.AbstractConfig;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.extern.slf4j.Slf4j;
@@ -18,12 +19,13 @@ import java.time.Duration;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@EqualsAndHashCode(callSuper = true)
 @Configuration
 @ConfigurationProperties(prefix = CachePlusConfig.CACHE_PREFIX)
 @Data
 @Slf4j
-public class CachePlusConfig {
-    public static final String CACHE_PREFIX = "application.cache";
+public class CachePlusConfig extends AbstractConfig {
+    public static final String CACHE_PREFIX = FRAMEWORK_PREFIX + "cache";
     public static final String CACHE_MULTI_ENABLE = "multi-enable";
     //本地数据缓存，方便处理，非配置类
     private static final Map<CachePlusType, BaseConfig> typeConfigMap = new HashMap<>();
@@ -35,7 +37,7 @@ public class CachePlusConfig {
     private final JCache jcache = new JCache();
     private final Redis redis = new Redis();
     private final RedissonDefault redisson = new RedissonDefault();
-    private final Redis redissonlm = new RedissonLocalMap();
+    private final Redis redissonRLocalMap = new RedissonLocalMap();
     protected boolean multiEnable;
     private CustomizeCacheConfig customize = new CustomizeCacheConfig();
 
@@ -51,6 +53,8 @@ public class CachePlusConfig {
             if (Objects.nonNull(timeToLive)) {
                 long ttl = timeToLive.toMillis();
                 redisConfig.put(cacheName, new CacheConfig(ttl, ttl / 2));
+            }else {
+                redisConfig.put(cacheName, new CacheConfig());
             }
         });
         return redisConfig;
@@ -201,7 +205,7 @@ public class CachePlusConfig {
     public static class RedissonDefault extends Redis {
         @Override
         protected CachePlusType getType() {
-            return CachePlusType.REDISSION_LOCAL_MAP;
+            return CachePlusType.REDISSON_LOCAL_MAP;
         }
     }
 
@@ -214,7 +218,7 @@ public class CachePlusConfig {
     public static class RedissonLocalMap extends Redis {
         @Override
         protected CachePlusType getType() {
-            return CachePlusType.REDISSION_DEFALUT;
+            return CachePlusType.REDISSON_2PC;
         }
     }
 
@@ -225,7 +229,7 @@ public class CachePlusConfig {
     @Data
     public static class Redis extends TxBaseConfig {
 
-        private StroeType stroeType = StroeType.KEY_VALUE;
+        private StoreType stroeType = StoreType.KEY_VALUE;
         /**
          * Entry expiration. By default the entries never expire.
          */
@@ -252,7 +256,7 @@ public class CachePlusConfig {
             return CachePlusType.REDIS;
         }
 
-        public enum StroeType {
+        public enum StoreType {
             /**
              * 普通键值对
              */
@@ -277,6 +281,7 @@ public class CachePlusConfig {
         protected abstract CachePlusType getType();
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     public static abstract class TxBaseConfig extends BaseConfig {
         boolean enableTransactions;

@@ -14,33 +14,27 @@
  * limitations under the License.
  */
 
-package com.ty.mid.framework.cache.configration;
+package com.ty.mid.framework.cache.configuration;
 
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
-import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.cache.Cache;
-import org.springframework.cache.support.SimpleCacheManager;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.support.NoOpCacheManager;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Collection;
-
 /**
- * Generic cache configuration based on arbitrary {@link Cache} instances defined in the
- * context.
+ * No-op cache configuration used to disable caching via configuration.
  *
  * @author Stephane Nicoll
  */
-@ConditionalOnBean(Cache.class)
+@ConditionalOnMissingBean(CacheManager.class)
 @AutoConfigureBefore({CacheAutoConfiguration.class})
-public class GenericCacheConfiguration {
+public class NoOpCacheConfiguration {
 
     @Bean
-    SimpleCacheManager simpleCacheManager(CacheManagerCustomizers customizers, Collection<Cache> caches) {
-        SimpleCacheManager cacheManager = new SimpleCacheManager();
-        cacheManager.setCaches(caches);
-        return customizers.customize(cacheManager);
+    NoOpCacheManager cacheManager() {
+        return new NoOpCacheManager();
     }
 
 }

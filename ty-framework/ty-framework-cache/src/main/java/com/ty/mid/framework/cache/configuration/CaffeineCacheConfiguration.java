@@ -1,4 +1,4 @@
-package com.ty.mid.framework.cache.configration;
+package com.ty.mid.framework.cache.configuration;
 
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 @AutoConfigureBefore({CacheAutoConfiguration.class})
 @ConditionalOnClass({Caffeine.class, CaffeineCacheManager.class})
@@ -44,9 +45,9 @@ public class CaffeineCacheConfiguration {
         List<String> cacheNameList = caffeineProperties.getCacheNames();
         log.debug("cacheNameList:{}", cacheNameList);
         String[] cacheNames = cacheNameList.toArray(new String[0]);
-        log.debug("cacheNames:{}", cacheNames);
+        log.debug("cacheNames:{}", (Object[]) cacheNames);
         CaffeineCacheManager cacheManager = new CaffeineCacheManager(cacheNames);
-        setCacheBuilder(caffeineProperties, caffeineSpec.getIfAvailable(), caffeine.getIfAvailable(), cacheManager);
+        setCacheBuilder(caffeineProperties, Objects.requireNonNull(caffeineSpec.getIfAvailable()), Objects.requireNonNull(caffeine.getIfAvailable()), cacheManager);
         cacheLoader.ifAvailable(cacheManager::setCacheLoader);
         return cacheManager;
     }

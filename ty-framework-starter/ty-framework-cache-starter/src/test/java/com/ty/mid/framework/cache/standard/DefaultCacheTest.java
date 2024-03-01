@@ -11,23 +11,10 @@ import org.springframework.cache.CacheManager;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles()
-//@ActiveProfiles()
 @Slf4j
 public class DefaultCacheTest extends BaseCacheTests {
-    @Autowired
-    GlobalCacheTestService cacheTestService;
 
-    @Autowired
-    SimpleCacheTestService simpleCacheTestService;
-    @Autowired
-    CacheManager cacheManager;
 
-    @BeforeAll
-    public void init() {
-        super.cacheTestService = cacheTestService;
-        super.cacheManager = cacheManager;
-        super.simpleCacheTestService = simpleCacheTestService;
-    }
 
     @Test
     public void doTest() {

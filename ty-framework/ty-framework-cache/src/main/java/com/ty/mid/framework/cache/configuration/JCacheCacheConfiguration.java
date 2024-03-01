@@ -1,4 +1,4 @@
-package com.ty.mid.framework.cache.configration;
+package com.ty.mid.framework.cache.configuration;
 
 import com.ty.mid.framework.cache.condition.CachePlusCondition;
 import com.ty.mid.framework.cache.config.CachePlusConfig;

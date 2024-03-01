@@ -1,10 +1,11 @@
-package com.ty.mid.framework.cache.configration;
+package com.ty.mid.framework.cache.configuration;
 
 import com.ty.mid.framework.cache.condition.CachePlusCondition;
 import com.ty.mid.framework.cache.config.CachePlusConfig;
 import com.ty.mid.framework.cache.support.manager.redis.Redis2PCCacheManager;
 import com.ty.mid.framework.cache.support.manager.redis.writer.TransactionHashRedisCacheWriter;
 import com.ty.mid.framework.cache.support.manager.redis.writer.TransactionRedisCacheWriter;
+import com.ty.mid.framework.common.util.GenericsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.spring.starter.RedissonAutoConfiguration;
 import org.springframework.beans.factory.ObjectProvider;
@@ -30,18 +31,20 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * Redis cache configuration.
+ * 两阶段提交cache redis实现
+ * 使用场景:支持事务系统中,存在缓存及mysql在事务中同时使用,且需要满足读写强一致
+ * 实现策略:
+ * 1.redis写入延迟到事务提交成功后
+ * 2.事务期间,为保持Redis数据可重复读,增加事务期间读锁,读取数据时,先从缓存中读取,如果缓存中不存在,则从Redis中读取,并将读取的数据写入缓存
  *
- * @author Stephane Nicoll
- * @author Mark Paluch
- * @author Ryon Day
+ * @author suyoulaing
  */
 @ConditionalOnClass(RedisConnectionFactory.class)
 @AutoConfigureAfter(RedissonAutoConfiguration.class)
 @Import({CachePlusConfig.class})
 @Conditional(CachePlusCondition.class)
 @Slf4j
-public class RedisCacheConfiguration {
+public class Redis2PCCacheConfiguration {
 
     @Bean
     RedisCacheManager redisCacheManager(CachePlusConfig cachePlusConfig, CacheManagerCustomizers cacheManagerCustomizers,
@@ -73,12 +76,9 @@ public class RedisCacheConfiguration {
             defaultCacheConfigurationField.setAccessible(true);
             initialCachesField.setAccessible(true);
             allowInFlightCacheCreationField.setAccessible(true);
-            Map<String, org.springframework.data.redis.cache.RedisCacheConfiguration> initialCaches = (Map) initialCachesField.get(builder);
+            Map<String, org.springframework.data.redis.cache.RedisCacheConfiguration> initialCaches = GenericsUtil.toMap(initialCachesField.get(builder));
             boolean allowInFlightCacheCreation = (boolean) allowInFlightCacheCreationField.get(builder);
-            CachePlusConfig.Redis.StroeType stroeType = redisProperties.getStroeType();
-            RedisCacheWriter txRedisCacheWriter = Objects.isNull(stroeType) || CachePlusConfig.Redis.StroeType.KEY_VALUE.equals(stroeType) ?
-                    new TransactionRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues())
-                    : new TransactionHashRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues());
+            RedisCacheWriter txRedisCacheWriter = getRedisCacheWriter(redisConnectionFactory, redisProperties);
 
             redis2PCCacheManager = new Redis2PCCacheManager(txRedisCacheWriter, determineConfiguration(redisProperties, redisCacheConfiguration, resourceLoader.getClassLoader()),
                     initialCaches, allowInFlightCacheCreation);
@@ -86,7 +86,7 @@ public class RedisCacheConfiguration {
                 redis2PCCacheManager.setTransactionAware(true);
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
+            log.error("init error:", e);
             throw new RuntimeException("初始化异常");
         }
 
@@ -94,6 +94,13 @@ public class RedisCacheConfiguration {
         RedisCacheManager customize = cacheManagerCustomizers.customize(redis2PCCacheManager);
         log.debug("RedisCacheManager customize cacheNames:{}", customize.getCacheNames());
         return redis2PCCacheManager;
+    }
+
+    private static RedisCacheWriter getRedisCacheWriter(RedisConnectionFactory redisConnectionFactory, CachePlusConfig.Redis redisProperties) {
+        CachePlusConfig.Redis.StoreType storeType = redisProperties.getStroeType();
+        return Objects.isNull(storeType) || CachePlusConfig.Redis.StoreType.KEY_VALUE.equals(storeType) ?
+                new TransactionRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues())
+                : new TransactionHashRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues());
     }
 
     private org.springframework.data.redis.cache.RedisCacheConfiguration determineConfiguration(

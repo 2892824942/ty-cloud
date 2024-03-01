@@ -1,6 +1,6 @@
-package com.ty.mid.framework.cache.configration.base;
+package com.ty.mid.framework.cache.configuration.base;
 
-import com.ty.mid.framework.cache.configration.*;
+import com.ty.mid.framework.cache.configuration.*;
 import com.ty.mid.framework.cache.constant.CachePlusType;
 
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class CacheConfigurations {
 //        mappings.put(CachePlusType.INFINISPAN.name(), InfinispanCacheConfiguration.class);
 //
 //        mappings.put(CachePlusType.COUCHBASE.name(), CouchbaseCacheConfiguration.class);
-        mappings.put(CachePlusType.REDIS.name(), RedisCacheConfiguration.class);
+        mappings.put(CachePlusType.REDIS.name(), RedissonCacheConfiguration.class);
         mappings.put(CachePlusType.CAFFEINE.name(), CaffeineCacheConfiguration.class);
         mappings.put(CachePlusType.SIMPLE.name(), SimpleCacheConfiguration.class);
         mappings.put(CachePlusType.NONE.name(), NoOpCacheConfiguration.class);
@@ -35,8 +35,8 @@ public class CacheConfigurations {
 //        mappings.put(CacheSuperType.EHCACHE, EhCacheCacheConfiguration.class);
 //        mappings.put(CacheSuperType.HAZELCAST, HazelcastCacheConfiguration.class);
         //自定义实现
-        mappings.put(CachePlusType.REDISSION_DEFALUT.name(), RedissonDefaultCacheConfiguration.class);
-        mappings.put(CachePlusType.REDISSION_LOCAL_MAP.name(), RedissonCustomizeCacheConfiguration.class);
+        mappings.put(CachePlusType.REDISSON_2PC.name(), Redis2PCCacheConfiguration.class);
+        mappings.put(CachePlusType.REDISSON_LOCAL_MAP.name(), RedissonRLocalMapCacheConfiguration.class);
         MAPPINGS = Collections.unmodifiableMap(mappings);
     }
 

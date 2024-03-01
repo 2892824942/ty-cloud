@@ -110,7 +110,7 @@ public class CustomTransactionAwareCacheDecorator extends TransactionAwareCacheD
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             //事务开启情况下，数据在事务上下文缓存。存入null会到时get走redis，这里存储NullValue
             ThreadResourceUtil.bindResource(getCacheName(), key, NullValue.INSTANCE);
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
                 public void beforeCommit(boolean readOnly) {
                     ThreadResourceUtil.removeAllResource();
@@ -132,7 +132,7 @@ public class CustomTransactionAwareCacheDecorator extends TransactionAwareCacheD
         if (TransactionSynchronizationManager.isSynchronizationActive()) {
             //事务开启情况下，数据在事务上下文缓存。存入null会导致get走redis，这里存储NullValue
             ThreadResourceUtil.bindNameSpaceNullValueResource(getCacheName());
-            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronizationAdapter() {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
                 @Override
                 public void beforeCommit(boolean readOnly) {
                     ThreadResourceUtil.removeAllResource();

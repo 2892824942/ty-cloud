@@ -1,7 +1,7 @@
 package com.ty.mid.framework.cache.condition;
 
 import com.ty.mid.framework.cache.config.CachePlusConfig;
-import com.ty.mid.framework.cache.configration.base.CacheConfigurations;
+import com.ty.mid.framework.cache.configuration.base.CacheConfigurations;
 import com.ty.mid.framework.cache.constant.CachePlusType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;

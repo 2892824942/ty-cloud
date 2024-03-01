@@ -1,4 +1,4 @@
-package com.ty.mid.framework.cache.configration;
+package com.ty.mid.framework.cache.configuration;
 
 import com.ty.mid.framework.cache.condition.CachePlusCondition;
 import com.ty.mid.framework.cache.config.CachePlusConfig;
@@ -22,7 +22,7 @@ import java.util.Map;
 @AutoConfigureAfter(RedissonAutoConfiguration.class)
 @Import({CachePlusConfig.class, CacheConfig.class})
 @Conditional(CachePlusCondition.class)
-public class RedissonDefaultCacheConfiguration {
+public class RedissonCacheConfiguration {
 
     @Autowired
     CachePlusConfig multiCacheConfig;
@@ -32,7 +32,7 @@ public class RedissonDefaultCacheConfiguration {
      */
     @Bean
     RedissonSpringCacheManager redissonDefaultCacheManage(RedissonClient redissonClient, CacheManagerCustomizers cacheManagerCustomizers) {
-        Map<String, CacheConfig> redisConfig = multiCacheConfig.getRedisConfig(CachePlusType.REDISSION_DEFALUT);
+        Map<String, CacheConfig> redisConfig = multiCacheConfig.getRedisConfig(CachePlusType.REDIS);
         RedissonSpringCacheManager redissonSpringCacheManager = new RedissonSpringCacheManager(redissonClient, redisConfig);
         cacheManagerCustomizers.customize(redissonSpringCacheManager);
         return redissonSpringCacheManager;

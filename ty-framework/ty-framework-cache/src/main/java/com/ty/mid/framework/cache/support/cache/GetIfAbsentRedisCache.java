@@ -53,6 +53,7 @@ public class GetIfAbsentRedisCache extends RedisCache {
      * @return
      */
     @Nullable
+    @Override
     protected Object fromStoreValue(@Nullable Object storeValue) {
         if (storeValue == NullValue.INSTANCE) {
             return null;

@@ -14,27 +14,37 @@
  * limitations under the License.
  */
 
-package com.ty.mid.framework.cache.configration;
+package com.ty.mid.framework.cache.configuration;
 
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
+import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
+import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.support.NoOpCacheManager;
+import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 
+import java.util.List;
+
 /**
- * No-op cache configuration used to disable caching via configuration.
+ * Simplest cache configuration, usually used as a fallback.
  *
  * @author Stephane Nicoll
  */
-@ConditionalOnMissingBean(CacheManager.class)
 @AutoConfigureBefore({CacheAutoConfiguration.class})
-public class NoOpCacheConfiguration {
+@ConditionalOnMissingBean(CacheManager.class)
+public class SimpleCacheConfiguration {
 
     @Bean
-    NoOpCacheManager cacheManager() {
-        return new NoOpCacheManager();
+    ConcurrentMapCacheManager concurrentMapCacheManager(CacheProperties cacheProperties,
+                                                        CacheManagerCustomizers cacheManagerCustomizers) {
+        ConcurrentMapCacheManager cacheManager = new ConcurrentMapCacheManager();
+        List<String> cacheNames = cacheProperties.getCacheNames();
+        if (!cacheNames.isEmpty()) {
+            cacheManager.setCacheNames(cacheNames);
+        }
+        return cacheManagerCustomizers.customize(cacheManager);
     }
 
 }

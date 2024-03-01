@@ -5,13 +5,13 @@ public enum CachePlusType {
     /**
      * FrameWork caching using 'Cache' beans from the context.
      */
-    REDISSION_DEFALUT,
+    REDISSON_2PC,
 
     /**
      * FrameWork caching using 'Cache' beans from the context.
      * with second-caching
      */
-    REDISSION_LOCAL_MAP,
+    REDISSON_LOCAL_MAP,
     //Spring 官方提供
     /**
      * Generic caching using 'Cache' beans from the context.

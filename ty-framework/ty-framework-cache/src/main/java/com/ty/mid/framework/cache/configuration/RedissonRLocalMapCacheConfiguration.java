@@ -1,4 +1,4 @@
-package com.ty.mid.framework.cache.configration;
+package com.ty.mid.framework.cache.configuration;
 
 import com.ty.mid.framework.cache.condition.CachePlusCondition;
 import com.ty.mid.framework.cache.config.CachePlusConfig;
@@ -26,7 +26,7 @@ import java.util.Map;
 @Import({CachePlusConfig.class, CacheConfig.class})
 @Conditional(CachePlusCondition.class)
 @Slf4j
-public class RedissonCustomizeCacheConfiguration {
+public class RedissonRLocalMapCacheConfiguration {
 
     @Autowired
     CachePlusConfig cachePlusConfig;
@@ -36,13 +36,13 @@ public class RedissonCustomizeCacheConfiguration {
      */
     @Bean
     RedissonClusteredSpringLocalCachedCacheManager redissonCustomerCacheManage(RedissonClient redissonClient, CacheManagerCustomizers cacheManagerCustomizers) {
-        Map<String, CacheConfig> redisConfig = cachePlusConfig.getRedisConfig(CachePlusType.REDISSION_LOCAL_MAP);
+        Map<String, CacheConfig> redisConfig = cachePlusConfig.getRedisConfig(CachePlusType.REDISSON_LOCAL_MAP);
         LocalCachedMapOptions<Object, Object> redissonLocalMapConfig = cachePlusConfig.getRedissonLocalMapConfig();
         org.redisson.api.LocalCachedMapOptions<Object, Object> defaults = org.redisson.api.LocalCachedMapOptions.defaults();
         BeanUtils.copyProperties(redissonLocalMapConfig, LocalCachedMapOptions.defaults());
         RedissonClusteredSpringLocalCachedCacheManager redissonSpringCacheManager =
                 new RedissonClusteredSpringLocalCachedCacheManager(redissonClient, redisConfig, defaults);
-        redissonSpringCacheManager.setCacheNames(cachePlusConfig.getRedissonlm().getCacheNames());
+        redissonSpringCacheManager.setCacheNames(cachePlusConfig.getRedissonRLocalMap().getCacheNames());
 
         cacheManagerCustomizers.customize(redissonSpringCacheManager);
         return redissonSpringCacheManager;
