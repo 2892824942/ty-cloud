@@ -16,7 +16,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Import;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheManager.RedisCacheManagerBuilder;
@@ -46,6 +45,13 @@ import java.util.Objects;
 @Conditional(CachePlusCondition.class)
 @Slf4j
 public class Redis2PCCacheConfiguration {
+
+    private static RedisCacheWriter getRedisCacheWriter(RedisConnectionFactory redisConnectionFactory, CachePlusConfig.Redis redisProperties) {
+        CachePlusConfig.Redis.StoreType storeType = redisProperties.getStoreType();
+        return Objects.isNull(storeType) || CachePlusConfig.Redis.StoreType.KEY_VALUE.equals(storeType) ?
+                new TransactionRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues())
+                : new TransactionHashRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues());
+    }
 
     @Bean
     RedisCacheManager redisCacheManager(CachePlusConfig cachePlusConfig, CacheManagerCustomizers cacheManagerCustomizers,
@@ -95,13 +101,6 @@ public class Redis2PCCacheConfiguration {
         RedisCacheManager customize = cacheManagerCustomizers.customize(redis2PCCacheManager);
         log.debug("RedisCacheManager customize cacheNames:{}", customize.getCacheNames());
         return redis2PCCacheManager;
-    }
-
-    private static RedisCacheWriter getRedisCacheWriter(RedisConnectionFactory redisConnectionFactory, CachePlusConfig.Redis redisProperties) {
-        CachePlusConfig.Redis.StoreType storeType = redisProperties.getStoreType();
-        return Objects.isNull(storeType) || CachePlusConfig.Redis.StoreType.KEY_VALUE.equals(storeType) ?
-                new TransactionRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues())
-                : new TransactionHashRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues());
     }
 
     private org.springframework.data.redis.cache.RedisCacheConfiguration determineConfiguration(

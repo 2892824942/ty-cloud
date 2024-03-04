@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Import;
 
 import java.util.Map;
 

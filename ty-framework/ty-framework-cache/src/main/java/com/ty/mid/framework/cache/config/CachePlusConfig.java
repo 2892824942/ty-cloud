@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.redisson.spring.cache.CacheConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
@@ -52,7 +51,7 @@ public class CachePlusConfig extends AbstractConfig {
             if (Objects.nonNull(timeToLive)) {
                 long ttl = timeToLive.toMillis();
                 redisConfig.put(cacheName, new CacheConfig(ttl, ttl / 2));
-            }else {
+            } else {
                 redisConfig.put(cacheName, new CacheConfig());
             }
         });

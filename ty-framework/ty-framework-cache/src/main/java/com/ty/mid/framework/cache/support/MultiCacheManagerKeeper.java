@@ -3,20 +3,18 @@ package com.ty.mid.framework.cache.support;
 import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.cache.config.CachePlusConfig;
 import com.ty.mid.framework.common.exception.FrameworkException;
-import com.ty.mid.framework.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.annotation.Primary;
 
 import java.util.*;
 
 @Slf4j
 public class MultiCacheManagerKeeper implements CacheManager {
     final Map<String, CacheManager> cacheNameMangerMap = new HashMap<>();
-    CachePlusConfig cacheConfig;
     private final ObjectProvider<CacheManager> cacheManagers;
+    CachePlusConfig cacheConfig;
 
 
     public MultiCacheManagerKeeper(CachePlusConfig cacheConfig, ObjectProvider<CacheManager> cacheManagers) {
@@ -48,9 +46,9 @@ public class MultiCacheManagerKeeper implements CacheManager {
             return cacheManager;
         }
         cacheManagers.stream().forEach(manager -> manager.getCacheNames().forEach(cacheName -> cacheNameMangerMap.put(cacheName, manager)));
-        if (log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
 
-            log.debug("cache:allCacheNames:{},cacheManagers:{}", cacheNameMangerMap.keySet(),  "["+StrUtil.join(",", cacheManagers.stream().map(Object::getClass).map(Class::getSimpleName).toArray())+"]");
+            log.debug("cache:allCacheNames:{},cacheManagers:{}", cacheNameMangerMap.keySet(), "[" + StrUtil.join(",", cacheManagers.stream().map(Object::getClass).map(Class::getSimpleName).toArray()) + "]");
             log.debug("cache name:{} match cacheManage:{}", name, Optional.ofNullable(cacheNameMangerMap.get(name)).map(Object::getClass).map(Class::getSimpleName).orElse("null"));
         }
         return cacheNameMangerMap.get(name);

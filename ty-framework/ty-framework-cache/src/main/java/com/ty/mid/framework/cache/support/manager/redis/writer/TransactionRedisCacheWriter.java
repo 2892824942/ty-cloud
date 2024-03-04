@@ -46,8 +46,8 @@ public class TransactionRedisCacheWriter implements RedisCacheWriter {
     private static final Duration DEFAULT_DURATION = Duration.of(5, ChronoUnit.MINUTES);
     private final RedisConnectionFactory connectionFactory;
     private final CacheStatisticsCollector statistics;
-    private Duration nullValueTimeToLive = Duration.ZERO;
     private final boolean allowNullValue;
+    private Duration nullValueTimeToLive = Duration.ZERO;
 
 
     /**

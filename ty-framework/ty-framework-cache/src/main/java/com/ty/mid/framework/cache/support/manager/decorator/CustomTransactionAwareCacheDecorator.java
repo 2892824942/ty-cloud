@@ -7,7 +7,6 @@ import org.springframework.cache.support.SimpleValueWrapper;
 import org.springframework.cache.transaction.TransactionAwareCacheDecorator;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.support.TransactionSynchronization;
-import org.springframework.transaction.support.TransactionSynchronizationAdapter;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.Objects;

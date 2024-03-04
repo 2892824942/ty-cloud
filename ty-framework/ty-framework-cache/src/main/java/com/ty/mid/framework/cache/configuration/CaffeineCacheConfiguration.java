@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -18,12 +17,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Import;
 import org.springframework.util.StringUtils;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
 
 @AutoConfigureBefore({CacheAutoConfiguration.class})
 @ConditionalOnClass({Caffeine.class, CaffeineCacheManager.class})
