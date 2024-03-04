@@ -10,6 +10,7 @@ import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
 import org.springframework.boot.autoconfigure.condition.*;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ConditionContext;
@@ -35,7 +36,7 @@ import java.util.Properties;
  * @author Madhura Bhave
  */
 @ConditionalOnClass({Caching.class, JCacheCacheManager.class})
-@Import({CachePlusConfig.class})
+@EnableConfigurationProperties(CachePlusConfig.class)
 @Conditional({CachePlusCondition.class})
 @Slf4j
 public class JCacheCacheConfiguration implements BeanClassLoaderAware {

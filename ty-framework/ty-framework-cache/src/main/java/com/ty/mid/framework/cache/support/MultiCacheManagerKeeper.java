@@ -1,16 +1,16 @@
 package com.ty.mid.framework.cache.support;
 
+import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.cache.config.CachePlusConfig;
 import com.ty.mid.framework.common.exception.FrameworkException;
+import com.ty.mid.framework.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
+import org.springframework.context.annotation.Primary;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 public class MultiCacheManagerKeeper implements CacheManager {
@@ -28,13 +28,9 @@ public class MultiCacheManagerKeeper implements CacheManager {
     public Cache getCache(String name) {
 
         CacheManager cacheManager = this.getManagerByCacheName(name);
-        log.debug("cache:cacheNameMangerMap:{},cacheManagers:{}", cacheNameMangerMap.keySet(), cacheManagers.stream().toArray());
-
-        log.debug("cacheNames:getCacheNames:{}", cacheManagers.stream().map(CacheManager::getCacheNames).flatMap(Collection::stream).toArray());
         //TODO 增加一个default配置,而不是直接报异常
         //代码配置优先级最高
         if (Objects.nonNull(cacheManager)) {
-            log.debug("cache name match cacheManage name:{},manager:{}", name, cacheManager.getClass().getSimpleName());
             return cacheManager.getCache(name);
         }
         throw new FrameworkException("not match cache manager from cacheName:" + name);
@@ -52,6 +48,11 @@ public class MultiCacheManagerKeeper implements CacheManager {
             return cacheManager;
         }
         cacheManagers.stream().forEach(manager -> manager.getCacheNames().forEach(cacheName -> cacheNameMangerMap.put(cacheName, manager)));
+        if (log.isDebugEnabled()){
+
+            log.debug("cache:allCacheNames:{},cacheManagers:{}", cacheNameMangerMap.keySet(),  "["+StrUtil.join(",", cacheManagers.stream().map(Object::getClass).map(Class::getSimpleName).toArray())+"]");
+            log.debug("cache name:{} match cacheManage:{}", name, Optional.ofNullable(cacheNameMangerMap.get(name)).map(Object::getClass).map(Class::getSimpleName).orElse("null"));
+        }
         return cacheNameMangerMap.get(name);
     }
 }

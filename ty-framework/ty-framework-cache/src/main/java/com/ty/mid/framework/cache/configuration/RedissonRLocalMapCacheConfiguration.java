@@ -15,6 +15,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.cache.CacheAutoConfiguration;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
@@ -23,7 +24,8 @@ import java.util.Map;
 
 @AutoConfigureBefore({CacheAutoConfiguration.class})
 @AutoConfigureAfter(RedissonAutoConfiguration.class)
-@Import({CachePlusConfig.class, CacheConfig.class})
+@EnableConfigurationProperties(CachePlusConfig.class)
+@Import({CacheConfig.class})
 @Conditional(CachePlusCondition.class)
 @Slf4j
 public class RedissonRLocalMapCacheConfiguration {

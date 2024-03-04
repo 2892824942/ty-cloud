@@ -20,7 +20,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
-@Configuration
 @ConfigurationProperties(prefix = CachePlusConfig.CACHE_PREFIX)
 @Data
 @Slf4j
@@ -44,7 +43,7 @@ public class CachePlusConfig extends AbstractConfig {
     public Map<String, CacheConfig> getRedisConfig(CachePlusType cachePlusType) {
         Redis redis = this.getCacheProperties(cachePlusType);
         Map<String, CacheConfig> redisConfig = new HashMap<>();
-        log.debug("------------getRedisConfig:{},cachePlusType:{}", this.getTypeNameMap(), cachePlusType);
+        log.debug("getRedisConfig:{},cachePlusType:{}", this.getTypeNameMap(), cachePlusType);
         this.getTypeNameMap().get(cachePlusType).forEach(cacheName -> {
             if (redis.isUseKeyPrefix() && StringUtils.isNotEmpty(redis.getKeyPrefix())) {
                 cacheName = redis.getKeyPrefix().concat("-");
@@ -229,7 +228,7 @@ public class CachePlusConfig extends AbstractConfig {
     @Data
     public static class Redis extends TxBaseConfig {
 
-        private StoreType stroeType = StoreType.KEY_VALUE;
+        private StoreType storeType = StoreType.KEY_VALUE;
         /**
          * Entry expiration. By default the entries never expire.
          */
@@ -241,7 +240,7 @@ public class CachePlusConfig extends AbstractConfig {
         /**
          * Allow caching null values.
          */
-        private boolean cacheNullValues = true;
+        private boolean cacheNullValues = false;
         /**
          * Key prefix.
          */

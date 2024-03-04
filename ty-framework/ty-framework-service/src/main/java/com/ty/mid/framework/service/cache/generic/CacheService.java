@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
  *
  * @link com.ty.mid.framework.service.cache.support.DefaultServiceCacheLoader
  * -如果缓存相关业务需要强一致性,切勿使用此方式,参考缓存模块-Redis2PCCacheManager
- * @see CacheService#cacheManager
+ * @see CacheService#jCacheCacheManager
  * 3.缓存key默认为实体类的主键,需要更改为其他字段重写CacheService#cacheDefineDOMapKey(),如果需要多个属性作为主键,重写CacheService#cacheDefineDOMapKeys()
  * 4.默认开启Read-Through模式(一个实现,一个定义),如果缓存中不存在数据,会自动从数据库加载数据.---暂时不支持存储null,且没有直接提供缓存穿透场景默认支持(后续再说)
  * 5.默认不开启Write-Through模式,即增删改操作需要开发者自己维护缓存一致性
@@ -50,12 +50,12 @@ import java.util.stream.Collectors;
 public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends GenericAutoWrapService<S, T, M> implements BaseCacheService<S, T> {
 
     @Resource
-    protected JCacheCacheManager cacheManager;
+    protected JCacheCacheManager jCacheCacheManager;
     @Resource
     private javax.cache.configuration.Configuration<String, T> configuration;
 
-    protected CacheManager getCacheManager() {
-        return cacheManager.getCacheManager();
+    protected CacheManager getjCacheCacheManager() {
+        return jCacheCacheManager.getCacheManager();
     }
 
 
@@ -69,7 +69,7 @@ public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M
             mutableConfiguration.setCacheLoaderFactory(FactoryBuilder.factoryOf(readThroughLoader));
         }
 
-        Cache<String, T> cache = getCacheManager().createCache(this.getCacheName(), configuration);
+        Cache<String, T> cache = getjCacheCacheManager().createCache(this.getCacheName(), configuration);
         MutableCacheEntryListenerConfiguration<String, T> mutableCacheEntryListenerConfiguration = new MutableCacheEntryListenerConfiguration<String, T>(
                 FactoryBuilder.factoryOf(GenericsUtil.cast2Class(CacheListener.class)), null, false, false
         );
@@ -80,7 +80,7 @@ public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M
 
     @Override
     public Cache<String, T> getCache() {
-        return getCacheManager().getCache(getCacheName());
+        return getjCacheCacheManager().getCache(getCacheName());
     }
 
     @Override

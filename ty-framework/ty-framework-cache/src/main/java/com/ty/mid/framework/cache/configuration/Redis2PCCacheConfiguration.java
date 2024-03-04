@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Import;
@@ -41,7 +42,7 @@ import java.util.Objects;
  */
 @ConditionalOnClass(RedisConnectionFactory.class)
 @AutoConfigureAfter(RedissonAutoConfiguration.class)
-@Import({CachePlusConfig.class})
+@EnableConfigurationProperties(CachePlusConfig.class)
 @Conditional(CachePlusCondition.class)
 @Slf4j
 public class Redis2PCCacheConfiguration {
@@ -97,7 +98,7 @@ public class Redis2PCCacheConfiguration {
     }
 
     private static RedisCacheWriter getRedisCacheWriter(RedisConnectionFactory redisConnectionFactory, CachePlusConfig.Redis redisProperties) {
-        CachePlusConfig.Redis.StoreType storeType = redisProperties.getStroeType();
+        CachePlusConfig.Redis.StoreType storeType = redisProperties.getStoreType();
         return Objects.isNull(storeType) || CachePlusConfig.Redis.StoreType.KEY_VALUE.equals(storeType) ?
                 new TransactionRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues())
                 : new TransactionHashRedisCacheWriter(redisConnectionFactory, redisProperties.getNullValueTimeToLive(), redisProperties.isCacheNullValues());
