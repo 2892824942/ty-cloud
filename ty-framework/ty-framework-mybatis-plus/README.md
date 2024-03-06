@@ -186,10 +186,10 @@ public class User extends BaseDO {
 
     @Schema(description = "年龄")
     @TableField(value = "`age`", typeHandler = DefaultTypeHandler.class)
-    private Integer age;
+  private Integer age;
 
-    @Schema(description = "邮箱")
-    private String email;
+  @Schema(description = "邮箱")
+  private String email;
 
     @Schema(description = "用户地址code")
     @TableField(value = "`addr_code`")
