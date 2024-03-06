@@ -53,7 +53,7 @@ public class MappingProvider {
         T targetFirst = targetList.iterator().next();
         Field wrapperField = null;
         for (Field sourceField : bMappingFieldList) {
-            BMapping annotation = sourceField.getAnnotation(BMapping.class);
+            AutoWrap annotation = sourceField.getAnnotation(AutoWrap.class);
             //1.校验
             Class<?>[] autoWrapperClassArray = annotation.values();
             List<Class<?>> targetWrapperCandidates = Arrays.stream(autoWrapperClassArray)
@@ -184,7 +184,7 @@ public class MappingProvider {
     public static <T extends BaseIdDO<Long>> List<Field> getBMappingField(T source) {
         Field[] fields = source.getClass().getDeclaredFields();
         return Arrays.stream(fields)
-                .filter(field -> Objects.nonNull(field.getAnnotation(BMapping.class)))
+                .filter(field -> Objects.nonNull(field.getAnnotation(AutoWrap.class)))
                 .collect(Collectors.toList());
     }
 

@@ -5,7 +5,7 @@ import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
-import com.ty.mid.framework.service.cache.generic.CacheService;
+import com.ty.mid.framework.service.cache.generic.CacheAutoWrapService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +23,7 @@ import java.util.*;
 @Data
 @Slf4j
 public class ReadThroughLoader<K, V> implements CacheLoader<K, V>, Serializable {
-    private CacheService<? extends BaseDO, ? extends BaseIdDO<Long>, ? extends BaseMapperX<?, Long>> cacheService;
+    private CacheAutoWrapService<? extends BaseDO, ? extends BaseIdDO<Long>, ? extends BaseMapperX<?, Long>> cacheAutoWrapService;
 
     @Override
     public V load(K key) throws CacheLoaderException {
@@ -32,7 +32,7 @@ public class ReadThroughLoader<K, V> implements CacheLoader<K, V>, Serializable 
             //默认不缓存空值及空字符串
             return null;
         }
-        return GenericsUtil.cast(cacheService.getDbData(String.valueOf(key)));
+        return GenericsUtil.cast(cacheAutoWrapService.getDbData(String.valueOf(key)));
 
     }
 
@@ -54,7 +54,7 @@ public class ReadThroughLoader<K, V> implements CacheLoader<K, V>, Serializable 
         if (CollUtil.isEmpty(keyList)) {
             return Collections.emptyMap();
         }
-        Map<String, ? extends BaseIdDO<Long>> dbDataMap = cacheService.getDbDataMap(keyList);
+        Map<String, ? extends BaseIdDO<Long>> dbDataMap = cacheAutoWrapService.getDbDataMap(keyList);
         return GenericsUtil.check2Map(dbDataMap);
     }
 }

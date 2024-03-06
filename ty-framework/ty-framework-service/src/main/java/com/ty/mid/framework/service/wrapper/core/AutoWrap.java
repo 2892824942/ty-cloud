@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Target(value = {ElementType.FIELD})
 @Retention(value = RetentionPolicy.RUNTIME)
 @Documented
-public @interface BMapping {
+public @interface AutoWrap {
     /**
      * 映射的字段Class类型,可多个
      *

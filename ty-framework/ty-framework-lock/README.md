@@ -18,9 +18,10 @@
   * [2.使用示例](#2使用示例)
 <!-- TOC -->
 
-# 项目特点
+
 开源地址:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-lock
 
+# 项目特点
 1. 集成分布式锁能力,starter依赖即可使用分布式锁能力
 2. 抽象分布式锁的集成，方便快速切换分布式锁方案(目前支持jvm,redis,zookeeper)
 3. 锁的调用基于spring lockRegistry以及java lock顶层接口，调用统一,支持多厂商实现(可同时使用),支持切换,支持扩展,

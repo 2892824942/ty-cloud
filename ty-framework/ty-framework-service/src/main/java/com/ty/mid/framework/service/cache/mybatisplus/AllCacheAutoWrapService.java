@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
-import com.ty.mid.framework.service.cache.generic.CacheService;
+import com.ty.mid.framework.service.cache.generic.CacheAutoWrapService;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.ArrayList;
@@ -15,14 +15,13 @@ import java.util.Map;
  * 抽象的带缓存service，基于mybatis-plus,实现自动缓存全量数据的功能
  * 注意:
  * 1.此类适合缓存如字典,全国省市区等基本不变且数量不多的场景
- * 2.如果不需要缓存全部,请使用AbstractCacheService 定制缓存的内容
+ * 2.如果不需要缓存全部,请使用BaseCacheService 定制缓存的内容
  * <p>
- * 实现细节参考
  *
- * @see CacheService
+ * @see CacheAutoWrapService
  */
 @Slf4j
-public abstract class MpAllCacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends CacheService<S, T, M> {
+public abstract class AllCacheAutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends CacheAutoWrapService<S, T, M> {
     protected static final Integer BATCH_SIZE = 3000;
 
     @Override

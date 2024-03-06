@@ -10,8 +10,7 @@ import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
 import com.ty.mid.framework.service.cache.jcache.listener.CacheListener;
 import com.ty.mid.framework.service.cache.jcache.listener.through.ReadThroughLoader;
-import com.ty.mid.framework.service.integrate.GenericAutoWrapService;
-import lombok.extern.slf4j.Slf4j;
+import com.ty.mid.framework.service.wrapper.AutoWrapService;import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.jcache.JCacheCacheManager;
 
 import javax.annotation.PostConstruct;
@@ -33,7 +32,7 @@ import java.util.stream.Collectors;
  *
  * @link com.ty.mid.framework.service.cache.support.DefaultServiceCacheLoader
  * -如果缓存相关业务需要强一致性,切勿使用此方式,参考缓存模块-Redis2PCCacheManager
- * @see CacheService#jCacheCacheManager
+ * @see CacheAutoWrapService#jCacheCacheManager
  * 3.缓存key默认为实体类的主键,需要更改为其他字段重写CacheService#cacheDefineDOMapKey(),如果需要多个属性作为主键,重写CacheService#cacheDefineDOMapKeys()
  * 4.默认开启Read-Through模式(一个实现,一个定义),如果缓存中不存在数据,会自动从数据库加载数据.---暂时不支持存储null,且没有直接提供缓存穿透场景默认支持(后续再说)
  * 5.默认不开启Write-Through模式,即增删改操作需要开发者自己维护缓存一致性
@@ -47,7 +46,7 @@ import java.util.stream.Collectors;
  * 二:集成了自动装载Service
  */
 @Slf4j
-public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends GenericAutoWrapService<S, T, M> implements BaseCacheService<S, T> {
+public abstract class CacheAutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends AutoWrapService<S, T, M> implements BaseCacheService<S, T> {
 
     @Resource
     protected JCacheCacheManager jCacheCacheManager;
@@ -65,7 +64,7 @@ public abstract class CacheService<S extends BaseDO, T extends BaseIdDO<Long>, M
         if (configuration instanceof MutableConfiguration) {
             MutableConfiguration mutableConfiguration = (MutableConfiguration) configuration;
             ReadThroughLoader<String, T> readThroughLoader = new ReadThroughLoader<>();
-            readThroughLoader.setCacheService(this);
+            readThroughLoader.setCacheAutoWrapService(this);
             mutableConfiguration.setCacheLoaderFactory(FactoryBuilder.factoryOf(readThroughLoader));
         }
 

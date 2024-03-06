@@ -10,11 +10,12 @@
   * [3.json](#3json)
   * [4.默认值忽略](#4默认值忽略)
 <!-- TOC -->
-# 项目特点
-开源地址:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-service
 
+开源地址:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-mybatis-plus
+
+# 项目特点
 1. 自动集成Mybatis-plus,提供统一的ORM层代码格式,同时支持Mybatis-plus-join(可选)
-2. 提供父类Mapper以及Service,简化开发.支持连表查询,分页查询,简化非空判断等
+2. 提供父类Mapper,简化开发.支持连表查询,分页查询,简化非空判断,查询结果Map
 3. 基于Mybatis TypeHandler,提供数据加密,json格式解析,连接符解析等能力
 
 # 一:框架集成
@@ -25,7 +26,7 @@
 
 <dependency>
     <groupId>com.ty</groupId>
-    <artifactId>ty-framework-service-starter</artifactId>
+    <artifactId>ty-framework-mybatis-plus-starter</artifactId>
     <version>${最新版本}</version>
 </dependency>
 
@@ -105,6 +106,7 @@ public class Address extends BaseDO {
 
 ```
 1.Mapper需要继承BaseMapperX,同时需要指定泛型,泛型1为数据库表对应的实体类,泛型2为主键类型
+BaseMapperX提供快速分页查询,简单条件查询list,简单条件查询Map,list转Map等工具,简化开发
 2.查询时提供三个Wrapper:
 (1)LambdaQueryWrapperWrapperX:支持lambda数据拼接
 (2)QueryWrapperWrapperX:支持原生sql数据拼接
@@ -180,7 +182,6 @@ public class User extends BaseDO {
 
     @Schema(description = "角色id列表,多个使用,号隔开")
     @TableField(value = "`role_ids`", typeHandler = LongListTypeHandler.class)
-    @BMapping(values = {RoleDTO.class, RoleSimpleDTO.class})
     private List<Long> roleIds;
 
     @Schema(description = "年龄")
@@ -192,7 +193,6 @@ public class User extends BaseDO {
 
     @Schema(description = "用户地址code")
     @TableField(value = "`addr_code`")
-    @BMapping(values = AddrDTO.class)
     private String addrCode;
 }
 ```
