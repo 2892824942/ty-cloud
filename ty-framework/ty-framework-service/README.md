@@ -288,7 +288,7 @@ public class AddressServiceImpl extends MpAllCacheService<Address, AddrDTO, Addr
 }
 ```
 问题2:一个表中既有id又有code多字段自动映射,或者一个字段可能不同的场景返回的DTO不同怎么办?
-答:自定义AutoWrapper,可以通过再次注册AutoWrapper来为当前表定义其他的自动装载
+答:自定义AutoWrapper,可以通过再次注册AutoWrapper来为当前表定义其他字段的自动装载
 
 ```java
 @Service
@@ -312,6 +312,10 @@ public class RoleServiceImpl extends GenericAutoWrapService<Role, RoleDTO, RoleM
 }
 ```
 如上,此时Role支持[code->RoleSimpleDTO]和[code->RoleDTO]两种自动装载
+
+问题3:自动装配和JPA好像啊?
+是的,自动装配也参考了JPA的思路,但是JPA的级联join查询不被大多数互联网公司接受.但是自动将目标数据装载到当前DTO确实是个非常方便的方式,尤其在常见的id,code等单字段映射场景.
+自动装配采用的是sql in的方式查询,不使用join.
 
 注意:目前AutoWrapper是按照DTO类型做自动识别,所以不支持多个字段转换为同一个DTO.
 
