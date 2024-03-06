@@ -213,3 +213,6 @@ IntegerListTypeHandler及StringListTypeHandler,分别将数据库字段映射为
 默认值总是让使用者困惑(比如age字段默认值为0).
 如需要忽略默认值, 可通过`@TableField(typeHandler = DefaultTypeHandler.class)`将默认值转化为null.
 系统全局默认值见:DefaultTypeConstants
+
+
+更详细的使用案例,见:https://github.com/2892824942/framework-demo
