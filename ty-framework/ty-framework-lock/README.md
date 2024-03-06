@@ -146,17 +146,19 @@ public class TestService {
 }
 
 ```
+具体示例见:lock-starter模块中的test
+注意,和spring等其他注解(如@Transaction)一样,基于界面实现的代码增强调用lock标注的方法必须使用代理对象,使用this.testLock1(id)调用注解不生效
 
 # 四:lock增强
 
 - 本地预锁
-  在分布式锁使用前增加jvm lock逻辑,适用于锁竞争较大场景
+  在分布式锁使用前增加jvm lock逻辑,适用于锁竞争较大场景.具体见withLocalCache配置
 
 - 事务感知
-  当lock存在于事务上下文中的策略,此情况发生时,会导致lock释放时,事务还未释放,从而导致锁不住的问题
+  当lock存在于事务上下文中的策略,此情况发生时,会导致lock释放时,事务还未释放,从而导致锁不住的问题.具体见transactionStrategy配置
 
 - 死锁检测
-  可检测代码中可能出现的死锁场景,只是检测,并不一定会出现,仅做参考使用,建议勿在生产开启
+  可检测代码中可能出现的死锁场景,只是检测,并不一定会出现,仅做参考使用(建议勿在生产开启).具体见cycleLockStrategy配置
 
 # 五:全局锁降级
 
@@ -196,11 +198,11 @@ public class TestService {
 所有的配置项,当作用域为全局及注解时,注解的优先级大于全局配置
 
 - keys及name
-  框架会按照${lockNamePrefix}:${name}:${key1}:...:${keyN}:${@LockKey1}:...:${@LockKeyN}的方式拼接，作为lock的LockId
+  框架会按照${lockNamePrefix}:${name}:${key1}:...:${keyN}:${@LockKey1}:...:${@LockKeyN}的方式拼接，作为lock的LockId.中间的连接符":"也可通过lockNameSeparator配置自定义
 
 特殊的:
-当lockNamePrefix为空时，${name}:${key1}:...:${keyN}:${@LockKey1}:...:${@LockKeyN}
-当name，keys以及注解@LockKey都为空时，系统默认使用方法的全限定类名作为key（不推荐使用此方式）
+当lockNamePrefix为空时，LockId=${name}:${key1}:...:${keyN}:${@LockKey1}:...:${@LockKeyN}
+当name，keys以及注解@LockKey都为空时，系统默认使用方法的全限定类名作为key（不推荐使用此方式,会增加存储成本）
 
 - transactionStrategy
   当lock存在于事务上下文中的策略,此情况发生时,会导致lock释放时,事务还未释放,从而导致锁不住的问题,可选策略
