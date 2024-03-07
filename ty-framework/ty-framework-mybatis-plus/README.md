@@ -106,11 +106,14 @@ public class Address extends BaseDO {
 
 ```
 1.Mapper需要继承BaseMapperX,同时需要指定泛型,泛型1为数据库表对应的实体类,泛型2为主键类型
+
 BaseMapperX提供快速分页查询,简单条件查询list,简单条件查询Map,list转Map等工具,简化开发
+
 2.查询时提供三个Wrapper:
-(1)LambdaQueryWrapperWrapperX:支持lambda数据拼接
-(2)QueryWrapperWrapperX:支持原生sql数据拼接
-(3)MPJLambdaWrapperX:支持连表查询(基于mybatis-plus-join)
+- LambdaQueryWrapperWrapperX:支持lambda数据拼接
+- QueryWrapperWrapperX:支持原生sql数据拼接
+- MPJLambdaWrapperX:支持连表查询(基于mybatis-plus-join)
+- 
 3.数据库实体提供统一的BaseDO继承,规范数据库审计相关字段,其中包括:
 ```java
     /**

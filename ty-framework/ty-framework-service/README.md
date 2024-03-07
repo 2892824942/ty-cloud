@@ -96,10 +96,10 @@ public class UserServiceImpl extends GenericAutoWrapService<User, UserFullDTO, U
 ```
 1.Service需要继承父Service以获得对应能力,同时需要指定泛型,泛型1为数据库表对应的实体类,泛型2为主DTO类,泛型3为对应Mapper类(如存在)
 2.主要提供以下父Service
-(1)GenericService:支持简化开发api
-(2)AutoWrapService:支持简化开发api,支持DO->DTO半自动装载
-(3)CacheAutoWrapService:支持简化开发api,支持DO->DTO半自动装载,支持自定义数据缓存
-(4)AllCacheAutoWrapService:支持简化开发api,支持DO->DTO半自动装载,支持全量数据缓存
+- GenericService:支持简化开发api
+- AutoWrapService:支持简化开发api,支持DO->DTO半自动装载
+- CacheAutoWrapService:支持简化开发api,支持DO->DTO半自动装载,支持自定义数据缓存
+- AllCacheAutoWrapService:支持简化开发api,支持DO->DTO半自动装载,支持全量数据缓存
 
 
 # 三:功能详情
@@ -266,8 +266,8 @@ public class AddressServiceImpl extends MpAllCacheService<Address, AddrDTO, Addr
 
 
 ## 3.问题答疑
-问题1:
-如果定义的字段不是id或者[DO->DTO]过程部分字段名称不一致无法自动转换怎么办
+问题1:如果定义的字段不是id或者[DO->DTO]过程部分字段名称不一致无法自动转换怎么办
+
 答:顶层接口定义了autoWrap的方法,支持重写[字段->DO]和[DO->DTO]过程
 ```java
 @Service
@@ -288,6 +288,7 @@ public class AddressServiceImpl extends MpAllCacheService<Address, AddrDTO, Addr
 }
 ```
 问题2:一个表中既有id又有code多字段自动映射,或者一个字段可能不同的场景返回的DTO不同怎么办?
+
 答:自定义AutoWrapper,可以通过再次注册AutoWrapper来为当前表定义其他字段的自动装载
 
 ```java
@@ -314,6 +315,7 @@ public class RoleServiceImpl extends GenericAutoWrapService<Role, RoleDTO, RoleM
 如上,此时Role支持[code->RoleSimpleDTO]和[code->RoleDTO]两种自动装载
 
 问题3:自动装配和JPA好像啊?
+
 是的,自动装配也参考了JPA的思路,但是JPA的级联join查询不被大多数互联网公司接受.但是自动将目标数据装载到当前DTO确实是个非常方便的方式,尤其在常见的id,code等单字段映射场景.
 自动装配采用的是sql in的方式查询,不使用join.
 
