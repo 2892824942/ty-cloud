@@ -68,6 +68,9 @@ public class Redis2PCCacheConfiguration {
         if (redisProperties.isEnableTransactions()) {
             builder.transactionAware();
         }
+        if (redisProperties.isEnableStatistics()) {
+            builder.enableStatistics();
+        }
         log.debug("RedisCacheManager cacheNames:{}", cacheNames);
         if (!cacheNames.isEmpty()) {
             builder.initialCacheNames(new LinkedHashSet<>(cacheNames));

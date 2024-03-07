@@ -32,7 +32,7 @@ public class RedissonCacheConfiguration {
      */
     @Bean
     RedissonSpringCacheManager redissonDefaultCacheManage(RedissonClient redissonClient, CacheManagerCustomizers cacheManagerCustomizers) {
-        Map<String, CacheConfig> redisConfig = multiCacheConfig.getRedisConfig(CachePlusType.REDIS);
+        Map<String, CacheConfig> redisConfig = multiCacheConfig.getRedissonConfig(CachePlusType.REDISSON);
         RedissonSpringCacheManager redissonSpringCacheManager = new RedissonSpringCacheManager(redissonClient, redisConfig);
         cacheManagerCustomizers.customize(redissonSpringCacheManager);
         return redissonSpringCacheManager;

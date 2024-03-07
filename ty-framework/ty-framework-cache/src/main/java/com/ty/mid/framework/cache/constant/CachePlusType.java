@@ -5,6 +5,10 @@ public enum CachePlusType {
     /**
      * FrameWork caching using 'Cache' beans from the context.
      */
+    REDISSON,
+    /**
+     * FrameWork caching using 'Cache' beans from the context.
+     */
     REDISSON_2PC,
 
     /**

@@ -34,12 +34,12 @@ public class CachePlusConfig extends AbstractConfig {
     private final Infinispan infinispan = new Infinispan();
     private final JCache jcache = new JCache();
     private final Redis redis = new Redis();
-    private final RedissonDefault redisson = new RedissonDefault();
+    private final Redis redisson = new Redisson();
     private final Redis redissonRLocalMap = new RedissonLocalMap();
     protected boolean multiEnable;
     private CustomizeCacheConfig customize = new CustomizeCacheConfig();
 
-    public Map<String, CacheConfig> getRedisConfig(CachePlusType cachePlusType) {
+    public Map<String, CacheConfig> getRedissonConfig(CachePlusType cachePlusType) {
         Redis redis = this.getCacheProperties(cachePlusType);
         Map<String, CacheConfig> redisConfig = new HashMap<>();
         log.debug("getRedisConfig:{},cachePlusType:{}", this.getTypeNameMap(), cachePlusType);
@@ -199,15 +199,6 @@ public class CachePlusConfig extends AbstractConfig {
      * Redis-specific cache properties.
      */
 
-    @EqualsAndHashCode(callSuper = true)
-    @Data
-    public static class RedissonDefault extends Redis {
-        @Override
-        protected CachePlusType getType() {
-            return CachePlusType.REDISSON_LOCAL_MAP;
-        }
-    }
-
 
     /**
      * Redis-specific cache properties.
@@ -218,6 +209,18 @@ public class CachePlusConfig extends AbstractConfig {
         @Override
         protected CachePlusType getType() {
             return CachePlusType.REDISSON_2PC;
+        }
+    }
+
+    /**
+     * Redis-specific cache properties.
+     */
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    public static class Redisson extends Redis {
+        @Override
+        protected CachePlusType getType() {
+            return CachePlusType.REDISSON;
         }
     }
 
@@ -249,6 +252,10 @@ public class CachePlusConfig extends AbstractConfig {
          * Whether to use the key prefix when writing to Redis.
          */
         private boolean useKeyPrefix = true;
+        /**
+         * Whether to enable cache statistics.
+         */
+        private boolean enableStatistics;
 
         @Override
         protected CachePlusType getType() {
