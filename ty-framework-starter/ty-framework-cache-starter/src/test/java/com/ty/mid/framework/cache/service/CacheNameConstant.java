@@ -1,4 +1,4 @@
-package com.ty.mid.framework.cache.constant;
+package com.ty.mid.framework.cache.service;
 
 /**
  * 系统定义缓存名称Constant

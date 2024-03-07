@@ -47,6 +47,7 @@ public class CachePlusConfig extends AbstractConfig {
             if (redis.isUseKeyPrefix() && StringUtils.isNotEmpty(redis.getKeyPrefix())) {
                 cacheName = redis.getKeyPrefix().concat("-");
             }
+            //TTl的配置这里可以设计成每个缓存独立,但是这样很麻烦,配置起来很烦,我觉得这个地方作为全局默认合适,对于每个缓存个性失效,应放在注解更合适
             Duration timeToLive = redis.getTimeToLive();
             if (Objects.nonNull(timeToLive)) {
                 long ttl = timeToLive.toMillis();

@@ -1,6 +1,5 @@
 package com.ty.mid.framework.cache.service;
 
-import com.ty.mid.framework.cache.constant.CacheNameConstant;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
