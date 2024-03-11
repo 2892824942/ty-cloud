@@ -171,7 +171,7 @@ public class TransactionHashRedisCacheWriter implements RedisCacheWriter {
         return new TransactionHashRedisCacheWriter(connectionFactory, nullValueTimeToLive, allowNullValue, cacheStatisticsCollector);
     }
 
-    private void setExpire(String name, byte[] key, byte[] value, @Nullable Duration ttl,RedisConnection connection){
+    private void setExpire(String name, byte[] key, byte[] value, @Nullable Duration ttl, RedisConnection connection) {
         if (Arrays.equals(BINARY_NULL_VALUE, value) && !Objects.equals(Duration.ZERO, nullValueTimeToLive)) {
             Duration realNullValueTimeToLive = allowNullValue ? nullValueTimeToLive : DEFAULT_DURATION;
             connection.expire(name.getBytes(), Expiration.from(realNullValueTimeToLive).getExpirationTimeInSeconds());
@@ -179,6 +179,7 @@ public class TransactionHashRedisCacheWriter implements RedisCacheWriter {
             connection.expire(name.getBytes(), Expiration.from(ttl).getExpirationTimeInSeconds());
         }
     }
+
     /**
      * @return {@literal true} if {@link RedisCacheWriter} uses locks.
      */

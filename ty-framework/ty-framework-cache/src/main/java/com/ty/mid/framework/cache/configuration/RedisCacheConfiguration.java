@@ -14,9 +14,9 @@ package com.ty.mid.framework.cache.configuration;/*
  * limitations under the License.
  */
 
-import cn.hutool.core.util.ReflectUtil;
 import com.ty.mid.framework.cache.condition.CachePlusCondition;
 import com.ty.mid.framework.cache.config.CachePlusConfig;
+import com.ty.mid.framework.cache.configuration.base.AbstractRedisCacheConfiguration;
 import com.ty.mid.framework.cache.constant.CachePlusType;
 import com.ty.mid.framework.cache.support.manager.redis.writer.HashRedisCacheWriter;
 import org.springframework.beans.factory.ObjectProvider;
@@ -30,17 +30,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.redis.cache.BatchStrategies;
-import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheManager.RedisCacheManagerBuilder;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 
-import java.lang.reflect.Field;
-import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -54,70 +47,20 @@ import java.util.Objects;
 @ConditionalOnBean(RedisConnectionFactory.class)
 @EnableConfigurationProperties(CachePlusConfig.class)
 @Conditional(CachePlusCondition.class)
-public class RedisCacheConfiguration {
+public class RedisCacheConfiguration extends AbstractRedisCacheConfiguration {
 
     @Bean
-    RedisCacheManager redisCacheManager(CachePlusConfig cachePlusConfig, CacheManagerCustomizers cacheManagerCustomizers,
-                                   ObjectProvider<org.springframework.data.redis.cache.RedisCacheConfiguration> redisCacheConfiguration,
-                                   ObjectProvider<RedisCacheManagerBuilderCustomizer> redisCacheManagerBuilderCustomizers,
-                                   RedisConnectionFactory redisConnectionFactory, ResourceLoader resourceLoader) {
-        CachePlusConfig.Redis cacheProperties = cachePlusConfig.getCacheProperties(CachePlusType.REDIS);
-        RedisCacheManagerBuilder builder = RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(determineConfiguration(cachePlusConfig, redisCacheConfiguration, resourceLoader.getClassLoader()));
-        List<String> cacheNames = cacheProperties.getCacheNames();
-        if (!cacheNames.isEmpty()) {
-            builder.initialCacheNames(new LinkedHashSet<>(cacheNames));
-        }
-        if (cacheProperties.isEnableStatistics()) {
-            builder.enableStatistics();
-        }
-        if (cacheProperties.isEnableTransactions()) {
-            builder.transactionAware();
-        }
-        if (Objects.equals(CachePlusConfig.Redis.StoreType.HASH, cacheProperties.getStoreType())) {
+    RedisCacheManager redisCacheManager(CacheManagerCustomizers cacheManagerCustomizers,
+                                        ObjectProvider<org.springframework.data.redis.cache.RedisCacheConfiguration> redisCacheConfiguration,
+                                        ObjectProvider<RedisCacheManagerBuilderCustomizer> redisCacheManagerBuilderCustomizers,
+                                        RedisConnectionFactory redisConnectionFactory, ResourceLoader resourceLoader) {
+        RedisCacheManagerBuilder builder = handleBuilder(CachePlusType.REDIS, redisCacheConfiguration, redisConnectionFactory, resourceLoader);
+        if (Objects.equals(CachePlusConfig.Redis.StoreType.HASH, cachePlusConfig.getRedis().getStoreType())) {
             builder.cacheWriter(new HashRedisCacheWriter(redisConnectionFactory, BatchStrategies.keys()));
         }
-
         redisCacheManagerBuilderCustomizers.orderedStream().forEach((customizer) -> customizer.customize(builder));
         return cacheManagerCustomizers.customize(builder.build());
     }
 
-    private org.springframework.data.redis.cache.RedisCacheConfiguration determineConfiguration(
-            CachePlusConfig cachePlusConfig,
-            ObjectProvider<org.springframework.data.redis.cache.RedisCacheConfiguration> redisCacheConfiguration,
-            ClassLoader classLoader) {
-        return redisCacheConfiguration.getIfAvailable(() -> createConfiguration(cachePlusConfig, classLoader));
-    }
-
-    private org.springframework.data.redis.cache.RedisCacheConfiguration createConfiguration(
-            CachePlusConfig cachePlusConfig, ClassLoader classLoader) {
-        CachePlusConfig.Redis redisProperties = cachePlusConfig.getRedis();
-        org.springframework.data.redis.cache.RedisCacheConfiguration config = org.springframework.data.redis.cache.RedisCacheConfiguration
-                .defaultCacheConfig();
-        config = config
-                .serializeValuesWith(SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(Object.class)))
-                .serializeKeysWith(SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(String.class)));
-        if (redisProperties.getTimeToLive() != null) {
-            config = config.entryTtl(redisProperties.getTimeToLive());
-        }
-        if (redisProperties.getKeyPrefix() != null) {
-            config.usePrefix();
-            Field keyPrefix = ReflectUtil.getField(config.getClass(), "keyPrefix");
-            Field field = ReflectUtil.setAccessible(keyPrefix);
-            try {
-                field.set(config, (CacheKeyPrefix) cacheName -> redisProperties.getKeyPrefix().concat(":").concat(cacheName));
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        if (!redisProperties.isCacheNullValues()) {
-            config = config.disableCachingNullValues();
-        }
-        if (!redisProperties.isUseKeyPrefix()) {
-            config = config.disableKeyPrefix();
-        }
-
-        return config;
-    }
 
 }

@@ -2,20 +2,21 @@ package com.ty.mid.framework.cache.config;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.TypeReference;
-import com.ty.mid.framework.cache.config.redisson.LocalCachedMapOptions;
 import com.ty.mid.framework.cache.constant.CachePlusType;
 import com.ty.mid.framework.core.config.AbstractConfig;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
-import org.redisson.spring.cache.CacheConfig;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
 import java.time.Duration;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @EqualsAndHashCode(callSuper = true)
@@ -34,46 +35,20 @@ public class CachePlusConfig extends AbstractConfig {
     private final Infinispan infinispan = new Infinispan();
     private final JCache jcache = new JCache();
     private final Redis redis = new Redis();
-    private final Redis redisson = new Redisson();
-    private final Redis redissonRLocalMap = new RedissonLocalMap();
+    private final Redisson redisson = new Redisson();
+    private final RedissonLocalMap redissonRLocalMap = new RedissonLocalMap();
     protected boolean multiEnable;
+    @Getter
     private CustomizeCacheConfig customize = new CustomizeCacheConfig();
 
-    public Map<String, CacheConfig> getRedissonConfig(CachePlusType cachePlusType) {
-        Redis redis = this.getCacheProperties(cachePlusType);
-        Map<String, CacheConfig> redisConfig = new HashMap<>();
-        log.debug("getRedisConfig:{},cachePlusType:{}", this.getTypeNameMap(), cachePlusType);
-        this.getTypeNameMap().get(cachePlusType).forEach(cacheName -> {
-            if (redis.isUseKeyPrefix() && StringUtils.isNotEmpty(redis.getKeyPrefix())) {
-                cacheName = redis.getKeyPrefix().concat("-");
-            }
-            //TTl的配置这里可以设计成每个缓存独立,但是这样很麻烦,配置起来很烦,我觉得这个地方作为全局默认合适,对于每个缓存个性失效,应放在注解更合适
-            Duration timeToLive = redis.getTimeToLive();
-            if (Objects.nonNull(timeToLive)) {
-                long ttl = timeToLive.toMillis();
-                redisConfig.put(cacheName, new CacheConfig(ttl, ttl / 2));
-            } else {
-                redisConfig.put(cacheName, new CacheConfig());
-            }
-        });
-        return redisConfig;
+    public static Map<CachePlusType, List<String>> getTypeNameMap() {
+        return CachePlusConfig.typeConfigMap.values().stream().collect(Collectors.toMap(CachePlusConfig.BaseConfig::getType, CachePlusConfig.BaseConfig::getCacheNames));
     }
-
-    public LocalCachedMapOptions<Object, Object> getRedissonLocalMapConfig() {
-        LocalCachedMapOptions<Object, Object> localCached = this.getCustomize().getLocalCached();
-        return Optional.ofNullable(localCached).orElseGet(LocalCachedMapOptions::defaults);
-    }
-
-    public Map<CachePlusType, List<String>> getTypeNameMap() {
-        return typeConfigMap.values().stream().collect(Collectors.toMap(BaseConfig::getType, BaseConfig::getCacheNames));
-    }
-
 
     public <T extends BaseConfig> T getCacheProperties(CachePlusType cachePlusType) {
         return Convert.convert(new TypeReference<T>() {
         }, typeConfigMap.get(cachePlusType));
     }
-
 
     /**
      * Resolve the config location if set.

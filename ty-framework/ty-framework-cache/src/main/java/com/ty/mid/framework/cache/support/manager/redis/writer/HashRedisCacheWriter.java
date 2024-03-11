@@ -61,6 +61,14 @@ public class HashRedisCacheWriter implements RedisCacheWriter {
         this.batchStrategy = batchStrategy;
     }
 
+    private static boolean shouldExpireWithin(@Nullable Duration ttl) {
+        return ttl != null && !ttl.isZero() && !ttl.isNegative();
+    }
+
+    private static byte[] createCacheLockKey(String name) {
+        return (name + "~lock").getBytes(StandardCharsets.UTF_8);
+    }
+
     /*
      * (non-Javadoc)
      * @see org.springframework.data.redis.cache.RedisCacheWriter#put(java.lang.String, byte[], byte[], java.time.Duration)
@@ -311,13 +319,5 @@ public class HashRedisCacheWriter implements RedisCacheWriter {
         } finally {
             statistics.incLockTime(name, System.nanoTime() - lockWaitTimeNs);
         }
-    }
-
-    private static boolean shouldExpireWithin(@Nullable Duration ttl) {
-        return ttl != null && !ttl.isZero() && !ttl.isNegative();
-    }
-
-    private static byte[] createCacheLockKey(String name) {
-        return (name + "~lock").getBytes(StandardCharsets.UTF_8);
     }
 }
