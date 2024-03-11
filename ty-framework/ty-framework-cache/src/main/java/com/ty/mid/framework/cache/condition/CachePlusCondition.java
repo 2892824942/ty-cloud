@@ -43,6 +43,7 @@ public class CachePlusCondition extends SpringBootCondition {
         }
         ConditionMessage.Builder message = ConditionMessage.forCondition("Cache", sourceClass);
         Environment environment = context.getEnvironment();
+        String className = ((AnnotationMetadata) metadata).getClassName();
         try {
             BindResult<Boolean> multiSwitch = Binder.get(environment).bind(MULTI_CACHE_SWITCH_NAME, MULTI_CACHE_SWITCH_BINDABLE);
             if (!multiSwitch.isBound()) {
@@ -54,7 +55,7 @@ public class CachePlusCondition extends SpringBootCondition {
                 log.debug("no cache type open");
                 return ConditionOutcome.noMatch(message.because("no cache type open"));
             }
-            CachePlusType definitionType = CacheConfigurations.getType(((AnnotationMetadata) metadata).getClassName());
+            CachePlusType definitionType = CacheConfigurations.getType((className));
             log.debug("definitionType is:{}", definitionType);
             if (Objects.nonNull(definitionType) && openType.get().contains(definitionType)) {
                 log.debug("multi cache used:{}", definitionType);
@@ -63,6 +64,7 @@ public class CachePlusCondition extends SpringBootCondition {
         } catch (BindException ex) {
             //do nothing
         }
+        log.info(className + " not match");
         return ConditionOutcome.noMatch(message.because("unknown cache type"));
     }
 

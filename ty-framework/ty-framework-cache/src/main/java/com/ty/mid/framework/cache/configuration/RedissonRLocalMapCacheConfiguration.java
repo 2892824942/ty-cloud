@@ -37,7 +37,7 @@ public class RedissonRLocalMapCacheConfiguration {
      * 重写 Redisson官方提供的CacheManager  基于RLocalMapCache实现
      */
     @Bean
-    RedissonClusteredSpringLocalCachedCacheManager redissonCustomerCacheManage(RedissonClient redissonClient, CacheManagerCustomizers cacheManagerCustomizers) {
+    RedissonClusteredSpringLocalCachedCacheManager redissonRMapCacheManage(RedissonClient redissonClient, CacheManagerCustomizers cacheManagerCustomizers) {
         Map<String, CacheConfig> redisConfig = cachePlusConfig.getRedissonConfig(CachePlusType.REDISSON_LOCAL_MAP);
         LocalCachedMapOptions<Object, Object> redissonLocalMapConfig = cachePlusConfig.getRedissonLocalMapConfig();
         org.redisson.api.LocalCachedMapOptions<Object, Object> defaults = org.redisson.api.LocalCachedMapOptions.defaults();

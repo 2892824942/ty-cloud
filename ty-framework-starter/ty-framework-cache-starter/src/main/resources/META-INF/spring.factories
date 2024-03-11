@@ -7,4 +7,5 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ty.mid.framework.cache.configuration.Redis2PCCacheConfiguration,\
   com.ty.mid.framework.cache.configuration.RedissonRLocalMapCacheConfiguration,\
   com.ty.mid.framework.cache.configuration.RedissonCacheConfiguration,\
+  com.ty.mid.framework.cache.configuration.RedisCacheConfiguration,\
   com.ty.mid.framework.cache.configuration.SimpleCacheConfiguration

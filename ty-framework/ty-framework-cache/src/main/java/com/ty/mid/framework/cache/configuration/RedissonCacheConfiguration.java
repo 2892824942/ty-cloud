@@ -31,7 +31,7 @@ public class RedissonCacheConfiguration {
      * Redisson 官方提供的CacheManager
      */
     @Bean
-    RedissonSpringCacheManager redissonDefaultCacheManage(RedissonClient redissonClient, CacheManagerCustomizers cacheManagerCustomizers) {
+    RedissonSpringCacheManager redissonCacheManage(RedissonClient redissonClient, CacheManagerCustomizers cacheManagerCustomizers) {
         Map<String, CacheConfig> redisConfig = multiCacheConfig.getRedissonConfig(CachePlusType.REDISSON);
         RedissonSpringCacheManager redissonSpringCacheManager = new RedissonSpringCacheManager(redissonClient, redisConfig);
         cacheManagerCustomizers.customize(redissonSpringCacheManager);

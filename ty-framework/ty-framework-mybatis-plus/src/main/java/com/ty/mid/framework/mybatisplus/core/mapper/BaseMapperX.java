@@ -29,7 +29,7 @@ import java.util.Map;
  * 2. {@link MPJBaseMapper} 为 MyBatis Plus Join 的基础接口，提供连表 Join 能力
  * 3.为 MyBatis Plus 的List接口，快速转换Map能力
  */
-public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> extends MPJBaseMapper<T> {
+public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> extends BaseMapper<T> {
     /**
      * 普通分页
      *
@@ -47,28 +47,6 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
         // MyBatis Plus 查询
         IPage<T> mpPage = MyBatisUtils.buildPage(pageParam);
         selectPage(mpPage, queryWrapper);
-        // 转换返回
-        return PageResult.of(mpPage.getRecords(), mpPage.getTotal());
-    }
-
-    /**
-     * 连表分页
-     * 其他连表能力,直接调用父级方法
-     *
-     * @param pageParam
-     * @param queryWrapper
-     * @return
-     */
-    default <DTO> PageResult<DTO> selectJoinPage(Class<DTO> dtoClass, PageParam pageParam, @Param("ew") MPJBaseJoin<T> queryWrapper) {
-        // 特殊：不分页，直接查询全部
-        if (PageParam.PAGE_SIZE_NONE.equals(pageParam.getPageNo())) {
-            List<DTO> list = selectJoinList(dtoClass, queryWrapper);
-            return PageResult.of(list, (long) list.size());
-        }
-
-        // MyBatis Plus 查询
-        IPage<DTO> mpPage = MyBatisUtils.buildPage(pageParam);
-        selectJoinPage(mpPage, dtoClass, queryWrapper);
         // 转换返回
         return PageResult.of(mpPage.getRecords(), mpPage.getTotal());
     }

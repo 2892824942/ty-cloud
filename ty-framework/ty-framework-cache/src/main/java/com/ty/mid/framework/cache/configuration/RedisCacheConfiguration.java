@@ -14,29 +14,34 @@ package com.ty.mid.framework.cache.configuration;/*
  * limitations under the License.
  */
 
+import cn.hutool.core.util.ReflectUtil;
 import com.ty.mid.framework.cache.condition.CachePlusCondition;
 import com.ty.mid.framework.cache.config.CachePlusConfig;
 import com.ty.mid.framework.cache.constant.CachePlusType;
+import com.ty.mid.framework.cache.support.manager.redis.writer.HashRedisCacheWriter;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
 import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.data.redis.cache.BatchStrategies;
+import org.springframework.data.redis.cache.CacheKeyPrefix;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.cache.RedisCacheManager.RedisCacheManagerBuilder;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext.SerializationPair;
 
+import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Redis cache configuration.
@@ -45,8 +50,6 @@ import java.util.List;
  * @author Mark Paluch
  * @author Ryon Day
  */
-@Configuration(proxyBeanMethods = false)
-@ConditionalOnClass(RedisConnectionFactory.class)
 @AutoConfigureAfter(RedisAutoConfiguration.class)
 @ConditionalOnBean(RedisConnectionFactory.class)
 @EnableConfigurationProperties(CachePlusConfig.class)
@@ -54,14 +57,13 @@ import java.util.List;
 public class RedisCacheConfiguration {
 
     @Bean
-    RedisCacheManager cacheManager(CachePlusConfig cachePlusConfig, CacheManagerCustomizers cacheManagerCustomizers,
+    RedisCacheManager redisCacheManager(CachePlusConfig cachePlusConfig, CacheManagerCustomizers cacheManagerCustomizers,
                                    ObjectProvider<org.springframework.data.redis.cache.RedisCacheConfiguration> redisCacheConfiguration,
                                    ObjectProvider<RedisCacheManagerBuilderCustomizer> redisCacheManagerBuilderCustomizers,
                                    RedisConnectionFactory redisConnectionFactory, ResourceLoader resourceLoader) {
         CachePlusConfig.Redis cacheProperties = cachePlusConfig.getCacheProperties(CachePlusType.REDIS);
         RedisCacheManagerBuilder builder = RedisCacheManager.builder(redisConnectionFactory)
-                .cacheDefaults(
-                        determineConfiguration(cachePlusConfig, redisCacheConfiguration, resourceLoader.getClassLoader()));
+                .cacheDefaults(determineConfiguration(cachePlusConfig, redisCacheConfiguration, resourceLoader.getClassLoader()));
         List<String> cacheNames = cacheProperties.getCacheNames();
         if (!cacheNames.isEmpty()) {
             builder.initialCacheNames(new LinkedHashSet<>(cacheNames));
@@ -72,6 +74,10 @@ public class RedisCacheConfiguration {
         if (cacheProperties.isEnableTransactions()) {
             builder.transactionAware();
         }
+        if (Objects.equals(CachePlusConfig.Redis.StoreType.HASH, cacheProperties.getStoreType())) {
+            builder.cacheWriter(new HashRedisCacheWriter(redisConnectionFactory, BatchStrategies.keys()));
+        }
+
         redisCacheManagerBuilderCustomizers.orderedStream().forEach((customizer) -> customizer.customize(builder));
         return cacheManagerCustomizers.customize(builder.build());
     }
@@ -89,12 +95,20 @@ public class RedisCacheConfiguration {
         org.springframework.data.redis.cache.RedisCacheConfiguration config = org.springframework.data.redis.cache.RedisCacheConfiguration
                 .defaultCacheConfig();
         config = config
-                .serializeValuesWith(SerializationPair.fromSerializer(new JdkSerializationRedisSerializer(classLoader)));
+                .serializeValuesWith(SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(Object.class)))
+                .serializeKeysWith(SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(String.class)));
         if (redisProperties.getTimeToLive() != null) {
             config = config.entryTtl(redisProperties.getTimeToLive());
         }
         if (redisProperties.getKeyPrefix() != null) {
-            config = config.prefixCacheNameWith(redisProperties.getKeyPrefix());
+            config.usePrefix();
+            Field keyPrefix = ReflectUtil.getField(config.getClass(), "keyPrefix");
+            Field field = ReflectUtil.setAccessible(keyPrefix);
+            try {
+                field.set(config, (CacheKeyPrefix) cacheName -> redisProperties.getKeyPrefix().concat(":").concat(cacheName));
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
         }
         if (!redisProperties.isCacheNullValues()) {
             config = config.disableCachingNullValues();
@@ -102,6 +116,7 @@ public class RedisCacheConfiguration {
         if (!redisProperties.isUseKeyPrefix()) {
             config = config.disableKeyPrefix();
         }
+
         return config;
     }
 

@@ -8,6 +8,7 @@ import org.springframework.data.redis.cache.RedisCacheWriter;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisConnectionUtils;
+import org.springframework.data.redis.core.types.Expiration;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
@@ -84,20 +85,8 @@ public class TransactionHashRedisCacheWriter implements RedisCacheWriter {
         Assert.notNull(value, "Value must not be null!");
 
         execute(name, connection -> {
-            //nullValue时间特殊设置
-            if (Arrays.equals(BINARY_NULL_VALUE, value) && !Objects.equals(Duration.ZERO, nullValueTimeToLive)) {
-//                connection.set(key, value, Expiration.from(nullValueTimeToLive.toMillis(), TimeUnit.MILLISECONDS), SetOption.upsert());
-                connection.hSet(name.getBytes(), key, value);
-                return "OK";
-            }
-
-
-            if (shouldExpireWithin(ttl)) {
-                connection.hSet(name.getBytes(), key, value);
-            } else {
-                connection.hSet(name.getBytes(), key, value);
-            }
-
+            connection.hSet(name.getBytes(), key, value);
+            setExpire(name, key, value, ttl, connection);
             return "OK";
         });
     }
@@ -127,23 +116,14 @@ public class TransactionHashRedisCacheWriter implements RedisCacheWriter {
         Assert.notNull(value, "Value must not be null!");
         execute(name, connection -> {
             //nullValue时间特殊设置
-            if (Arrays.equals(BINARY_NULL_VALUE, value) && !Objects.equals(Duration.ZERO, nullValueTimeToLive)) {
-                Duration realNullValueTimeToLive = allowNullValue ? nullValueTimeToLive : DEFAULT_DURATION;
-                connection.hSetNX(name.getBytes(), key, value);
-                return "OK";
-            }
-
-
-            if (shouldExpireWithin(ttl)) {
-                connection.hSetNX(name.getBytes(), key, value);
-            } else {
-                connection.hSetNX(name.getBytes(), key, value);
-            }
+            Boolean result = connection.hSetNX(name.getBytes(), key, value);
+            setExpire(name, key, value, ttl, connection);
 
             return "OK";
         });
         return null;
     }
+
 
     /*
      * (non-Javadoc)
@@ -191,6 +171,14 @@ public class TransactionHashRedisCacheWriter implements RedisCacheWriter {
         return new TransactionHashRedisCacheWriter(connectionFactory, nullValueTimeToLive, allowNullValue, cacheStatisticsCollector);
     }
 
+    private void setExpire(String name, byte[] key, byte[] value, @Nullable Duration ttl,RedisConnection connection){
+        if (Arrays.equals(BINARY_NULL_VALUE, value) && !Objects.equals(Duration.ZERO, nullValueTimeToLive)) {
+            Duration realNullValueTimeToLive = allowNullValue ? nullValueTimeToLive : DEFAULT_DURATION;
+            connection.expire(name.getBytes(), Expiration.from(realNullValueTimeToLive).getExpirationTimeInSeconds());
+        } else if (shouldExpireWithin(ttl)) {
+            connection.expire(name.getBytes(), Expiration.from(ttl).getExpirationTimeInSeconds());
+        }
+    }
     /**
      * @return {@literal true} if {@link RedisCacheWriter} uses locks.
      */
