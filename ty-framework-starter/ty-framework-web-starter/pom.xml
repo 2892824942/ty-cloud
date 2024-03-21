@@ -21,11 +21,6 @@
             <artifactId>ty-framework-autoconfigure</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
         <!-- 工具类相关 -->
         <!-- validation spring starter-->
         <dependency>

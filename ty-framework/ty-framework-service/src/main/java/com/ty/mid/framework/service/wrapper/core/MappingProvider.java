@@ -30,7 +30,7 @@ public class MappingProvider {
         return MappingProvider.CONTAINER;
     }
 
-    public static <T extends BaseIdDO<Long>> void autoWrapper(T source, T target) {
+    public static <S extends BaseIdDO<Long>,T extends BaseIdDO<Long>> void autoWrapper(S source, T target) {
         autoWrapper(Collections.singletonList(source), Collections.singletonList(target));
     }
 
@@ -248,6 +248,5 @@ public class MappingProvider {
             throw new RuntimeException(e);
         }
     }
-
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class GenericService<T extends BaseDO, M extends BaseMapperX<T, Long>> extends ServiceImpl<M, T> implements IService<T> {
+public abstract class GenericService<S extends BaseDO, M extends BaseMapperX<S, Long>> extends ServiceImpl<M, S> implements IService<S> {
 
     /**
      * id 是否空
@@ -70,46 +70,46 @@ public abstract class GenericService<T extends BaseDO, M extends BaseMapperX<T, 
         return PageResult.of(resultPage, dataPage.getTotal());
     }
 
-    public T selectOne(String field, Object value) {
+    public S selectOne(String field, Object value) {
         return baseMapper.selectOne(field, value);
     }
 
-    public T selectOne(String field, Object value, boolean throwEx) {
+    public S selectOne(String field, Object value, boolean throwEx) {
         return baseMapper.selectOne(field, value, throwEx);
     }
 
 
-    public T selectOne(SFunction<T, ?> field, Object value) {
+    public S selectOne(SFunction<S, ?> field, Object value) {
         return baseMapper.selectOne(field, value);
     }
 
-    public T selectOne(SFunction<T, ?> field, Object value, boolean throwEx) {
+    public S selectOne(SFunction<S, ?> field, Object value, boolean throwEx) {
         return baseMapper.selectOne(field, value, throwEx);
     }
 
-    public T selectOne(String field1, Object value1, String field2, Object value2) {
+    public S selectOne(String field1, Object value1, String field2, Object value2) {
         return baseMapper.selectOne(field1, value1, field2, value2);
     }
 
-    public T selectOne(String field1, Object value1, String field2, Object value2, boolean throwEx) {
+    public S selectOne(String field1, Object value1, String field2, Object value2, boolean throwEx) {
         return baseMapper.selectOne(field1, value1, field2, value2, throwEx);
     }
 
-    public T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
+    public S selectOne(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2) {
         return baseMapper.selectOne(field1, value1, field2, value2);
     }
 
-    public T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2, boolean throwEx) {
+    public S selectOne(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2, boolean throwEx) {
         return baseMapper.selectOne(field1, value1, field2, value2, throwEx);
     }
 
-    public T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2,
-                       SFunction<T, ?> field3, Object value3) {
+    public S selectOne(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2,
+                       SFunction<S, ?> field3, Object value3) {
         return baseMapper.selectOne(field1, value1, field2, value2, field3, value3);
     }
 
-    public T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2,
-                       SFunction<T, ?> field3, Object value3, boolean throwEx) {
+    public S selectOne(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2,
+                       SFunction<S, ?> field3, Object value3, boolean throwEx) {
         return baseMapper.selectOne(field1, value1, field2, value2, field3, value3, throwEx);
     }
 
@@ -121,57 +121,57 @@ public abstract class GenericService<T extends BaseDO, M extends BaseMapperX<T, 
         return baseMapper.selectCount(field, value);
     }
 
-    public Long selectCount(SFunction<T, ?> field, Object value) {
+    public Long selectCount(SFunction<S, ?> field, Object value) {
         return baseMapper.selectCount(field, value);
     }
 
-    public List<T> selectList() {
+    public List<S> selectList() {
         return baseMapper.selectList();
     }
 
-    public Map<Long, T> selectMap() {
+    public Map<Long, S> selectMap() {
         return baseMapper.selectMap();
     }
 
 
-    public <K> Map<K, T> selectMap(SFunction<T, K> keyField) {
+    public <K> Map<K, S> selectMap(SFunction<S, K> keyField) {
         return baseMapper.selectMap(keyField);
     }
 
 
-    public List<T> selectList(SFunction<T, ?> field, Object value) {
+    public List<S> selectList(SFunction<S, ?> field, Object value) {
         return baseMapper.selectList(field, value);
     }
 
-    public Map<Long, T> selectMap(SFunction<T, ?> field, Object value) {
+    public Map<Long, S> selectMap(SFunction<S, ?> field, Object value) {
         return baseMapper.selectMap(field, value);
     }
 
-    public <K> Map<K, T> selectMap(SFunction<T, ?> field, Object value, SFunction<T, K> keyField) {
+    public <K> Map<K, S> selectMap(SFunction<S, ?> field, Object value, SFunction<S, K> keyField) {
         return baseMapper.selectMap(field, value, keyField);
     }
 
-    public List<T> selectList(SFunction<T, ?> field, Collection<?> values) {
+    public List<S> selectList(SFunction<S, ?> field, Collection<?> values) {
         return baseMapper.selectList(field, values);
     }
 
-    public Map<Long, T> selectMap(SFunction<T, ?> field, Collection<?> values) {
+    public Map<Long, S> selectMap(SFunction<S, ?> field, Collection<?> values) {
         return baseMapper.selectMap(field, values);
     }
 
-    public <K> Map<K, T> selectMap(SFunction<T, ?> field, Collection<?> values, SFunction<T, K> keyField) {
+    public <K> Map<K, S> selectMap(SFunction<S, ?> field, Collection<?> values, SFunction<S, K> keyField) {
         return baseMapper.selectMap(field, values, keyField);
     }
 
-    public List<T> selectList(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
+    public List<S> selectList(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2) {
         return baseMapper.selectList(field1, value1, field2, value2);
     }
 
-    public Map<Long, T> selectMap(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
+    public Map<Long, S> selectMap(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2) {
         return baseMapper.selectMap(field1, value1, field2, value2);
     }
 
-    public <K> Map<K, T> selectMap(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2, SFunction<T, K> keyField) {
+    public <K> Map<K, S> selectMap(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2, SFunction<S, K> keyField) {
         return baseMapper.selectMap(field1, value1, field2, value2, keyField);
     }
 

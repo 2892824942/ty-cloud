@@ -29,7 +29,7 @@ import java.util.Map;
  * 2. {@link MPJBaseMapper} 为 MyBatis Plus Join 的基础接口，提供连表 Join 能力
  * 3.为 MyBatis Plus 的List接口，快速转换Map能力
  */
-public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> extends BaseMapper<T> {
+public interface BaseMapperX<S extends BaseIdDO<ID>, ID extends Serializable> extends BaseMapper<S> {
     /**
      * 普通分页
      *
@@ -37,61 +37,61 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
      * @param queryWrapper
      * @return
      */
-    default PageResult<T> selectPage(PageParam pageParam, @Param("ew") Wrapper<T> queryWrapper) {
+    default PageResult<S> selectPage(PageParam pageParam, @Param("ew") Wrapper<S> queryWrapper) {
         // 特殊：不分页，直接查询全部
         if (PageParam.PAGE_SIZE_NONE.equals(pageParam.getPageNo())) {
-            List<T> list = selectList(queryWrapper);
+            List<S> list = selectList(queryWrapper);
             return PageResult.of(list, (long) list.size());
         }
 
         // MyBatis Plus 查询
-        IPage<T> mpPage = MyBatisUtils.buildPage(pageParam);
+        IPage<S> mpPage = MyBatisUtils.buildPage(pageParam);
         selectPage(mpPage, queryWrapper);
         // 转换返回
         return PageResult.of(mpPage.getRecords(), mpPage.getTotal());
     }
 
-    default T selectOne(String field, Object value) {
+    default S selectOne(String field, Object value) {
         return selectOne(field, value, Boolean.FALSE);
     }
 
-    default T selectOne(String field, Object value, boolean throwEx) {
-        return selectOne(new QueryWrapper<T>().eq(field, value), throwEx);
+    default S selectOne(String field, Object value, boolean throwEx) {
+        return selectOne(new QueryWrapper<S>().eq(field, value), throwEx);
     }
 
-    default T selectOne(SFunction<T, ?> field, Object value) {
+    default S selectOne(SFunction<S, ?> field, Object value) {
         return selectOne(field, value, Boolean.FALSE);
     }
 
-    default T selectOne(SFunction<T, ?> field, Object value, boolean throwEx) {
-        return selectOne(new LambdaQueryWrapper<T>().eq(field, value), throwEx);
+    default S selectOne(SFunction<S, ?> field, Object value, boolean throwEx) {
+        return selectOne(new LambdaQueryWrapper<S>().eq(field, value), throwEx);
     }
 
-    default T selectOne(String field1, Object value1, String field2, Object value2) {
+    default S selectOne(String field1, Object value1, String field2, Object value2) {
         return selectOne(field1, value1, field2, value2, Boolean.FALSE);
     }
 
-    default T selectOne(String field1, Object value1, String field2, Object value2, boolean throwEx) {
-        return selectOne(new QueryWrapper<T>().eq(field1, value1).eq(field2, value2), throwEx);
+    default S selectOne(String field1, Object value1, String field2, Object value2, boolean throwEx) {
+        return selectOne(new QueryWrapper<S>().eq(field1, value1).eq(field2, value2), throwEx);
     }
 
-    default T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
+    default S selectOne(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2) {
         return selectOne(field1, value1, field2, value2, Boolean.FALSE);
     }
 
-    default T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2, boolean throwEx) {
-        return selectOne(new LambdaQueryWrapper<T>().eq(field1, value1).eq(field2, value2), throwEx);
+    default S selectOne(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2, boolean throwEx) {
+        return selectOne(new LambdaQueryWrapper<S>().eq(field1, value1).eq(field2, value2), throwEx);
     }
 
-    default T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2,
-                        SFunction<T, ?> field3, Object value3) {
+    default S selectOne(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2,
+                        SFunction<S, ?> field3, Object value3) {
         return selectOne(field1, value1, field2, value2, field3, value3, Boolean.FALSE);
     }
 
 
-    default T selectOne(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2,
-                        SFunction<T, ?> field3, Object value3, Boolean throwEx) {
-        return selectOne(new LambdaQueryWrapper<T>().eq(field1, value1).eq(field2, value2)
+    default S selectOne(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2,
+                        SFunction<S, ?> field3, Object value3, Boolean throwEx) {
+        return selectOne(new LambdaQueryWrapper<S>().eq(field1, value1).eq(field2, value2)
                 .eq(field3, value3), throwEx);
     }
 
@@ -100,64 +100,64 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
     }
 
     default Long selectCount(String field, Object value) {
-        return selectCount(new QueryWrapper<T>().eq(field, value));
+        return selectCount(new QueryWrapper<S>().eq(field, value));
     }
 
-    default Long selectCount(SFunction<T, ?> field, Object value) {
-        return selectCount(new LambdaQueryWrapper<T>().eq(field, value));
+    default Long selectCount(SFunction<S, ?> field, Object value) {
+        return selectCount(new LambdaQueryWrapper<S>().eq(field, value));
     }
 
-    default List<T> selectList() {
+    default List<S> selectList() {
         return selectList(new QueryWrapper<>());
     }
 
 
-    default Map<ID, T> selectMap() {
+    default Map<ID, S> selectMap() {
         return IterUtil.toMap(selectList(), BaseIdDO::getId);
     }
 
 
-    default <K> Map<K, T> selectMap(SFunction<T, K> keyField) {
+    default <K> Map<K, S> selectMap(SFunction<S, K> keyField) {
         return IterUtil.toMap(selectList(), keyField);
     }
 
 
-    default List<T> selectList(SFunction<T, ?> field, Object value) {
-        return selectList(new LambdaQueryWrapper<T>().eq(field, value));
+    default List<S> selectList(SFunction<S, ?> field, Object value) {
+        return selectList(new LambdaQueryWrapper<S>().eq(field, value));
     }
 
-    default Map<ID, T> selectMap(SFunction<T, ?> field, Object value) {
+    default Map<ID, S> selectMap(SFunction<S, ?> field, Object value) {
         return IterUtil.toMap(selectList(field, value), BaseIdDO::getId);
     }
 
-    default <K> Map<K, T> selectMap(SFunction<T, ?> field, Object value, SFunction<T, K> keyField) {
+    default <K> Map<K, S> selectMap(SFunction<S, ?> field, Object value, SFunction<S, K> keyField) {
         return IterUtil.toMap(selectList(field, value), keyField);
     }
 
-    default List<T> selectList(SFunction<T, ?> field, Collection<?> values) {
+    default List<S> selectList(SFunction<S, ?> field, Collection<?> values) {
         if (CollUtil.isEmpty(values)) {
             return CollUtil.newArrayList();
         }
-        return selectList(new LambdaQueryWrapper<T>().in(field, values));
+        return selectList(new LambdaQueryWrapper<S>().in(field, values));
     }
 
-    default Map<ID, T> selectMap(SFunction<T, ?> field, Collection<?> values) {
+    default Map<ID, S> selectMap(SFunction<S, ?> field, Collection<?> values) {
         return IterUtil.toMap(selectList(field, values), BaseIdDO::getId);
     }
 
-    default <K> Map<K, T> selectMap(SFunction<T, ?> field, Collection<?> values, SFunction<T, K> keyField) {
+    default <K> Map<K, S> selectMap(SFunction<S, ?> field, Collection<?> values, SFunction<S, K> keyField) {
         return IterUtil.toMap(selectList(field, values), keyField);
     }
 
-    default List<T> selectList(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
-        return selectList(new LambdaQueryWrapper<T>().eq(field1, value1).eq(field2, value2));
+    default List<S> selectList(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2) {
+        return selectList(new LambdaQueryWrapper<S>().eq(field1, value1).eq(field2, value2));
     }
 
-    default Map<ID, T> selectMap(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2) {
+    default Map<ID, S> selectMap(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2) {
         return IterUtil.toMap(selectList(field1, value1, field2, value2), BaseIdDO::getId);
     }
 
-    default <K> Map<K, T> selectMap(SFunction<T, ?> field1, Object value1, SFunction<T, ?> field2, Object value2, SFunction<T, K> keyField) {
+    default <K> Map<K, S> selectMap(SFunction<S, ?> field1, Object value1, SFunction<S, ?> field2, Object value2, SFunction<S, K> keyField) {
         return IterUtil.toMap(selectList(field1, value1, field2, value2), keyField);
     }
 
@@ -166,7 +166,7 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
      *
      * @param entities 实体们
      */
-    default void insertBatch(Collection<T> entities) {
+    default void insertBatch(Collection<S> entities) {
         Db.saveBatch(entities);
     }
 
@@ -176,36 +176,36 @@ public interface BaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> ex
      * @param entities 实体们
      * @param size     插入数量 Db.saveBatch 默认为 1000
      */
-    default void insertBatch(Collection<T> entities, int size) {
+    default void insertBatch(Collection<S> entities, int size) {
         Db.saveBatch(entities, size);
     }
 
-    default void updateBatch(T update) {
+    default void updateBatch(S update) {
         update(update, new QueryWrapper<>());
     }
 
-    default void updateBatch(Collection<T> entities) {
+    default void updateBatch(Collection<S> entities) {
         Db.updateBatchById(entities);
     }
 
-    default void updateBatch(Collection<T> entities, int size) {
+    default void updateBatch(Collection<S> entities, int size) {
         Db.updateBatchById(entities, size);
     }
 
-    default void insertOrUpdate(T entity) {
+    default void insertOrUpdate(S entity) {
         Db.saveOrUpdate(entity);
     }
 
-    default void insertOrUpdateBatch(Collection<T> collection) {
+    default void insertOrUpdateBatch(Collection<S> collection) {
         Db.saveOrUpdateBatch(collection);
     }
 
     default int delete(String field, String value) {
-        return delete(new QueryWrapper<T>().eq(field, value));
+        return delete(new QueryWrapper<S>().eq(field, value));
     }
 
-    default int delete(SFunction<T, ?> field, Object value) {
-        return delete(new LambdaQueryWrapper<T>().eq(field, value));
+    default int delete(SFunction<S, ?> field, Object value) {
+        return delete(new LambdaQueryWrapper<S>().eq(field, value));
     }
 
 }

@@ -175,7 +175,7 @@ public abstract class CacheAutoWrapService<S extends BaseDO, T extends BaseIdDO<
     }
 
     @Override
-    public <DS, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> Collection<T> getTargetList(M baseMapperX, SFunction<S, ?> sFunction, Collection<DS> collection, Function<List<S>, List<T>> function) {
+    public <DS, M extends BaseMapperX<S, Long>> Collection<T> getTargetList(M baseMapperX, SFunction<S, ?> sFunction, Collection<DS> collection) {
         //当前的Service拥有缓存和自动装载两个能力
         SFunction<S, ?> cacheSFunction = cacheDefineDOMapKey();
         //对比是否是同一属性
@@ -185,6 +185,6 @@ public abstract class CacheAutoWrapService<S extends BaseDO, T extends BaseIdDO<
             Map<String, T> all = GenericsUtil.check2Map(getCache().getAll(new HashSet<>(keys)));
             return all.values();
         }
-        return super.getTargetList(baseMapperX, sFunction, collection, function);
+        return super.getTargetList(baseMapperX, sFunction, collection);
     }
 }

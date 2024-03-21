@@ -11,11 +11,6 @@
     <artifactId>ty-framework-autoconfigure</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
 
         <dependency>
             <groupId>org.redisson</groupId>

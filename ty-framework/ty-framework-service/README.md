@@ -4,7 +4,7 @@
   * [1.引入核心依赖](#1引入核心依赖)
 * [二:使用示例](#二使用示例)
 * [三:功能详情](#三功能详情)
-  * [1.DO->DTO半自动装载](#1do-dto半自动装载)
+  * [1.DO->DTO自动装载](#1do-dto自动装载)
   * [2.数据缓存](#2数据缓存)
     * [(1)能力介绍](#1能力介绍)
     * [(2)使用示例](#2使用示例)
@@ -15,7 +15,7 @@
 # 项目特点
 1. 自动依赖mybatis-plus模块,拥有cloud下mybatis-plus模块所有能力.具体见:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-mybatis-plus
 2. 提供实体对象缓存能力,简化简单缓存业务代码开发
-3. DO<-->DTO 通过Mapstruct转换,增强DO-->DTO转换,支持简单关联字段半自动映射,支持审计字段自动映射
+3. DO<-->DTO 通过Mapstruct转换,增强DO-->DTO转换,支持简单关联字段自动映射,支持审计字段自动映射
 
 # 一:框架集成
 
@@ -97,18 +97,18 @@ public class UserServiceImpl extends GenericAutoWrapService<User, UserFullDTO, U
 1.Service需要继承父Service以获得对应能力,同时需要指定泛型,泛型1为数据库表对应的实体类,泛型2为主DTO类,泛型3为对应Mapper类(如存在)
 2.主要提供以下父Service
 - GenericService:支持简化开发api
-- AutoWrapService:支持简化开发api,支持DO->DTO半自动装载
-- CacheAutoWrapService:支持简化开发api,支持DO->DTO半自动装载,支持自定义数据缓存
-- AllCacheAutoWrapService:支持简化开发api,支持DO->DTO半自动装载,支持全量数据缓存
+- AutoWrapService:支持简化开发api,支持DO->DTO自动装载
+- CacheAutoWrapService:支持简化开发api,支持DO->DTO自动装载,支持自定义数据缓存
+- AllCacheAutoWrapService:支持简化开发api,支持DO->DTO自动装载,支持全量数据缓存
 
 
 # 三:功能详情
-## 1.DO->DTO半自动装载
+## 1.DO->DTO自动装载
 一张表中有几个字段是映射的其他表,比如用户拥有areaId,roleCode属性,分别对应区域表及角色表.这种一个字段映射其他表是非常常见的,
 在开发过程中,我们通常会定义一个DTO,将类似以上的主表内容以及其他表内容通过DTO进行封装,这就需要针对这种其他表映射字段进行封装,
 当字段较多时,开发难度虽不大,但是比较繁琐.而在实际开发过程,这种情况非常常见
 
-DO->DTO半自动装载主要是针对以上场景,简化开发过程
+DO->DTO自动装载主要是针对以上场景,简化开发过程
 整个自动装载流程,以User表的roleCode为例:
 RoleId->查询RoleDO->转换为RoleDTO->写入到UserDTO对应属性roleDTO中 通用的步骤即:
 - [字段->DO]
@@ -147,7 +147,7 @@ baseAutoCovert中在mapstruct标准转换执行完成后,会自动调用自动�
 ### (2)使用示例
 ```java
 @Service
-public class AddressServiceImpl extends MpAllCacheService<Address, AddrDTO, AddressMapper> implements IAddressService {
+public class AddressServiceImpl extends AllCacheAutoWrapService<Address, AddrDTO, AddressMapper> implements IAddressService {
     @Override
     public List<AddrDTO> getByCodesFromCache(List<String> codes) {
         Map<String, AddrDTO> all = cacheGetAll(codes);
@@ -271,7 +271,7 @@ public class AddressServiceImpl extends MpAllCacheService<Address, AddrDTO, Addr
 答:顶层接口定义了autoWrap的方法,支持重写[字段->DO]和[DO->DTO]过程
 ```java
 @Service
-public class AddressServiceImpl extends MpAllCacheService<Address, AddrDTO, AddressMapper> implements IAddressService {
+public class AddressServiceImpl extends AllCacheAutoWrapService<Address, AddrDTO, AddressMapper> implements IAddressService {
     /**
      * 自动装载Service:
      * 定义code->AddrDTO自动装载
@@ -293,7 +293,7 @@ public class AddressServiceImpl extends MpAllCacheService<Address, AddrDTO, Addr
 
 ```java
 @Service
-public class RoleServiceImpl extends GenericAutoWrapService<Role, RoleDTO, RoleMapper> implements IRoleService {
+public class RoleServiceImpl extends GenericService<Role, RoleDTO, RoleMapper> implements IRoleService {
    /**
    * 为角色表定义code->RoleSimpleDTO自动装载
    * @return
