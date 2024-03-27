@@ -3,7 +3,6 @@ package com.ty.mid.framework.mybatisplus.core.dataobject;
 import com.baomidou.mybatisplus.annotation.*;
 import com.ty.mid.framework.common.entity.Auditable;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
 import lombok.Setter;
 import org.apache.ibatis.type.JdbcType;
 
@@ -54,6 +53,7 @@ public abstract class BaseDO implements Auditable<Long>, Serializable {
 
     /**
      * 是否删除 0:未删除 1:已删除
+     *
      * @see com.ty.mid.framework.common.constant.DeletedEnum
      */
     @Schema(description = "是否删除 0:未删除 1:已删除")

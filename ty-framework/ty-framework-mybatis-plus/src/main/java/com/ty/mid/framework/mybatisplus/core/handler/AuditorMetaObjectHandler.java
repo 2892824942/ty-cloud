@@ -17,7 +17,7 @@ public class AuditorMetaObjectHandler<T extends Serializable> implements MetaObj
 
     protected AuditorInfoResolver<T> auditorInfoResolver;
 
-    public  AuditorMetaObjectHandler(AuditorInfoResolver<T> auditorInfoResolver) {
+    public AuditorMetaObjectHandler(AuditorInfoResolver<T> auditorInfoResolver) {
         this.auditorInfoResolver = auditorInfoResolver;
     }
 
@@ -67,7 +67,7 @@ public class AuditorMetaObjectHandler<T extends Serializable> implements MetaObj
                     "DEFAULT_AUDITOR",
                     ThreadUtils.getCurrentThreadNameSafety(), ThreadUtils.getCurrentThreadGroupNameSafety());
             info = auditorInfoResolver.resolveCurrentAuditor();
-            if (null ==info){
+            if (null == info) {
                 throw new FrameworkException("默认的用户上下文信息不能为空");
             }
         }

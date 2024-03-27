@@ -58,12 +58,11 @@ public class SafeGetUtil {
     }
 
 
-
     public static <K, V> V get(K obj, Function<K, V> function, V defaultValue) {
         return Optional.ofNullable(obj).map(function).orElse(defaultValue);
     }
 
-    public static <T,R> Collection<T> get(Collection<T> obj) {
+    public static <T, R> Collection<T> get(Collection<T> obj) {
         return Optional.ofNullable(obj).orElse(Collections.emptyList());
     }
 
@@ -71,7 +70,6 @@ public class SafeGetUtil {
     public static <K, V> Map<K, V> get(Map<K, V> obj) {
         return Optional.ofNullable(obj).orElse(Collections.emptyMap());
     }
-
 
 
 }

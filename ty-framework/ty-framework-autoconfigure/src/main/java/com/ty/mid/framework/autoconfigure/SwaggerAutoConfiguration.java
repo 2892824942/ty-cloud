@@ -1,7 +1,5 @@
 package com.ty.mid.framework.autoconfigure;
 
-import cn.hutool.core.collection.CollUtil;
-import com.ty.mid.framework.core.spring.SpringContextHelper;
 import com.ty.mid.framework.web.config.WebConfig;
 import com.ty.mid.framework.web.swagger.SwaggerUtil;
 import com.ty.mid.framework.web.swagger.config.SwaggerConfig;
@@ -10,34 +8,22 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.media.IntegerSchema;
-import io.swagger.v3.oas.models.media.StringSchema;
-import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.*;
 import org.springdoc.core.customizers.OpenApiBuilderCustomizer;
 import org.springdoc.core.customizers.ServerBaseUrlCustomizer;
 import org.springdoc.core.providers.JavadocProvider;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
-import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.http.HttpHeaders;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static com.ty.mid.framework.web.core.util.WebFrameworkUtils.HEADER_TENANT_ID;
 
 /**
  * Swagger 自动配置类，基于 OpenAPI + Springdoc 实现。
@@ -49,7 +35,7 @@ import static com.ty.mid.framework.web.core.util.WebFrameworkUtils.HEADER_TENANT
  * @author suyouliang
  */
 @ConditionalOnClass({OpenAPI.class})
-@EnableConfigurationProperties({SwaggerConfig.class,WebConfig.class})
+@EnableConfigurationProperties({SwaggerConfig.class, WebConfig.class})
 @ConditionalOnProperty(prefix = "springdoc.api-docs", name = "enabled", havingValue = "true", matchIfMissing = true)
 public class SwaggerAutoConfiguration {
 

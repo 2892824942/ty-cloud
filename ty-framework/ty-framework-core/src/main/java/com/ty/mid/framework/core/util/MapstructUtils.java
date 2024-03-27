@@ -64,9 +64,6 @@ public class MapstructUtils {
      * @return desc
      */
     public static <T, V> List<V> convert(List<T> sourceList, Class<V> desc) {
-        if (ObjectUtil.isNull(sourceList)) {
-            return null;
-        }
         if (CollUtil.isEmpty(sourceList)) {
             return CollUtil.newArrayList();
         }

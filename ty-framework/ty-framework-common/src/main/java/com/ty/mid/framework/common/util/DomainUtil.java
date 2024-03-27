@@ -1,7 +1,7 @@
 package com.ty.mid.framework.common.util;
 
-import com.ty.mid.framework.common.pojo.KVPair;
 import com.ty.mid.framework.common.lang.NonNull;
+import com.ty.mid.framework.common.pojo.KVPair;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
 
 import java.util.Collection;

@@ -45,6 +45,112 @@ public class MPJLambdaWrapperX<T> extends MPJAbstractLambdaWrapper<T, MPJLambdaW
         Query<MPJLambdaWrapperX<T>>, QueryLabel<MPJLambdaWrapperX<T>>, Chain<T>, SelectWrapper<T, MPJLambdaWrapperX<T>> {
 
 
+    /**
+     * 查询的字段
+     */
+    @Getter
+    private final List<Select> selectColumns = new ArrayList<>();
+    /**
+     * 映射关系
+     */
+    @Getter
+    private final List<Label<?>> resultMapMybatisLabel = new ArrayList<>();
+    /**
+     * 查询字段 sql
+     */
+    private SharedString sqlSelect = new SharedString();
+    /**
+     * 是否 select distinct
+     */
+    private boolean selectDistinct = false;
+    /**
+     * union sql
+     */
+    private SharedString unionSql;
+    /**
+     * 自定义wrapper索引
+     */
+    private AtomicInteger wrapperIndex;
+    /**
+     * 自定义wrapper
+     */
+    @Getter
+    private Map<String, Wrapper<?>> wrapperMap;
+
+    /**
+     * 推荐使用 带 class 的构造方法
+     */
+    public MPJLambdaWrapperX() {
+        super();
+    }
+
+    /**
+     * 推荐使用此构造方法
+     */
+    public MPJLambdaWrapperX(Class<T> clazz) {
+        super(clazz);
+    }
+
+    /**
+     * 构造方法
+     *
+     * @param entity 主表实体
+     */
+    public MPJLambdaWrapperX(T entity) {
+        super(entity);
+    }
+
+    /**
+     * 自定义主表别名
+     */
+    public MPJLambdaWrapperX(String alias) {
+        super(alias);
+    }
+
+    /**
+     * 构造方法
+     *
+     * @param clazz 主表class类
+     * @param alias 主表别名
+     */
+    public MPJLambdaWrapperX(Class<T> clazz, String alias) {
+        super(clazz, alias);
+    }
+
+    /**
+     * 构造方法
+     *
+     * @param entity 主表实体类
+     * @param alias  主表别名
+     */
+    public MPJLambdaWrapperX(T entity, String alias) {
+        super(entity, alias);
+    }
+
+    /****************************************原类的方法******************************************/
+    /**
+     * 不建议直接 new 该实例，使用 JoinWrappers.lambda(UserDO.class)
+     */
+    MPJLambdaWrapperX(T entity, Class<T> entityClass, SharedString sqlSelect, AtomicInteger paramNameSeq,
+                      Map<String, Object> paramNameValuePairs, MergeSegments mergeSegments,
+                      SharedString lastSql, SharedString sqlComment, SharedString sqlFirst,
+                      TableList tableList, Integer index, String keyWord, Class<?> joinClass, String tableName) {
+        super.setEntity(entity);
+        super.setEntityClass(entityClass);
+        this.paramNameSeq = paramNameSeq;
+        this.paramNameValuePairs = paramNameValuePairs;
+        this.expression = mergeSegments;
+        this.sqlSelect = sqlSelect;
+        this.lastSql = lastSql;
+        this.sqlComment = sqlComment;
+        this.sqlFirst = sqlFirst;
+        this.tableList = tableList;
+        this.index = index;
+        this.keyWord = keyWord;
+        this.joinClass = joinClass;
+        this.tableName = tableName;
+    }
+
     public <R> MPJLambdaWrapperX<T> likeIfPresent(SFunction<R, ?> column, String val) {
         MPJWrappers.lambdaJoin().like(column, val);
         if (org.springframework.util.StringUtils.hasText(val)) {
@@ -167,116 +273,6 @@ public class MPJLambdaWrapperX<T> extends MPJAbstractLambdaWrapper<T, MPJLambdaW
     public MPJLambdaWrapperX<T> addDefaultTimelinessQuery() {
         return this.addTimelinessQuery(LocalDateTime.now(), null);
     }
-
-    /****************************************原类的方法******************************************/
-    /**
-     * 查询字段 sql
-     */
-    private SharedString sqlSelect = new SharedString();
-    /**
-     * 是否 select distinct
-     */
-    private boolean selectDistinct = false;
-    /**
-     * 查询的字段
-     */
-    @Getter
-    private final List<Select> selectColumns = new ArrayList<>();
-    /**
-     * 映射关系
-     */
-    @Getter
-    private final List<Label<?>> resultMapMybatisLabel = new ArrayList<>();
-
-    /**
-     * union sql
-     */
-    private SharedString unionSql;
-
-    /**
-     * 自定义wrapper索引
-     */
-    private AtomicInteger wrapperIndex;
-
-    /**
-     * 自定义wrapper
-     */
-    @Getter
-    private Map<String, Wrapper<?>> wrapperMap;
-
-    /**
-     * 推荐使用 带 class 的构造方法
-     */
-    public MPJLambdaWrapperX() {
-        super();
-    }
-
-    /**
-     * 推荐使用此构造方法
-     */
-    public MPJLambdaWrapperX(Class<T> clazz) {
-        super(clazz);
-    }
-
-    /**
-     * 构造方法
-     *
-     * @param entity 主表实体
-     */
-    public MPJLambdaWrapperX(T entity) {
-        super(entity);
-    }
-
-    /**
-     * 自定义主表别名
-     */
-    public MPJLambdaWrapperX(String alias) {
-        super(alias);
-    }
-
-    /**
-     * 构造方法
-     *
-     * @param clazz 主表class类
-     * @param alias 主表别名
-     */
-    public MPJLambdaWrapperX(Class<T> clazz, String alias) {
-        super(clazz, alias);
-    }
-
-    /**
-     * 构造方法
-     *
-     * @param entity 主表实体类
-     * @param alias  主表别名
-     */
-    public MPJLambdaWrapperX(T entity, String alias) {
-        super(entity, alias);
-    }
-
-    /**
-     * 不建议直接 new 该实例，使用 JoinWrappers.lambda(UserDO.class)
-     */
-    MPJLambdaWrapperX(T entity, Class<T> entityClass, SharedString sqlSelect, AtomicInteger paramNameSeq,
-                      Map<String, Object> paramNameValuePairs, MergeSegments mergeSegments,
-                      SharedString lastSql, SharedString sqlComment, SharedString sqlFirst,
-                      TableList tableList, Integer index, String keyWord, Class<?> joinClass, String tableName) {
-        super.setEntity(entity);
-        super.setEntityClass(entityClass);
-        this.paramNameSeq = paramNameSeq;
-        this.paramNameValuePairs = paramNameValuePairs;
-        this.expression = mergeSegments;
-        this.sqlSelect = sqlSelect;
-        this.lastSql = lastSql;
-        this.sqlComment = sqlComment;
-        this.sqlFirst = sqlFirst;
-        this.tableList = tableList;
-        this.index = index;
-        this.keyWord = keyWord;
-        this.joinClass = joinClass;
-        this.tableName = tableName;
-    }
-
 
     /**
      * sql去重

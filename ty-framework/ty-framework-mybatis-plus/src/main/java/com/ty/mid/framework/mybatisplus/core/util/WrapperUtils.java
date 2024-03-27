@@ -10,7 +10,6 @@ import com.github.yulichang.toolkit.Asserts;
 import com.github.yulichang.toolkit.LogicInfoUtils;
 import com.github.yulichang.toolkit.TableHelper;
 import com.github.yulichang.toolkit.sql.SqlScriptUtils;
-import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.ty.mid.framework.mybatisplus.core.query.MPJLambdaWrapperX;
 
 import java.util.Objects;
@@ -18,6 +17,7 @@ import java.util.Optional;
 
 /**
  * 由于重写AbstractLambdaWrapper抄过来的类,后续如优化子类链式调用,可优化
+ *
  * @since 1.4.5
  */
 @SuppressWarnings("DuplicatedCode")

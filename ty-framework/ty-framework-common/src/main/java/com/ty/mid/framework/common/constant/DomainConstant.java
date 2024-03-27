@@ -6,7 +6,7 @@ public interface DomainConstant {
         /**
          * RPC API 的前缀
          */
-        String RPC_API_PREFIX ="/rpc-api";
+        String RPC_API_PREFIX = "/rpc-api";
     }
 
     interface Fields {

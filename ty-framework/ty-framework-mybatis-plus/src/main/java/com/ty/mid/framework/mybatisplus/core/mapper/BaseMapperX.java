@@ -10,7 +10,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.github.yulichang.base.MPJBaseMapper;
-import com.github.yulichang.interfaces.MPJBaseJoin;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.pojo.PageParam;
 import com.ty.mid.framework.common.pojo.PageResult;

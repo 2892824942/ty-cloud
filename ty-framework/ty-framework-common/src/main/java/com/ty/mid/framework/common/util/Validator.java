@@ -1,6 +1,6 @@
 package com.ty.mid.framework.common.util;
 
-import com.ty.mid.framework.common.exception.FrameworkException;
+import com.ty.mid.framework.common.exception.ParamException;
 import com.ty.mid.framework.common.lang.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -38,7 +38,7 @@ public class Validator {
 
     public static void requireNonNull(byte[] val, String errorCode, String errorMessage) {
         if (null == val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -49,7 +49,7 @@ public class Validator {
     public static void requireNonNull(String val, String errorCode, String errorMessage) {
         // log.info("checking nonNull, value: {}", val);
         if (null == val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -60,7 +60,7 @@ public class Validator {
     public static void requireNonNull(Integer val, String errorCode, String errorMessage) {
         // log.info("checking nonNull, value: {}", val);
         if (null == val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -71,7 +71,7 @@ public class Validator {
     public static void requireNonNull(Long val, String errorCode, String errorMessage) {
         // log.info("checking nonNull, value: {}", val);
         if (null == val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -82,7 +82,7 @@ public class Validator {
     public static void requireNonNull(Double val, String errorCode, String errorMessage) {
         // log.info("checking nonNull, value: {}", val);
         if (null == val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -93,7 +93,7 @@ public class Validator {
     public static void requireNonNull(Float val, String errorCode, String errorMessage) {
         // log.info("checking nonNull, value: {}", val);
         if (null == val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -104,7 +104,7 @@ public class Validator {
     public static void requireNonNull(BigDecimal val, String errorCode, String errorMessage) {
         // log.info("checking nonNull, value: {}", val);
         if (null == val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -115,7 +115,7 @@ public class Validator {
     public static void requireNonNull(Date val, String errorCode, String errorMessage) {
         // log.info("checking nonNull, value: {}", val);
         if (null == val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -126,7 +126,7 @@ public class Validator {
     public static void requireNonNull(Object val, String errorCode, String errorMessage) {
         // log.info("checking nonNull, value: {}", val);
         if (null == val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -139,7 +139,7 @@ public class Validator {
     public static void requireNull(String val, String errorCode, String errorMessage) {
         // log.info("checking null, value: {}", val);
         if (null != val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -150,7 +150,7 @@ public class Validator {
     public static void requireNull(Integer val, String errorCode, String errorMessage) {
         // log.info("checking null, value: {}", val);
         if (null != val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -161,7 +161,7 @@ public class Validator {
     public static void requireNull(Long val, String errorCode, String errorMessage) {
         // log.info("checking null, value: {}", val);
         if (null != val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -172,7 +172,7 @@ public class Validator {
     public static void requireNull(Double val, String errorCode, String errorMessage) {
         // log.info("checking null, value: {}", val);
         if (null != val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -183,7 +183,7 @@ public class Validator {
     public static void requireNull(Float val, String errorCode, String errorMessage) {
         // log.info("checking null, value: {}", val);
         if (null != val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -194,7 +194,7 @@ public class Validator {
     public static void requireNull(BigDecimal val, String errorCode, String errorMessage) {
         // log.info("checking null, value: {}", val);
         if (null != val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -205,7 +205,7 @@ public class Validator {
     public static void requireNull(Date val, String errorCode, String errorMessage) {
         // log.info("checking null, value: {}", val);
         if (null != val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -216,7 +216,7 @@ public class Validator {
     public static void requireNull(Object val, String errorCode, String errorMessage) {
         // log.info("checking null, value: {}", val);
         if (null != val) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -229,7 +229,7 @@ public class Validator {
     public static void requireNonEmpty(String val, String code, String errorMessage) {
         // log.info("checking nonEmpty, value: {}", val);
         if (StringUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -240,7 +240,7 @@ public class Validator {
     public static void requireNonEmpty(List<?> val, String code, String errorMessage) {
         // log.info("checking nonEmpty, value: {}", val);
         if (CollectionUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -251,7 +251,7 @@ public class Validator {
     public static void requireNonEmpty(Set<?> val, String code, String errorMessage) {
         // log.info("checking nonEmpty, value: {}", val);
         if (CollectionUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -262,7 +262,7 @@ public class Validator {
     public static void requireNonEmpty(Collection<?> val, String code, String errorMessage) {
         // log.info("checking nonEmpty, value: {}", val);
         if (CollectionUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -273,7 +273,7 @@ public class Validator {
     public static void requireNonEmpty(Map<?, ?> val, String code, String errorMessage) {
         // log.info("checking nonEmpty, value: {}", val);
         if (MapUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -285,7 +285,7 @@ public class Validator {
     public static void requireEmpty(String val, String code, String errorMessage) {
         // log.info("checking empty, value: {}", val);
         if (!StringUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -296,7 +296,7 @@ public class Validator {
     public static void requireEmpty(List<?> val, String code, String errorMessage) {
         // log.info("checking empty, value: {}", val);
         if (!CollectionUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -307,7 +307,7 @@ public class Validator {
     public static void requireEmpty(Set<?> val, String code, String errorMessage) {
         // log.info("checking empty, value: {}", val);
         if (!CollectionUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -318,7 +318,7 @@ public class Validator {
     public static void requireEmpty(Collection<?> val, String code, String errorMessage) {
         // log.info("checking empty, value: {}", val);
         if (!CollectionUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -329,7 +329,7 @@ public class Validator {
     public static void requireEmpty(Map<?, ?> val, String code, String errorMessage) {
         // log.info("checking empty, value: {}", val);
         if (!MapUtils.isEmpty(val)) {
-            throw new FrameworkException(code, errorMessage);
+            doThrowException(code, errorMessage);
         }
     }
 
@@ -339,7 +339,7 @@ public class Validator {
 
     public static void requireNonEmpty(byte[] val, String errorCode, String errorMessage) {
         if (null == val || val.length == 0) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -352,7 +352,7 @@ public class Validator {
     public static void requireTrue(final boolean expression, String errorCode, String errorMessage) {
         // log.info("checking true, value: {}", expression);
         if (!expression) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -365,7 +365,7 @@ public class Validator {
     public static void requireFalse(final boolean expression, String errorCode, String errorMessage) {
         // log.info("checking false, value: {}", expression);
         if (expression) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -380,7 +380,7 @@ public class Validator {
         requireNonNull(b, formatNonNullMessage("b"));
 
         if (!a.equals(b)) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -394,7 +394,7 @@ public class Validator {
         requireNonNull(b, formatNonNullMessage("b"));
 
         if (!a.equals(b)) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -408,7 +408,7 @@ public class Validator {
         requireNonNull(b, formatNonNullMessage("b"));
 
         if (!a.equals(b)) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -422,7 +422,7 @@ public class Validator {
         requireNonNull(b, formatNonNullMessage("b"));
 
         if (!a.equals(b)) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -436,7 +436,7 @@ public class Validator {
         requireNonNull(b, formatNonNullMessage("b"));
 
         if (!a.equals(b)) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -450,7 +450,7 @@ public class Validator {
         requireNonNull(b, formatNonNullMessage("b"));
 
         if (fixPrice(a).compareTo(fixPrice(b)) != 0) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -464,7 +464,7 @@ public class Validator {
         requireNonNull(b, formatNonNullMessage("b"));
 
         if (fixPrice(a, scale).compareTo(fixPrice(b, scale)) != 0) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -478,7 +478,7 @@ public class Validator {
         requireNonNull(b, formatNonNullMessage("b"));
 
         if (!a.equals(b)) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -491,7 +491,7 @@ public class Validator {
         requireNonEmpty(in, formatNonNullMessage("in"));
 
         if (!in.contains(object)) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -504,7 +504,7 @@ public class Validator {
         requireNonEmpty(in, formatNonNullMessage("in"));
 
         if (!in.contains(object)) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -517,7 +517,7 @@ public class Validator {
         requireNonEmpty(in, formatNonNullMessage("in"));
 
         if (!in.contains(object)) {
-            throw new FrameworkException(errorCode, errorMessage);
+            doThrowException(errorCode, errorMessage);
         }
     }
 
@@ -560,6 +560,10 @@ public class Validator {
 
     private static BigDecimal fixPrice(BigDecimal decimal, int scale) {
         return decimal.setScale(scale, DEFAULT_PRICE_ROUNDING_MODE);
+    }
+
+    private static void doThrowException(String errorCode, String errorMessage) {
+        throw new ParamException(errorCode, errorMessage);
     }
 
 }

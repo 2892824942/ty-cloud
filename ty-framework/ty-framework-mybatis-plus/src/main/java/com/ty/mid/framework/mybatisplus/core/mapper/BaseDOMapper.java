@@ -28,7 +28,6 @@ import org.apache.ibatis.annotations.Mapper;
  * <p>
  * 另外一个解决方案是给相关Wrapper指定泛型类型，告诉mp让他加载子类的字段信息，也可以解决该问题：
  * 使用{@link com.baomidou.mybatisplus.core.conditions.AbstractWrapper#setEntityClass(Class)}
- *
  */
 @Mapper
 public interface BaseDOMapper extends BaseMapper<BaseDO> {

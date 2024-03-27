@@ -4,12 +4,17 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
+import com.ty.mid.framework.common.dto.AbstractNameDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.exception.FrameworkException;
+import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.common.util.Validator;
+import com.ty.mid.framework.common.util.collection.CollectionUtils;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
 import com.ty.mid.framework.service.wrapper.AutoWrapService;
+import com.ty.mid.framework.service.wrapper.UserNameTranslation;
 import lombok.extern.slf4j.Slf4j;
+import org.mapstruct.MappingTarget;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -30,7 +35,7 @@ public class MappingProvider {
         return MappingProvider.CONTAINER;
     }
 
-    public static <S extends BaseIdDO<Long>,T extends BaseIdDO<Long>> void autoWrapper(S source, T target) {
+    public static <S extends BaseIdDO<Long>, T extends BaseIdDO<Long>> void autoWrapper(S source, T target) {
         autoWrapper(Collections.singletonList(source), Collections.singletonList(target));
     }
 
@@ -62,7 +67,7 @@ public class MappingProvider {
             if (CollUtil.isEmpty(targetWrapperCandidates)) {
                 //未找到对应的自动装载器
                 log.debug("target class not found field when auto covert process.check out you target:{} whether forgot define " +
-                        ",or make a mistake value Class on  @BMapping in source:{} ", targetFirst.getClass(), sourceList.iterator().next().getClass());
+                        ",or make a mistake value Class on  @AutoWrap in source:{} ", targetFirst.getClass(), sourceList.iterator().next().getClass());
 
                 continue;
 
@@ -116,7 +121,12 @@ public class MappingProvider {
                         continue;
                     }
                     if (!isCollection) {
-                        MappingProvider.setTargetField(target, targetField, dataMap.get(idKeyMap.get(target.getId())));
+                        Object o = dataMap.get(idKeyMap.get(target.getId()));
+                        if (Objects.nonNull(o)) {
+                            handleAbstractNameDTOList(Collections.singletonList(o));
+                        }
+
+                        MappingProvider.setTargetField(target, targetField, o);
                     } else {
                         //Collection兼容
                         Object val = idKeyMap.get(target.getId());
@@ -125,6 +135,7 @@ public class MappingProvider {
                             continue;
                         }
                         List<Object> realDate = keyCollection.stream().map(dataMap::get).filter(Objects::nonNull).collect(Collectors.toList());
+                        handleAbstractNameDTOList(realDate);
                         MappingProvider.setTargetField(target, targetField, realDate);
                     }
 
@@ -133,6 +144,49 @@ public class MappingProvider {
             }
 
         }
+    }
+
+    public static void afterAll(@MappingTarget Object object) {
+        if (Objects.isNull(object)) {
+            return;
+        }
+        if (List.class.isAssignableFrom(object.getClass())) {
+            handleAbstractNameDTOList(GenericsUtil.toList(object));
+        } else {
+            handleAbstractNameDTOList(Collections.singletonList(object));
+        }
+    }
+
+
+    static <T extends AbstractNameDTO> void handleAbstractNameDTOList(@MappingTarget List<Object> objects) {
+        if (CollUtil.isEmpty(objects)) {
+            return;
+        }
+        if (AbstractNameDTO.class.isAssignableFrom(objects.iterator().next().getClass())) {
+            doHandleAbstractNameDTOList(GenericsUtil.toList(objects));
+        }
+    }
+
+    //后续可沉淀为策略
+
+    static <T extends AbstractNameDTO> void doHandleAbstractNameDTOList(@MappingTarget List<T> abstractNameDTOList) {
+        List<Long> creatorIdList = CollectionUtils.convertList(abstractNameDTOList, AbstractNameDTO::getCreator);
+        List<Long> updaterIdList = CollectionUtils.convertList(abstractNameDTOList, AbstractNameDTO::getUpdater);
+        Collection<Long> userIdList = CollUtil.addAll(creatorIdList, updaterIdList);
+        if (CollUtil.isEmpty(userIdList)) {
+            return;
+        }
+        UserNameTranslation userNameTranslation = SpringContextHelper.getBean(UserNameTranslation.class);
+        Map<Long, String> userNameMap = userNameTranslation.getUserNameMap(userIdList);
+        if (CollUtil.isEmpty(userNameMap)) {
+            return;
+        }
+        abstractNameDTOList.forEach(abstractNameDTO -> {
+            abstractNameDTO.setCreatorName(userNameMap.get(abstractNameDTO.getCreator()));
+            abstractNameDTO.setUpdaterName(userNameMap.get(abstractNameDTO.getUpdater()));
+
+        });
+
     }
 
     /**

@@ -4,7 +4,7 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.ty.mid.framework.common.exception.ServiceException;
+import com.ty.mid.framework.common.exception.BizException;
 import com.ty.mid.framework.common.pojo.BaseResult;
 import com.ty.mid.framework.common.util.JsonUtils;
 import com.ty.mid.framework.core.monitor.TracerUtils;
@@ -83,8 +83,9 @@ public class GlobalExceptionHandler {
         if (ex instanceof HttpRequestMethodNotSupportedException) {
             return httpRequestMethodNotSupportedExceptionHandler((HttpRequestMethodNotSupportedException) ex);
         }
-        if (ex instanceof ServiceException) {
-            return serviceExceptionHandler((ServiceException) ex);
+
+        if (ex instanceof BizException) {
+            return httpRequestMethodNotSupportedExceptionHandler((HttpRequestMethodNotSupportedException) ex);
         }
 
         return defaultExceptionHandler(request, ex);
@@ -178,6 +179,7 @@ public class GlobalExceptionHandler {
         return BaseResult.fail(METHOD_NOT_ALLOWED.getCode(), String.format("请求方法不正确:%s", ex.getMessage()));
     }
 
+
     /**
      * 处理 Resilience4j 限流抛出的异常
      */
@@ -187,15 +189,15 @@ public class GlobalExceptionHandler {
     }
 
     /**
-     * 处理业务异常 ServiceException
+     * 处理框架定义业务异常 BizException
      * <p>
-     * 例如说，商品库存不足，用户手机号已存在。
      */
-    @ExceptionHandler(value = ServiceException.class)
-    public BaseResult<?> serviceExceptionHandler(ServiceException ex) {
-        log.info("[serviceExceptionHandler]", ex);
+    @ExceptionHandler(value = BizException.class)
+    public BaseResult<?> bizException(BizException ex) {
+        log.info("[bizException]", ex);
         return BaseResult.fail(ex.getCode(), ex.getMessage());
     }
+
 
     /**
      * 处理系统异常，兜底处理所有的一切

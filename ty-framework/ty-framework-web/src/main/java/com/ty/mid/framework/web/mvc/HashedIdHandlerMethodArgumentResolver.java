@@ -1,8 +1,8 @@
 package com.ty.mid.framework.web.mvc;
 
-import com.ty.mid.framework.web.annotation.desensitize.HashedId;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.HashIdUtil;
+import com.ty.mid.framework.web.annotation.desensitize.HashedId;
 import com.ty.mid.framework.web.config.WebConfig;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

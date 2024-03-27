@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * 可缓存service的定义
  */
 @SuppressWarnings("unchecked")
-public interface AutoWrapper<S extends BaseDO,T extends BaseIdDO<Long>> {
+public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>> {
 
     default Class<T> currentDTOClass() {
         return (Class<T>) ReflectionKit.getSuperClassGenericType(this.getClass(), AutoWrapper.class, 1);
@@ -94,10 +94,6 @@ public interface AutoWrapper<S extends BaseDO,T extends BaseIdDO<Long>> {
 
     default <DS, M extends BaseMapperX<S, Long>> Collection<T> getTargetList(M baseMapperX, SFunction<S, ?> sFunction, Collection<DS> collection) {
         List<S> mDo = baseMapperX.selectList(sFunction, collection);
-        if (CollUtil.isEmpty(mDo)) {
-            return Collections.emptyList();
-        }
-
-        return MapstructUtils.convert(mDo,currentDTOClass());
+        return MapstructUtils.convert(mDo, currentDTOClass());
     }
 }

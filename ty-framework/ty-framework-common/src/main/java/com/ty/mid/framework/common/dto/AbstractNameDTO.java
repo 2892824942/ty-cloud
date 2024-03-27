@@ -1,12 +1,9 @@
 package com.ty.mid.framework.common.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ty.mid.framework.common.entity.Auditable;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
 
 @Data
 public abstract class AbstractNameDTO extends AbstractDTO implements Serializable {

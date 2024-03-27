@@ -20,7 +20,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
 @EnableConfigurationProperties(WebConfig.class)
-@ConditionalOnProperty(prefix = WebConfig.PREFIX, name = "xss.enable", havingValue = "true", matchIfMissing = true) // 设置为 false 时，禁用
+@ConditionalOnProperty(prefix = WebConfig.PREFIX, name = "xss.enable", havingValue = "true", matchIfMissing = true)
+// 设置为 false 时，禁用
 public class XssAutoConfiguration implements WebMvcConfigurer {
 
     /**

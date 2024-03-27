@@ -1,27 +1,30 @@
 <!-- TOC -->
+
 * [项目特点](#项目特点)
 * [一:框架集成](#一框架集成)
-  * [1.引入核心依赖](#1引入核心依赖)
-  * [2.使用redis厂商lock默认实现Redisson](#2使用redis厂商lock默认实现redisson)
-  * [3.使用zookeeper厂商lock](#3使用zookeeper厂商lock)
+    * [1.引入核心依赖](#1引入核心依赖)
+    * [2.使用redis厂商lock默认实现Redisson](#2使用redis厂商lock默认实现redisson)
+    * [3.使用zookeeper厂商lock](#3使用zookeeper厂商lock)
 * [二:api调用示例](#二api调用示例)
 * [三:注解支持](#三注解支持)
-  * [1.注解介绍](#1注解介绍)
-  * [2.注解使用示例](#2注解使用示例)
+    * [1.注解介绍](#1注解介绍)
+    * [2.注解使用示例](#2注解使用示例)
 * [四:lock增强](#四lock增强)
 * [五:全局锁降级](#五全局锁降级)
 * [六:配置](#六配置)
-  * [1.配置清单](#1配置清单)
-  * [2.具体配置介绍](#2具体配置介绍)
+    * [1.配置清单](#1配置清单)
+    * [2.具体配置介绍](#2具体配置介绍)
 * [七:CUSTOMER的SPI扩展示例](#七customer的spi扩展示例)
-  * [1.SPI扩展点](#1spi扩展点)
-  * [2.使用示例](#2使用示例)
+    * [1.SPI扩展点](#1spi扩展点)
+    * [2.使用示例](#2使用示例)
+
 <!-- TOC -->
 
 
 开源地址:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-lock
 
 # 项目特点
+
 1. 集成分布式锁能力,starter依赖即可使用分布式锁能力
 2. 抽象分布式锁的集成，方便快速切换分布式锁方案(目前支持jvm,redis,zookeeper)
 3. 锁的调用基于spring lockRegistry以及java lock顶层接口，调用统一,支持多厂商实现(可同时使用),支持切换,支持扩展,
@@ -33,7 +36,9 @@
 # 一:框架集成
 
 ## 1.引入核心依赖
+
 暂时未发到中央仓库(准备中)...
+
 ```xml
 
 <dependency>
@@ -147,8 +152,10 @@ public class TestService {
 }
 
 ```
+
 具体示例见:lock-starter模块中的test
-注意,和spring等其他注解(如@Transaction)一样,基于界面实现的代码增强调用lock标注的方法必须使用代理对象,使用this.testLock1(id)调用注解不生效
+注意,和spring等其他注解(如@Transaction)一样,基于界面实现的代码增强调用lock标注的方法必须使用代理对象,使用this.testLock1(
+id)调用注解不生效
 
 # 四:lock增强
 
@@ -199,7 +206,8 @@ public class TestService {
 所有的配置项,当作用域为全局及注解时,注解的优先级大于全局配置
 
 - keys及name
-  框架会按照${lockNamePrefix}:${name}:${key1}:...:${keyN}:${@LockKey1}:...:${@LockKeyN}的方式拼接，作为lock的LockId.中间的连接符":"也可通过lockNameSeparator配置自定义
+  框架会按照${lockNamePrefix}:${name}:${key1}:...:${keyN}:${@LockKey1}:...:
+  ${@LockKeyN}的方式拼接，作为lock的LockId.中间的连接符":"也可通过lockNameSeparator配置自定义
 
 特殊的:
 当lockNamePrefix为空时，LockId=${name}:${key1}:...:${keyN}:${@LockKey1}:...:${@LockKeyN}

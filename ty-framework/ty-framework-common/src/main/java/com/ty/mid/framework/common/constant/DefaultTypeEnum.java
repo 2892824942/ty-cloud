@@ -68,7 +68,7 @@ public enum DefaultTypeEnum {
     ;
     public final static Map<Class<?>, DefaultTypeEnum> DEFAULT_TYPE_ENUMMAP = new HashMap<>(7);
 
-    static{
+    static {
         DefaultTypeEnum[] values = DefaultTypeEnum.values();
         for (DefaultTypeEnum value : values) {
             DEFAULT_TYPE_ENUMMAP.put(value.javaClass, value);
@@ -77,9 +77,9 @@ public enum DefaultTypeEnum {
 
     private final Class<?> javaClass;
 
-    public abstract <T> T defaultValue();
-
     DefaultTypeEnum(Class<?> javaClass) {
         this.javaClass = javaClass;
     }
+
+    public abstract <T> T defaultValue();
 }

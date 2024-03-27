@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInt
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.ty.mid.framework.mybatisplus.core.audit.DefaultLongAuditorInfoResolver;
 import com.ty.mid.framework.mybatisplus.core.handler.AuditorMetaObjectHandler;
-import org.apache.ibatis.annotations.Mapper;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 
@@ -29,6 +27,7 @@ public class MybatisAutoConfiguration {
     /**
      * 默认注入Long为Id的处理类
      * 如果项目使用默认id不为Long,重新注入此方法
+     *
      * @return
      */
     @Bean

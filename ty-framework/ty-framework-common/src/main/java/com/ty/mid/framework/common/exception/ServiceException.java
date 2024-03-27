@@ -9,25 +9,13 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public final class ServiceException extends BaseException {
+public final class ServiceException extends BizException {
 
 
     /**
      * 空构造方法，避免反序列化问题
      */
     public ServiceException() {
-    }
-
-    public static ServiceException of(BaseCode baseCode){
-        return new ServiceException(baseCode);
-    }
-
-    public static ServiceException of(String code, String message){
-        return new ServiceException(code,message);
-    }
-
-    public static ServiceException of(String message){
-        return new ServiceException(message);
     }
 
     public ServiceException(Integer code, String message) {
@@ -39,8 +27,6 @@ public final class ServiceException extends BaseException {
         super.code = baseCode.getCode();
     }
 
-
-
     public ServiceException(String code, String message) {
         super(message);
         this.code = code;
@@ -48,6 +34,18 @@ public final class ServiceException extends BaseException {
 
     public ServiceException(String message) {
         super(message);
+    }
+
+    public static ServiceException of(BaseCode baseCode) {
+        return new ServiceException(baseCode);
+    }
+
+    public static ServiceException of(String code, String message) {
+        return new ServiceException(code, message);
+    }
+
+    public static ServiceException of(String message) {
+        return new ServiceException(message);
     }
 
 

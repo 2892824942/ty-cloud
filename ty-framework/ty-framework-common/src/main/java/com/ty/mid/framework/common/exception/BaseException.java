@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 @Builder
 public class BaseException extends RuntimeException {
 
-    protected String code= GlobalErrorCodeEnum.EXCEPTION.getCode();
+    protected String code = GlobalErrorCodeEnum.EXCEPTION.getCode();
 
     protected String message;
 

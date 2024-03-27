@@ -2,8 +2,8 @@ package com.ty.mid.framework.common.pojo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.mid.framework.common.constant.BaseCode;
-import com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum;
 import com.ty.mid.framework.common.exception.BaseException;
+import com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -30,31 +30,6 @@ public class BaseResult<T> implements Serializable, Result<T> {
     @JsonIgnore
     private Map<String, Object> extraData = new HashMap<>();
 
-    @Override
-    public boolean isSuccess() {
-        return "0".equals(code);
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public T getData() {
-        return data;
-    }
-
-    @Override
-    public void setExtraData(String key, Object value) {
-        extraData.put(key, value);
-    }
-
-    @Override
-    public Map<String, Object> getExtraData() {
-        return extraData;
-    }
-
     /**
      * ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓静态方法↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
      */
@@ -78,6 +53,7 @@ public class BaseResult<T> implements Serializable, Result<T> {
         result.setMessage(message);
         return result;
     }
+
     public static <T> BaseResult<T> fail(String errorCode, String message) {
         BaseResult<T> result = new BaseResult<>();
         result.setCode(errorCode);
@@ -96,9 +72,10 @@ public class BaseResult<T> implements Serializable, Result<T> {
 
     /**
      * 通用异常构建返回值
+     *
      * @param e
-     * @return
      * @param <T>
+     * @return
      */
     public static <T> BaseResult<T> fail(Exception e) {
         if (e instanceof BaseException) {
@@ -110,9 +87,10 @@ public class BaseResult<T> implements Serializable, Result<T> {
 
     /**
      * 通用枚举构建返回值
+     *
      * @param baseCodeEnum
-     * @return
      * @param <T>
+     * @return
      */
 
     public static <T> BaseResult<T> fail(BaseCode baseCodeEnum) {
@@ -121,5 +99,30 @@ public class BaseResult<T> implements Serializable, Result<T> {
         result.setCode(baseCodeEnum.getCode());
         result.setMessage(baseCodeEnum.getMessage());
         return result;
+    }
+
+    @Override
+    public boolean isSuccess() {
+        return "0".equals(code);
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public T getData() {
+        return data;
+    }
+
+    @Override
+    public void setExtraData(String key, Object value) {
+        extraData.put(key, value);
+    }
+
+    @Override
+    public Map<String, Object> getExtraData() {
+        return extraData;
     }
 }

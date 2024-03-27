@@ -18,10 +18,11 @@ import java.io.IOException;
 @NoArgsConstructor
 public class HashedIdJsonDeserializer extends JsonDeserializer<Long> {
     private WebConfig.HashId hashIdConfig = SpringContextHelper.getBean(WebConfig.class).getHashId();
+
     @Override
     public Long deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         String text = p.getText().trim();
-        if (!hashIdConfig.isEnable()){
+        if (!hashIdConfig.isEnable()) {
             return Long.parseLong(text);
         }
 

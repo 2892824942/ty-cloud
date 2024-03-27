@@ -17,7 +17,7 @@ public class InEnumCollectionValidator implements ConstraintValidator<InEnum, Co
 
     @Override
     public void initialize(InEnum annotation) {
-        KVResp<?,?>[] kvResps = annotation.value().getEnumConstants();
+        KVResp<?, ?>[] kvResps = annotation.value().getEnumConstants();
         if (kvResps.length == 0) {
             this.keys = Collections.emptyList();
         } else {

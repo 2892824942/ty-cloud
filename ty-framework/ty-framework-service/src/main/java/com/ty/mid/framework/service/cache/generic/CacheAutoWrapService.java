@@ -10,7 +10,8 @@ import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import com.ty.mid.framework.mybatisplus.core.mapper.BaseMapperX;
 import com.ty.mid.framework.service.cache.jcache.listener.CacheListener;
 import com.ty.mid.framework.service.cache.jcache.listener.through.ReadThroughLoader;
-import com.ty.mid.framework.service.wrapper.AutoWrapService;import lombok.extern.slf4j.Slf4j;
+import com.ty.mid.framework.service.wrapper.AutoWrapService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.jcache.JCacheCacheManager;
 
 import javax.annotation.PostConstruct;
@@ -22,7 +23,6 @@ import javax.cache.configuration.MutableCacheEntryListenerConfiguration;
 import javax.cache.configuration.MutableConfiguration;
 import javax.validation.constraints.NotNull;
 import java.util.*;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**

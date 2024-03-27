@@ -2,19 +2,23 @@ package com.ty.mid.framework.common.pojo;
 
 import cn.hutool.core.lang.func.VoidFunc0;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.mid.framework.common.exception.BizException;
-import com.ty.mid.framework.common.exception.FrameworkException;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 public interface Result<T> extends Serializable {
 
+
+    static <T> BaseResult<T> success(T data) {
+        BaseResult<T> result = new BaseResult<>();
+        result.setData(data);
+
+        return result;
+    }
 
     String getMessage();
 
@@ -23,12 +27,13 @@ public interface Result<T> extends Serializable {
     @JsonIgnore
     void setExtraData(String key, Object value);
 
-    @JsonIgnore
-    Map<String, Object> getExtraData();
-
     /**
      * ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓成员方法↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
      */
+
+    @JsonIgnore
+    Map<String, Object> getExtraData();
+
     /**
      * @return
      */
@@ -139,16 +144,6 @@ public interface Result<T> extends Serializable {
 
         throw BizException.of(errorMsg);
     }
-
-
-    static <T> BaseResult<T> success(T data) {
-        BaseResult<T> result = new BaseResult<>();
-        result.setData(data);
-
-        return result;
-    }
-
-
 
 
 }

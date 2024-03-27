@@ -8,7 +8,6 @@ import javax.validation.ConstraintValidatorContext;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class InEnumValidator implements ConstraintValidator<InEnum, Object> {
@@ -19,7 +18,7 @@ public class InEnumValidator implements ConstraintValidator<InEnum, Object> {
 
     @Override
     public void initialize(InEnum annotation) {
-        KVResp<?,?>[] kvResps = annotation.value().getEnumConstants();
+        KVResp<?, ?>[] kvResps = annotation.value().getEnumConstants();
         if (kvResps.length == 0) {
             this.keys = Collections.emptyList();
         } else {

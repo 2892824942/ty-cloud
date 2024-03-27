@@ -25,7 +25,6 @@ public interface DesensitizationHandler<S extends Annotation> {
     String desensitize(String origin, S annotation);
 
 
-
     @Getter
     enum DesensitizeEnum {
         BANK_CARD(BankCardDesensitize.class) {
@@ -115,10 +114,6 @@ public interface DesensitizationHandler<S extends Annotation> {
             Clazz = clazz;
         }
 
-
-        abstract DesensitizeContext getDesensitize(Annotation annotation);
-
-
         public static DesensitizeContext toDesensitizeInfo(Annotation annotation) {
             for (DesensitizeEnum enumObj : values()) {
                 if (annotation.annotationType().isAssignableFrom(enumObj.getClazz())) {
@@ -127,6 +122,8 @@ public interface DesensitizationHandler<S extends Annotation> {
             }
             throw new FrameworkException("未找到匹配脱敏注解");
         }
+
+        abstract DesensitizeContext getDesensitize(Annotation annotation);
 
     }
 

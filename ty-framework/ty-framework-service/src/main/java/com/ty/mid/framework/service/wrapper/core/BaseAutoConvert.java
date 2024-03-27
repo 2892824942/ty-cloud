@@ -103,7 +103,7 @@ public interface BaseAutoConvert {
     }
 
 
-    default <S,T> PageResult<T> covertPage(PageResult<S> dataPage, Function<List<S>,List<T>> function) {
+    default <S, T> PageResult<T> covertPage(PageResult<S> dataPage, Function<List<S>, List<T>> function) {
         if (CollectionUtil.isEmpty(dataPage.getList())) {
             return PageResult.empty();
         }

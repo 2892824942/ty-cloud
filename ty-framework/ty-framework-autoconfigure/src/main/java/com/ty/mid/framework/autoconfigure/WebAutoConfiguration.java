@@ -32,7 +32,6 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.annotation.Resource;
-import javax.servlet.Filter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -40,10 +39,9 @@ import java.util.Map;
 @EnableConfigurationProperties(WebConfig.class)
 public class WebAutoConfiguration implements WebMvcConfigurer {
 
+    private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher(".");
     @Resource
     private WebConfig webConfig;
-
-    private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher(".");
     /**
      * 应用名
      */
@@ -52,7 +50,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 
     @Override
     public void configurePathMatch(PathMatchConfigurer configurer) {
-        if (!webConfig.isEnableMvcUrlPrefix()){
+        if (!webConfig.isEnableMvcUrlPrefix()) {
             return;
         }
         Map<String, WebConfig.Api> customApi = webConfig.getCustomApi();
@@ -65,7 +63,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        if (webConfig.getHashId().isEnable()){
+        if (webConfig.getHashId().isEnable()) {
             resolvers.add(new HashedIdHandlerMethodArgumentResolver(webConfig));
         }
 
@@ -78,23 +76,24 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
      * @param api        API 配置
      */
     private void configurePathMatch(PathMatchConfigurer configurer, WebConfig.Api api) {
-        if (!api.isEnableMvcUrlPrefix()){
+        if (!api.isEnableMvcUrlPrefix()) {
             return;
         }
 
         configurer.addPathPrefix(api.getPrefix()
                 , clazz -> (clazz.isAnnotationPresent(RestController.class) || clazz.isAnnotationPresent(Controller.class))
-                        && pathMatch(ANT_PATH_MATCHER,api,clazz));
+                        && pathMatch(ANT_PATH_MATCHER, api, clazz));
     }
 
     /**
      * 匹配controller 包
+     *
      * @param antPathMatcher
      * @param api
      * @param clazz
      * @return
      */
-    private boolean pathMatch(AntPathMatcher antPathMatcher,WebConfig.Api api,Class<?> clazz){
+    private boolean pathMatch(AntPathMatcher antPathMatcher, WebConfig.Api api, Class<?> clazz) {
         return Arrays.stream(api.getController()).anyMatch(controller -> antPathMatcher.match(controller, clazz.getPackage().getName()));
     }
 
@@ -126,7 +125,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
      * 创建 ApiAccessLogFilter Bean，记录 API 请求日志
      */
     @Bean
-    @ConditionalOnProperty(prefix = WebConfig.PREFIX, name = "api-log.enable",  havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = WebConfig.PREFIX, name = "api-log.enable", havingValue = "true", matchIfMissing = true)
     public FilterRegistrationBean<ApiAccessLogFilter> apiAccessLogFilter(WebConfig webConfig, ApiLogService apiLogService,
                                                                          @Value("${spring.application.name}") String applicationName) {
         ApiAccessLogFilter filter = new ApiAccessLogFilter(webConfig, apiLogService, applicationName);

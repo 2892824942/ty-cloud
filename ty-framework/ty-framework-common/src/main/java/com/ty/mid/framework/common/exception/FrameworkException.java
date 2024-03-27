@@ -13,14 +13,6 @@ import lombok.EqualsAndHashCode;
 @Data
 public class FrameworkException extends BaseException {
 
-    public static FrameworkException of(String code, String message){
-        return new FrameworkException(code,message);
-    }
-
-    public static FrameworkException of(String message){
-        return new FrameworkException(message);
-    }
-
     public FrameworkException(String code, String message) {
         super(message);
         this.code = code;
@@ -50,5 +42,13 @@ public class FrameworkException extends BaseException {
     public FrameworkException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
         this.message = message;
+    }
+
+    public static FrameworkException of(String code, String message) {
+        return new FrameworkException(code, message);
+    }
+
+    public static FrameworkException of(String message) {
+        return new FrameworkException(message);
     }
 }

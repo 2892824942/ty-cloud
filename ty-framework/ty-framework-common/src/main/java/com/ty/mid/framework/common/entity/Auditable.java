@@ -11,37 +11,6 @@ import java.time.LocalDateTime;
  */
 public interface Auditable<T extends Serializable> extends BaseIdDO<T> {
 
-    /**
-     * 获取创建人
-     *
-     * @return
-     */
-    T getCreator();
-
-    /**
-     * 获取更新人
-     *
-     * @return
-     */
-    T getUpdater();
-
-    /**
-     * 获取创建时间
-     *
-     * @return
-     */
-    LocalDateTime getCreateTime();
-
-    /**
-     * 获取更新时间
-     */
-    LocalDateTime getUpdateTime();
-
-    /**
-     * 是否删除
-     */
-    Boolean getDeleted();
-
     Long DEFAULT_USER_ID = DefaultTypeConstants.DEFAULT_LONG;
     /**
      * 默认审计信息
@@ -77,4 +46,35 @@ public interface Auditable<T extends Serializable> extends BaseIdDO<T> {
             return DeletedEnum.NO_DELETE.getBooleanValue();
         }
     };
+
+    /**
+     * 获取创建人
+     *
+     * @return
+     */
+    T getCreator();
+
+    /**
+     * 获取更新人
+     *
+     * @return
+     */
+    T getUpdater();
+
+    /**
+     * 获取创建时间
+     *
+     * @return
+     */
+    LocalDateTime getCreateTime();
+
+    /**
+     * 获取更新时间
+     */
+    LocalDateTime getUpdateTime();
+
+    /**
+     * 是否删除
+     */
+    Boolean getDeleted();
 }

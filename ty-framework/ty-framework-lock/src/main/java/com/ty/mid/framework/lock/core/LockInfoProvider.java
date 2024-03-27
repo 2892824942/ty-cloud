@@ -169,7 +169,7 @@ public class LockInfoProvider {
     }
 
     private String doGetLockName(String handledLockKey) {
-        if (StringUtils.isEmpty(lockConfig.getLockNamePrefix())){
+        if (StringUtils.isEmpty(lockConfig.getLockNamePrefix())) {
             return handledLockKey;
         }
         return SafeGetUtil.getString(lockConfig.getLockNamePrefix()).concat(SafeGetUtil.getString(lockConfig.getLockNameSeparator())).concat(handledLockKey);

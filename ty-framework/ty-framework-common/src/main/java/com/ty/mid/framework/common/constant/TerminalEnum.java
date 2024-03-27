@@ -3,8 +3,6 @@ package com.ty.mid.framework.common.constant;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.Arrays;
-
 /**
  * 终端的枚举
  *

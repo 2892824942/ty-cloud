@@ -18,9 +18,10 @@ import java.io.IOException;
 public class HashedIdJsonSerializer extends JsonSerializer<Long> {
 
     private WebConfig.HashId hashIdConfig = SpringContextHelper.getBean(WebConfig.class).getHashId();
+
     @Override
     public void serialize(Long value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-        if (!hashIdConfig.isEnable()){
+        if (!hashIdConfig.isEnable()) {
             gen.writeString(value == null ? null : value.toString());
             return;
         }

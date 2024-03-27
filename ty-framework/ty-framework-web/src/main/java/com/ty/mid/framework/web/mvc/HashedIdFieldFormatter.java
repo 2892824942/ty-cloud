@@ -1,8 +1,8 @@
 package com.ty.mid.framework.web.mvc;
 
-import com.ty.mid.framework.web.annotation.desensitize.HashedId;
 import com.ty.mid.framework.common.util.HashIdUtil;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
+import com.ty.mid.framework.web.annotation.desensitize.HashedId;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.AnnotationFormatterFactory;

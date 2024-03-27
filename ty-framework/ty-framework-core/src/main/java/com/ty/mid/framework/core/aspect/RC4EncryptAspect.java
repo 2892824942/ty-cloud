@@ -1,8 +1,8 @@
 package com.ty.mid.framework.core.aspect;
 
+import com.ty.mid.framework.common.annotation.RC4Encrypt;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
-import com.ty.mid.framework.common.annotation.RC4Encrypt;
 import com.ty.mid.framework.core.util.DatabaseEncryptUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

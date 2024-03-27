@@ -38,6 +38,40 @@ public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQuery
         implements Query<LambdaQueryWrapperX<T>, T, SFunction<T, ?>> {
 
 
+    /**
+     * 查询字段
+     */
+    private SharedString sqlSelect = new SharedString();
+
+    public LambdaQueryWrapperX() {
+        this((T) null);
+    }
+
+    public LambdaQueryWrapperX(T entity) {
+        super.setEntity(entity);
+        super.initNeed();
+    }
+
+    public LambdaQueryWrapperX(Class<T> entityClass) {
+        super.setEntityClass(entityClass);
+        super.initNeed();
+    }
+
+    LambdaQueryWrapperX(T entity, Class<T> entityClass, SharedString sqlSelect, AtomicInteger paramNameSeq,
+                        Map<String, Object> paramNameValuePairs, MergeSegments mergeSegments, SharedString paramAlias,
+                        SharedString lastSql, SharedString sqlComment, SharedString sqlFirst) {
+        super.setEntity(entity);
+        super.setEntityClass(entityClass);
+        this.paramNameSeq = paramNameSeq;
+        this.paramNameValuePairs = paramNameValuePairs;
+        this.expression = mergeSegments;
+        this.sqlSelect = sqlSelect;
+        this.paramAlias = paramAlias;
+        this.lastSql = lastSql;
+        this.sqlComment = sqlComment;
+        this.sqlFirst = sqlFirst;
+    }
+
     public LambdaQueryWrapperX<T> likeIfPresent(SFunction<T, ?> column, String val) {
         if (StringUtils.hasText(val)) {
             return super.like(column, val);
@@ -108,6 +142,9 @@ public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQuery
         return this;
     }
 
+
+    /****************************************原类的方法******************************************/
+
     public LambdaQueryWrapperX<T> leIfPresent(SFunction<T, ?> column, Object val) {
         if (val != null) {
             return super.le(column, val);
@@ -172,42 +209,6 @@ public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQuery
      */
     public LambdaQueryWrapperX<T> addDefaultTimelinessQuery() {
         return this.addTimelinessQuery(LocalDateTime.now(), null);
-    }
-
-
-    /****************************************原类的方法******************************************/
-    /**
-     * 查询字段
-     */
-    private SharedString sqlSelect = new SharedString();
-
-    public LambdaQueryWrapperX() {
-        this((T) null);
-    }
-
-    public LambdaQueryWrapperX(T entity) {
-        super.setEntity(entity);
-        super.initNeed();
-    }
-
-    public LambdaQueryWrapperX(Class<T> entityClass) {
-        super.setEntityClass(entityClass);
-        super.initNeed();
-    }
-
-    LambdaQueryWrapperX(T entity, Class<T> entityClass, SharedString sqlSelect, AtomicInteger paramNameSeq,
-                        Map<String, Object> paramNameValuePairs, MergeSegments mergeSegments, SharedString paramAlias,
-                        SharedString lastSql, SharedString sqlComment, SharedString sqlFirst) {
-        super.setEntity(entity);
-        super.setEntityClass(entityClass);
-        this.paramNameSeq = paramNameSeq;
-        this.paramNameValuePairs = paramNameValuePairs;
-        this.expression = mergeSegments;
-        this.sqlSelect = sqlSelect;
-        this.paramAlias = paramAlias;
-        this.lastSql = lastSql;
-        this.sqlComment = sqlComment;
-        this.sqlFirst = sqlFirst;
     }
 
     @Override
