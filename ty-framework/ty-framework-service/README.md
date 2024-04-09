@@ -41,6 +41,7 @@
 # 二:使用示例
 
 ```java
+
 /**
  * <p>
  * 服务实现类
@@ -50,54 +51,58 @@
  * @since 2023-11-27
  */
 @Service
-public class UserServiceImpl extends GenericAutoWrapService<User, UserFullDTO, UserMapper> implements IUserService {
+public class UserServiceImpl extends AutoWrapService<User, UserFullDTO, UserMapper> implements IUserService, UserNameTranslation {
 
-  @Resource
-  private UserMapper userMapper;
+    @Resource
+    private UserMapper userMapper;
 
-  @Override
-  public UserFullDTO getById(Long id) {
-    if (isNegative(id)) {
-      return null;
+    @Override
+    public UserFullDTO getById(Long id) {
+        if (isNegative(id)) {
+            return null;
+        }
+        return selectOneDTO(User::getId, id);
     }
-    return UserDTOConvert.INSTANCE.convert(userMapper.selectById(id));
-  }
 
-  @Override
-  public PageResult<UserFullBO> getPage(UserQuery userQuery) {
-    return userMapper.selectJoinPage(userQuery);
-  }
-
-  @Override
-  public List<UserFullDTO> getFullList(UserQuery userQuery) {
-    userQuery.openSelectAll();
-    PageResult<User> userPageResult = userMapper.selectPage(userQuery);
-    return UserDTOConvert.INSTANCE.convert(userPageResult.getList());
-  }
-
-  @Override
-  public List<UserInfoDTO> getInfoList(UserQuery userQuery) {
-    userQuery.setPageNo(PageParam.PAGE_SIZE_NONE);
-    PageResult<User> userPageResult = userMapper.selectPage(userQuery);
-    return UserDTOConvert.INSTANCE.convert2Info(userPageResult.getList());
-  }
-
-  @Override
-  public Boolean save(UserSaveQuery query) {
-    User user = UserConvert.INSTANCE.convert(query);
-    return userMapper.insert(user) > 0;
-  }
-
-  @Override
-  public void saveBatch(List<UserSaveQuery> queryList) {
-    if (CollUtil.isEmpty(queryList)) {
-      return;
+    @Override
+    public PageResult<UserFullBO> getPage(UserQuery userQuery) {
+        return userMapper.selectJoinPage(userQuery);
     }
-    List<User> userList = queryList.stream().map(UserConvert.INSTANCE::convert).collect(Collectors.toList());
 
-    userMapper.insertBatch(userList);
-  }
-  
+    @Override
+    public List<UserFullDTO> getFullList(UserQuery userQuery) {
+        userQuery.openSelectAll();
+        PageResult<User> userPageResult = userMapper.selectPage(userQuery);
+        return convert(userPageResult.getList(), UserFullDTO.class);
+    }
+
+    @Override
+    public List<UserInfoDTO> getInfoList(UserQuery userQuery) {
+        userQuery.setPageNo(PageParam.PAGE_SIZE_NONE);
+        PageResult<User> userPageResult = userMapper.selectPage(userQuery);
+        return convert(userPageResult.getList(), UserInfoDTO.class);
+    }
+
+    @Override
+    public Boolean save(UserSaveQuery query) {
+        User user = convert(query);
+        return userMapper.insert(user) > 0;
+    }
+
+    @Override
+    public void saveBatch(List<UserSaveQuery> queryList) {
+        if (CollUtil.isEmpty(queryList)) {
+            return;
+        }
+        List<User> userList = convert(queryList, User.class);
+
+        userMapper.insertBatch(userList);
+    }
+
+    @Override
+    public Boolean deleteById(Long id) {
+        return userMapper.deleteById(id) > 0;
+    }
 }
 
 ```
@@ -115,6 +120,45 @@ public class UserServiceImpl extends GenericAutoWrapService<User, UserFullDTO, U
 
 ## 1.DO->DTO自动装载
 
+### 1.1 基础字段自动装载
+项目集成了mapstruct-plus,通过一下方式实现自动装载,具体参见[https://www.mapstruct.plus/](官方文档)
+
+```java
+@Schema(description = "用户全量对象")
+@Getter
+@Setter
+@AutoMapper(target = User.class)
+public class UserFullDTO extends AbstractNameDTO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    @Schema(description = "姓名")
+    @ChineseNameDesensitize
+    private String name;
+
+    @Schema(description = "密码")
+    @PasswordDesensitize
+    private String password;
+
+    @Schema(description = "年龄")
+    private Integer age;
+
+    @Schema(description = "邮箱")
+    @EmailDesensitize
+    private String email;
+
+    @Schema(description = "角色信息")
+    private List<RoleDTO> roleInfos;
+
+    @Schema(description = "用户地址code")
+    private AddrDTO addrInfo;
+
+}
+
+```
+本框架已在AutoWrapperService中提供covert方法,直接转换,也可通过xxxDTO()的方法直接获取转换后的DTO.
+### 1.2 数据库字段自动装载
+
 一张表中有几个字段是映射的其他表,比如用户拥有areaId,roleCode属性,分别对应区域表及角色表.这种一个字段映射其他表是非常常见的,
 在开发过程中,我们通常会定义一个DTO,将类似以上的主表内容以及其他表内容通过DTO进行封装,这就需要针对这种其他表映射字段进行封装,
 当字段较多时,开发难度虽不大,但是比较繁琐.而在实际开发过程,这种情况非常常见
@@ -129,7 +173,7 @@ RoleId->查询RoleDO->转换为RoleDTO->写入到UserDTO对应属性roleDTO中 �
 
 使用方法:
 (1)定义自动装载映射
-当继承Service支持自动装载时,例如AutoWrapService,则[字段->查询DO]默认定义为id查询,[DO->DTO]则通过对象序列化自动转换
+当继承Service支持自动装载时,例如AutoWrapService,则[字段->查询DO]默认定义为id查询,[DO->DTO]则通过mapstruct-plus自动转换
 (2)在需要自动装载的字段上,添加注解@AutoWrap,并定义需要自动装载的DTO类
 
 ```java
@@ -141,8 +185,7 @@ public class User extends BaseDO {
 }
 ```
 
-(3)mapstruct covert类需继承BaseAutoConvert
-baseAutoCovert中在mapstruct标准转换执行完成后,会自动调用自动装载过程
+(3)需使用AutoWrapperService中提供covert方法,直接转换,或通过xxxDTO()的方法直接获取转换后的DTO.
 
 - 支持字段一对一,一对多,多对多
 - 支持自动装载嵌套.例如A中的b字段映射B表,B中的c字段映射C表,当b->B,c->C自动装载配置后,则A->B->C自动装载
@@ -298,7 +341,7 @@ public class AddressServiceImpl extends AllCacheAutoWrapService<Address, AddrDTO
      */
     @Override
     public Map<?, AddrDTO> autoWrap(Collection<?> collection) {
-        //通过Mapstruct重新定义[DO->DTO]过程
+        //通过Mapstruct重新重新定义[DO->DTO]过程
         Function<List<Address>, List<AddrDTO>> function = AddrDTOConvert.INSTANCE::convert;
         //指定[字段->查询DO]使用code查询
         return convert(GenericsUtil.check2Collection(collection), Address::getCode, AddrDTO::getCode, function);
@@ -319,14 +362,8 @@ public class RoleServiceImpl extends GenericService<Role, RoleDTO, RoleMapper> i
    */
     @Bean
     public AutoWrapper<Role> roleSimpleDTOAutoWrapper() {
-        //注意:不可以省略后面的泛型否则报错
+        //注意:不可以省略后面的泛型否则报错,默认使用maperstruct-plus能力自动转换,也可重写对应方法
         return new AutoWrapService<Role, RoleSimpleDTO, RoleMapper>() {
-            @Override
-            public Map<?, RoleSimpleDTO> autoWrap(Collection<?> collection) {
-                //通过Mapstruct自定义转换流程
-                return this.convert(collection, RoleDTOConvert.INSTANCE::convert2Simple);
-            }
-
         };
     }
 }
