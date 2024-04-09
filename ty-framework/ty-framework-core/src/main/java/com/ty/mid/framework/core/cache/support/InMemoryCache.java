@@ -4,7 +4,6 @@ package com.ty.mid.framework.core.cache.support;
 import com.ty.mid.framework.common.lang.ThreadSafe;
 import com.ty.mid.framework.core.cache.HashCache;
 import com.ty.mid.framework.core.util.ExpireCacheInMemory;
-import com.ty.mid.framework.core.util.StringUtils;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -216,7 +215,7 @@ public class InMemoryCache<K, IK, T> implements HashCache<K, IK, T> {
     @ThreadSafe
     public boolean renewCache(K cacheKey, long renewTime, TimeUnit timeUnit) {
         T cacheValue = cacheInMemory.getCache(cacheKey);
-        if (StringUtils.isEmpty(cacheValue)) {
+        if (Objects.isNull(cacheValue)) {
             return false;
         }
         cacheInMemory.setCacheComputeIfAbsent(cacheKey, cacheValue, timeUnit, renewTime);

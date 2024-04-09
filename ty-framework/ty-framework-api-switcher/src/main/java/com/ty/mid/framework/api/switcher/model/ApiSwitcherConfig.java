@@ -1,6 +1,6 @@
 package com.ty.mid.framework.api.switcher.model;
 
-import com.ty.mid.framework.core.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 
 import java.util.Date;
 
@@ -57,7 +57,7 @@ public class ApiSwitcherConfig {
     }
 
     public boolean isConfigInValid() {
-        return StringUtils.isEmpty(apiName) || fromDate == null;
+        return StrUtil.isEmpty(apiName) || fromDate == null;
     }
 
     public String getApiName() {

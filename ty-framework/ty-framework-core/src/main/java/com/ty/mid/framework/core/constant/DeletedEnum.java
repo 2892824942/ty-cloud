@@ -1,11 +1,14 @@
-package com.ty.mid.framework.common.constant;
+package com.ty.mid.framework.core.constant;
 
+import com.ty.mid.framework.common.pojo.KVResp;
+import io.github.linpeilie.annotations.AutoEnumMapper;
 import lombok.Getter;
 
 import java.util.Objects;
 
 @Getter
-public enum DeletedEnum {
+@AutoEnumMapper("key")
+public enum DeletedEnum implements KVResp<Integer,Boolean> {
     /**
      * 未删除
      */
@@ -48,5 +51,15 @@ public enum DeletedEnum {
         }
 
         return DeletedEnum.UNKNOWN;
+    }
+
+    @Override
+    public Integer getKey() {
+        return intValue;
+    }
+
+    @Override
+    public Boolean getValue() {
+        return booleanValue;
     }
 }

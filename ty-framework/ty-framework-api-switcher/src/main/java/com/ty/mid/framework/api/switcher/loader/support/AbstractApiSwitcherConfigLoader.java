@@ -1,10 +1,10 @@
 package com.ty.mid.framework.api.switcher.loader.support;
 
+import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.api.switcher.deserializer.ApiSwitcherConfigDeserializer;
 import com.ty.mid.framework.api.switcher.exception.ApiSwitcherConfigDeserializeException;
 import com.ty.mid.framework.api.switcher.loader.ApiSwitcherConfigLoader;
 import com.ty.mid.framework.api.switcher.model.ApiSwitcherConfig;
-import com.ty.mid.framework.core.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -23,7 +23,7 @@ public class AbstractApiSwitcherConfigLoader implements ApiSwitcherConfigLoader 
 
     public AbstractApiSwitcherConfigLoader(ApiSwitcherConfigDeserializer deserializer, String initialConfig) {
         this.deserializer = deserializer;
-        if (!StringUtils.isEmpty(initialConfig)) {
+        if (!StrUtil.isEmpty(initialConfig)) {
             this.reloadConfig(initialConfig);
         }
     }

@@ -1,7 +1,6 @@
 package com.ty.mid.framework.common.entity;
 
 import com.ty.mid.framework.common.constant.DefaultTypeConstants;
-import com.ty.mid.framework.common.constant.DeletedEnum;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -43,7 +42,7 @@ public interface Auditable<T extends Serializable> extends BaseIdDO<T> {
 
         @Override
         public Boolean getDeleted() {
-            return DeletedEnum.NO_DELETE.getBooleanValue();
+            return Boolean.FALSE;
         }
     };
 

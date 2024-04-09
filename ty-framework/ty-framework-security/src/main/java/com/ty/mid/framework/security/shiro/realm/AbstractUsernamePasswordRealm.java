@@ -1,9 +1,9 @@
 package com.ty.mid.framework.security.shiro.realm;
 
+import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.common.model.Permission;
 import com.ty.mid.framework.common.model.Role;
 import com.ty.mid.framework.common.model.UserLogin;
-import com.ty.mid.framework.core.util.StringUtils;
 import com.ty.mid.framework.security.SecurityService;
 import com.ty.mid.framework.security.token.UsernamePasswordToken;
 import org.apache.shiro.authc.AuthenticationException;
@@ -43,7 +43,7 @@ public abstract class AbstractUsernamePasswordRealm<U extends UserLogin<ID>, R e
     }
 
     protected ByteSource getByteSource(String salt) {
-        if (StringUtils.isEmpty(salt)) {
+        if (StrUtil.isEmpty(salt)) {
             return null;
         }
         return ByteSource.Util.bytes(salt);

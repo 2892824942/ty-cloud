@@ -1,9 +1,9 @@
 package com.ty.mid.framework.security.shiro.realm;
 
+import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.common.model.Permission;
 import com.ty.mid.framework.common.model.Role;
 import com.ty.mid.framework.common.model.UserLogin;
-import com.ty.mid.framework.core.util.StringUtils;
 import com.ty.mid.framework.security.RestTokenManager;
 import com.ty.mid.framework.security.SecurityService;
 import com.ty.mid.framework.security.exception.UnknownAccountException;
@@ -53,7 +53,7 @@ public class AbstractRestTokenRealm<U extends UserLogin<ID>, R extends Role, P e
     protected U checkRestToken(ShiroRestToken restToken) {
         String token = restToken.getToken();
 
-        if (StringUtils.isEmpty(token)) throw new UnknownAccountException();
+        if (StrUtil.isEmpty(token)) throw new UnknownAccountException();
 
         boolean valid = tokenManager.validateToken(token);
         if (!valid) throw new UnknownAccountException();

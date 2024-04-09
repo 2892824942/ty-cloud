@@ -126,56 +126,58 @@ BaseMapperX提供快速分页查询,简单条件查询list,简单条件查询Map
 3.数据库实体提供统一的BaseDO继承,规范数据库审计相关字段,其中包括:
 
 ```java
+    import com.ty.mid.framework.core.constant.DeletedEnum;
+
+/**
+ * 基础实体对象
+ *
+ * @author suyoulinag
+ */
+@Setter
+public abstract class BaseDO implements Auditable<Long>, Serializable {
+
     /**
-    * 基础实体对象
-    *
-    * @author suyoulinag
-    */
-  @Setter
-  public abstract class BaseDO implements Auditable<Long>, Serializable {
+     * 用户id
+     */
 
-      /**
-       * 用户id
-       */
+    @Schema(description = "主键ID")
+    @TableId(type = IdType.AUTO)
+    private Long id;
 
-      @Schema(description = "主键ID")
-      @TableId(type = IdType.AUTO)
-      private Long id;
+    /**
+     * 创建者
+     */
+    @Schema(description = "创建者")
+    @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.VARCHAR)
+    private Long creator;
+    /**
+     * 更新者
+     */
+    @Schema(description = "更新者")
+    @TableField(fill = FieldFill.INSERT_UPDATE, jdbcType = JdbcType.VARCHAR)
+    private Long updater;
 
-      /**
-       * 创建者
-       */
-      @Schema(description = "创建者")
-      @TableField(fill = FieldFill.INSERT, jdbcType = JdbcType.VARCHAR)
-      private Long creator;
-      /**
-       * 更新者
-       */
-      @Schema(description = "更新者")
-      @TableField(fill = FieldFill.INSERT_UPDATE, jdbcType = JdbcType.VARCHAR)
-      private Long updater;
+    /**
+     * 创建时间
+     */
+    @Schema(description = "创建时间")
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+    /**
+     * 最后更新时间
+     */
+    @Schema(description = "最后更新时间")
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
 
-      /**
-       * 创建时间
-       */
-      @Schema(description = "创建时间")
-      @TableField(fill = FieldFill.INSERT)
-      private LocalDateTime createTime;
-      /**
-       * 最后更新时间
-       */
-      @Schema(description = "最后更新时间")
-      @TableField(fill = FieldFill.INSERT_UPDATE)
-      private LocalDateTime updateTime;
-
-      /**
-       * 是否删除 0:未删除 1:已删除
-       * @see com.ty.mid.framework.common.constant.DeletedEnum
-       */
-      @Schema(description = "是否删除 0:未删除 1:已删除")
-      @TableLogic
-      private Boolean deleted;
-  }
+    /**
+     * 是否删除 0:未删除 1:已删除
+     * @see com.ty.mid.framework.core.constant.DeletedEnum
+     */
+    @Schema(description = "是否删除 0:未删除 1:已删除")
+    @TableLogic
+    private Boolean deleted;
+}
 ```
 
 审计字段配合security模块自动填充.

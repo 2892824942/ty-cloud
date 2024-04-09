@@ -56,7 +56,6 @@ public class MappingProvider {
 
 
         T targetFirst = targetList.iterator().next();
-        Field wrapperField = null;
         for (Field sourceField : bMappingFieldList) {
             AutoWrap annotation = sourceField.getAnnotation(AutoWrap.class);
             //1.校验
@@ -116,7 +115,6 @@ public class MappingProvider {
                 Class<?> aClass = targetClassFieldMap.get(targetField);
                 Map<Object, Object> dataMap = autoWrapServiceMap.get(aClass).autoWrap(values);
                 for (T target : targetList) {
-
                     if (MapUtil.isEmpty(dataMap)) {
                         continue;
                     }
@@ -125,7 +123,6 @@ public class MappingProvider {
                         if (Objects.nonNull(o)) {
                             handleAbstractNameDTOList(Collections.singletonList(o));
                         }
-
                         MappingProvider.setTargetField(target, targetField, o);
                     } else {
                         //Collection兼容

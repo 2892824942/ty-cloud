@@ -13,6 +13,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * service约定:
+ * 1.service中禁止出现wrapper相关语句,因此service没有getPage方法
+ * @param <S>
+ * @param <M>
+ */
 public abstract class GenericService<S extends BaseDO, M extends BaseMapperX<S, Long>> extends ServiceImpl<M, S> implements IService<S> {
 
     /**

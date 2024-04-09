@@ -1,10 +1,10 @@
 package com.ty.mid.framework.security.shiro.realm;
 
+import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.common.model.Permission;
 import com.ty.mid.framework.common.model.Role;
 import com.ty.mid.framework.common.model.UserLogin;
 import com.ty.mid.framework.common.model.security.AuthorizeInfo;
-import com.ty.mid.framework.core.util.StringUtils;
 import com.ty.mid.framework.security.RealmSupport;
 import com.ty.mid.framework.security.SecurityService;
 import com.ty.mid.framework.security.shiro.permission.UrlPatternPermission;
@@ -39,9 +39,9 @@ public abstract class AbstractAuthorizingRealm<U extends UserLogin<ID>, R extend
         info.addRoles(roles.stream().map(r -> r.getRoleCode()).collect(Collectors.toSet()));
 
         permissions.stream().forEach(p -> {
-            if (!StringUtils.isEmpty(p.getPermissionCode()) && p.getPermissionCode().startsWith("/")) {
+            if (!StrUtil.isEmpty(p.getPermissionCode()) && p.getPermissionCode().startsWith("/")) {
                 info.addObjectPermission(new UrlPatternPermission(p.getPermissionCode()));
-            } else if (!StringUtils.isEmpty(p.getPermissionCode()) && p.getPermissionCode().contains(":")) {
+            } else if (!StrUtil.isEmpty(p.getPermissionCode()) && p.getPermissionCode().contains(":")) {
                 info.addObjectPermission(new WildcardPermission(p.getPermissionCode()));
             } else {
                 info.addStringPermission(p.getPermissionCode());

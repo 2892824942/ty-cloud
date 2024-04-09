@@ -1,6 +1,6 @@
 package com.ty.mid.framework.idempotent.service.support;
 
-import com.ty.mid.framework.core.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.idempotent.constant.IdempotentConstant;
 import com.ty.mid.framework.idempotent.exception.AlreadyExecutedIdempotentException;
 import com.ty.mid.framework.idempotent.exception.IdempotentServiceException;
@@ -90,7 +90,7 @@ public abstract class AbstractIdempotentService implements IdempotentService {
     protected abstract void doMark(String key);
 
     protected String resolveLockKey(String name) {
-        return StringUtils.isEmpty(lockKeyPrefix) ? name : this.lockKeyPrefix.concat(name);
+        return StrUtil.isEmpty(lockKeyPrefix) ? name : this.lockKeyPrefix.concat(name);
     }
 
     /**

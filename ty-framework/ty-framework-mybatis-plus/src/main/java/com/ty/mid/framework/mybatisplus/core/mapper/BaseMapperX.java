@@ -9,7 +9,6 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.support.SFunction;
 import com.baomidou.mybatisplus.extension.toolkit.Db;
-import com.github.yulichang.base.MPJBaseMapper;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.pojo.PageParam;
 import com.ty.mid.framework.common.pojo.PageResult;
@@ -25,8 +24,7 @@ import java.util.Map;
  * 在 MyBatis Plus 的 BaseMapper 的基础上拓展，提供更多的能力
  * <p>
  * 1. {@link BaseMapper} 为 MyBatis Plus 的基础接口，提供基础的 CRUD 能力
- * 2. {@link MPJBaseMapper} 为 MyBatis Plus Join 的基础接口，提供连表 Join 能力
- * 3.为 MyBatis Plus 的List接口，快速转换Map能力
+ * 2.为 MyBatis Plus 的List接口，快速转换Map能力
  */
 public interface BaseMapperX<S extends BaseIdDO<ID>, ID extends Serializable> extends BaseMapper<S> {
     /**

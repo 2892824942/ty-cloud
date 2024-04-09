@@ -1,6 +1,6 @@
 package com.ty.mid.framework.security.shiro.permission;
 
-import com.ty.mid.framework.core.util.StringUtils;
+import cn.hutool.core.util.StrUtil;
 import org.apache.shiro.authz.Permission;
 
 import java.io.Serializable;
@@ -26,7 +26,7 @@ public class UrlPatternPermission implements Permission, Serializable {
 
     @Override
     public boolean implies(Permission p) {
-        if (StringUtils.isEmpty(urlPattern)) {
+        if (StrUtil.isEmpty(urlPattern)) {
             return false;
         }
 

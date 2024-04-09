@@ -2,7 +2,6 @@ package com.ty.mid.framework.web.core.util;
 
 import cn.hutool.core.util.NumberUtil;
 import com.ty.mid.framework.common.constant.DomainConstant;
-import com.ty.mid.framework.common.constant.TerminalEnum;
 import com.ty.mid.framework.common.pojo.BaseResult;
 import com.ty.mid.framework.web.config.WebConfig;
 import org.springframework.web.context.request.RequestAttributes;
@@ -23,7 +22,6 @@ public class WebFrameworkUtils {
     /**
      * 终端的 Header
      *
-     * @see TerminalEnum
      */
     public static final String HEADER_TERMINAL = "terminal";
     private static final String REQUEST_ATTRIBUTE_LOGIN_USER_ID = "login_user_id";
@@ -104,14 +102,6 @@ public class WebFrameworkUtils {
         return getLoginUserId(request);
     }
 
-    public static Integer getTerminal() {
-        HttpServletRequest request = getRequest();
-        if (request == null) {
-            return TerminalEnum.UNKNOWN.getTerminal();
-        }
-        String terminalValue = request.getHeader(HEADER_TERMINAL);
-        return NumberUtil.parseInt(terminalValue, TerminalEnum.UNKNOWN.getTerminal());
-    }
 
     public static void setCommonResult(ServletRequest request, BaseResult<?> result) {
         request.setAttribute(REQUEST_ATTRIBUTE_COMMON_RESULT, result);

@@ -2,6 +2,7 @@ package com.ty.mid.framework.web.swagger.config;
 
 import com.ty.mid.framework.core.config.AbstractConfig;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import javax.validation.constraints.NotEmpty;
@@ -13,6 +14,7 @@ import static com.ty.mid.framework.core.config.AbstractConfig.FRAMEWORK_PREFIX;
  *
  * @author suyouliang
  */
+@EqualsAndHashCode(callSuper = true)
 @ConfigurationProperties(FRAMEWORK_PREFIX + "swagger")
 @Data
 public class SwaggerConfig extends AbstractConfig {

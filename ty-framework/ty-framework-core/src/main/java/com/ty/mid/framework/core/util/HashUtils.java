@@ -1,5 +1,6 @@
 package com.ty.mid.framework.core.util;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.digest.Digester;
 import cn.hutool.crypto.digest.MD5;
@@ -19,7 +20,7 @@ public class HashUtils {
     }
 
     public static String md5Hash(@NonNull String source, @Nullable String salt) {
-        MD5 md5 = StringUtils.isEmpty(salt) ? MD5.create() : new MD5(getByte(salt));
+        MD5 md5 = StrUtil.isEmpty(salt) ? MD5.create() : new MD5(getByte(salt));
         return md5.digestHex(source);
     }
 

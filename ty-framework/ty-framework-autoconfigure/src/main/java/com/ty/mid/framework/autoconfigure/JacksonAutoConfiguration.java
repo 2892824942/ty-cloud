@@ -2,7 +2,10 @@ package com.ty.mid.framework.autoconfigure;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -10,13 +13,16 @@ import com.fasterxml.jackson.datatype.jsr310.deser.LocalTimeDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalTimeSerializer;
+import com.ty.mid.framework.common.pojo.KVResp;
 import com.ty.mid.framework.common.util.JsonUtils;
 import com.ty.mid.framework.web.jackson.NumberSerializer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -64,5 +70,33 @@ public class JacksonAutoConfiguration {
         log.info("[init][序列化配置初始化成功]");
         return new JsonUtils();
     }
+
+    /**
+     * 为类型为KVResp,且为枚举的类型提供序列化能力
+     * 按照以下格式进行序列化：
+     * {
+     * "key": "1",
+     * "value": "内置角色"
+     * },
+     *
+     * @return
+     */
+    @Bean
+    public Jackson2ObjectMapperBuilderCustomizer enumCustomizer() {
+        return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder.serializerByType(KVResp.class, new JsonSerializer<KVResp<?, ?>>() {
+            @Override
+            public void serialize(KVResp<?, ?> kvResp, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
+                if (kvResp.getClass().isEnum()) {
+                    gen.writeStartObject();
+                    gen.writeStringField("key", String.valueOf(kvResp.getKey()));
+                    gen.writeStringField("value", String.valueOf(kvResp.getValue()));
+                    gen.writeEndObject();
+
+                }
+
+            }
+        });
+    }
+
 
 }

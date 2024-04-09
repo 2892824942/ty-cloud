@@ -1,7 +1,8 @@
-package com.ty.mid.framework.common.constant;
+package com.ty.mid.framework.core.constant;
 
 import cn.hutool.core.util.ObjUtil;
 import com.ty.mid.framework.common.pojo.KVResp;
+import io.github.linpeilie.annotations.AutoEnumMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -12,6 +13,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
+@AutoEnumMapper("key")
 public enum EnableStatusEnum implements KVResp<Integer, String> {
 
     ENABLE(0, "开启"),

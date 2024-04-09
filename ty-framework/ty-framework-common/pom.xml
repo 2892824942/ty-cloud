@@ -52,7 +52,10 @@
             <artifactId>guava</artifactId>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>io.github.linpeilie</groupId>
+            <artifactId>mapstruct-plus</artifactId>
+        </dependency>
 
     </dependencies>
 </project>
