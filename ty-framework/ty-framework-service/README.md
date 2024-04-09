@@ -1,24 +1,23 @@
 <!-- TOC -->
-
 * [项目特点](#项目特点)
 * [一:框架集成](#一框架集成)
-    * [1.引入核心依赖](#1引入核心依赖)
+  * [1.引入核心依赖](#1引入核心依赖)
 * [二:使用示例](#二使用示例)
 * [三:功能详情](#三功能详情)
-    * [1.DO->DTO自动装载](#1do-dto自动装载)
-    * [2.数据缓存](#2数据缓存)
-        * [(1)能力介绍](#1能力介绍)
-        * [(2)使用示例](#2使用示例)
-    * [3.问题答疑](#3问题答疑)
-
+  * [1.DO->DTO自动装载](#1do-dto自动装载)
+    * [1.1 基础字段自动装载](#11-基础字段自动装载)
+    * [1.2 数据库字段自动装载](#12-数据库字段自动装载)
+  * [2.数据缓存](#2数据缓存)
+    * [(1)能力介绍](#1能力介绍)
+    * [(2)使用示例](#2使用示例)
+  * [3.问题答疑](#3问题答疑)
 <!-- TOC -->
 
 开源地址:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-service
 
 # 项目特点
 
-1.
-自动依赖mybatis-plus模块,拥有cloud下mybatis-plus模块所有能力.具体见:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-mybatis-plus
+1.自动依赖mybatis-plus模块,拥有cloud下mybatis-plus模块所有能力.具体见:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-mybatis-plus
 2. 提供实体对象缓存能力,简化简单缓存业务代码开发
 3. DO<-->DTO 通过Mapstruct转换,增强DO-->DTO转换,支持简单关联字段自动映射,支持审计字段自动映射
 
@@ -360,8 +359,7 @@ public class RoleServiceImpl extends GenericService<Role, RoleDTO, RoleMapper> i
    * 为角色表定义code->RoleSimpleDTO自动装载
    * @return
    */
-    @Bean
-    public AutoWrapper<Role> roleSimpleDTOAutoWrapper() {
+    @Bean public AutoWrapper<Role> roleSimpleDTOAutoWrapper() {
         //注意:不可以省略后面的泛型否则报错,默认使用maperstruct-plus能力自动转换,也可重写对应方法
         return new AutoWrapService<Role, RoleSimpleDTO, RoleMapper>() {
         };
