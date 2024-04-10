@@ -21,7 +21,6 @@ public class WebFrameworkUtils {
     public static final String HEADER_TENANT_ID = "tenant-id";
     /**
      * 终端的 Header
-     *
      */
     public static final String HEADER_TERMINAL = "terminal";
     private static final String REQUEST_ATTRIBUTE_LOGIN_USER_ID = "login_user_id";

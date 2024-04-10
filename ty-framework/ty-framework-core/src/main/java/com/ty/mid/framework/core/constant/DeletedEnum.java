@@ -8,7 +8,7 @@ import java.util.Objects;
 
 @Getter
 @AutoEnumMapper("key")
-public enum DeletedEnum implements KVResp<Integer,Boolean> {
+public enum DeletedEnum implements KVResp<Integer, Boolean> {
     /**
      * 未删除
      */

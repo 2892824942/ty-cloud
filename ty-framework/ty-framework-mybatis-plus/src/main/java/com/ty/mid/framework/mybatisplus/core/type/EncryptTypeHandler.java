@@ -27,7 +27,7 @@ public class EncryptTypeHandler extends BaseTypeHandler<String> {
 
     private static String decrypt(String value) {
         //兼容数据库默认值""字符
-        if (!StrUtil.isEmpty(value)) {
+        if (StrUtil.isEmpty(value)) {
             return value;
         }
         return getEncryptor().decryptStr(value);

@@ -1,16 +1,18 @@
 <!-- TOC -->
+
 * [项目特点](#项目特点)
 * [一:框架集成](#一框架集成)
-  * [1.引入核心依赖](#1引入核心依赖)
+    * [1.引入核心依赖](#1引入核心依赖)
 * [二:使用示例](#二使用示例)
 * [三:功能详情](#三功能详情)
-  * [1.DO->DTO自动装载](#1do-dto自动装载)
-    * [1.1 基础字段自动装载](#11-基础字段自动装载)
-    * [1.2 数据库字段自动装载](#12-数据库字段自动装载)
-  * [2.数据缓存](#2数据缓存)
-    * [(1)能力介绍](#1能力介绍)
-    * [(2)使用示例](#2使用示例)
-  * [3.问题答疑](#3问题答疑)
+    * [1.DO->DTO自动装载](#1do-dto自动装载)
+        * [1.1 基础字段自动装载](#11-基础字段自动装载)
+        * [1.2 数据库字段自动装载](#12-数据库字段自动装载)
+    * [2.数据缓存](#2数据缓存)
+        * [(1)能力介绍](#1能力介绍)
+        * [(2)使用示例](#2使用示例)
+    * [3.问题答疑](#3问题答疑)
+
 <!-- TOC -->
 
 开源地址:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-service
@@ -18,6 +20,7 @@
 # 项目特点
 
 1.自动依赖mybatis-plus模块,拥有cloud下mybatis-plus模块所有能力.具体见:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-mybatis-plus
+
 2. 提供实体对象缓存能力,简化简单缓存业务代码开发
 3. DO<-->DTO 通过Mapstruct转换,增强DO-->DTO转换,支持简单关联字段自动映射,支持审计字段自动映射
 
@@ -120,9 +123,11 @@ public class UserServiceImpl extends AutoWrapService<User, UserFullDTO, UserMapp
 ## 1.DO->DTO自动装载
 
 ### 1.1 基础字段自动装载
+
 项目集成了mapstruct-plus,通过一下方式实现自动装载,具体参见[https://www.mapstruct.plus/](官方文档)
 
 ```java
+
 @Schema(description = "用户全量对象")
 @Getter
 @Setter
@@ -155,7 +160,9 @@ public class UserFullDTO extends AbstractNameDTO implements Serializable {
 }
 
 ```
+
 本框架已在AutoWrapperService中提供covert方法,直接转换,也可通过xxxDTO()的方法直接获取转换后的DTO.
+
 ### 1.2 数据库字段自动装载
 
 一张表中有几个字段是映射的其他表,比如用户拥有areaId,roleCode属性,分别对应区域表及角色表.这种一个字段映射其他表是非常常见的,
@@ -177,10 +184,10 @@ RoleId->查询RoleDO->转换为RoleDTO->写入到UserDTO对应属性roleDTO中 �
 
 ```java
 public class User extends BaseDO {
-    
+
     @AutoWrap(values = {RoleDTO.class, RoleSimpleDTO.class})
     private List<Long> roleIds;
-    
+
 }
 ```
 
@@ -205,103 +212,104 @@ public class User extends BaseDO {
 ### (2)使用示例
 
 ```java
+
 @Service
 public class AddressServiceImpl extends AllCacheAutoWrapService<Address, AddrDTO, AddressMapper> implements IAddressService {
 
-  @Override
-  public AddrDTO getByCode(String code) {
-    return selectOneDTO(Address::getCode, code);
-  }
-
-  @Override
-  public List<AddrDTO> getByCodesFromCache(List<String> codes) {
-    Map<String, AddrDTO> all = cacheGetAll(codes);
-    return new ArrayList<>(all.values());
-  }
-
-  @Override
-  public AddrDTO getByCodeFromCache(String code) {
-    return cacheGetByKey(code);
-  }
-
-  @Override
-  public List<AddrDTO> getList(AddrQuery addrQuery) {
-    addrQuery.setPageNo(PageParam.PAGE_SIZE_NONE);
-    PageResult<Address> pageResult = baseMapper.getPage(addrQuery);
-    return convert(pageResult.getList(), AddrDTO.class);
-  }
-
-
-  /**
-   *↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓增删改部分demo↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-   */
-
-  /**
-   * 默认开启了ReadThrough,读取不到会自动查询数据库
-   *
-   * @param query
-   * @return
-   */
-
-  @Override
-  public Boolean save(AddrSaveQuery query) {
-    Address address = convert(query, Address.class);
-    return save(address);
-  }
-
-  /**
-   * 1.如更新不会更新key相关字段,直接删除缓存即可
-   * 2.如更新会更新key相关字段,则需要先查询数据库原始数据,update后需要删除前后两个值已达到缓存重新加载的目的
-   *
-   * @param addrUpdateQuery
-   * @return
-   */
-  @Override
-  @Transactional
-  public Boolean update(AddrUpdateQuery addrUpdateQuery) {
-    Address address = convert(addrUpdateQuery, Address.class);
-    Address dbAddress = getById(address.getId());
-    boolean result = updateById(address);
-    if (result) {
-      cacheClear(Lists.newArrayList(address, dbAddress));
+    @Override
+    public AddrDTO getByCode(String code) {
+        return selectOneDTO(Address::getCode, code);
     }
-    return null;
-  }
 
-  /**
-   * 默认开启了ReadThrough,读取不到会自动查询数据库
-   *
-   * @param query
-   * @return
-   */
-  @Override
-  public void saveBatch(List<AddrSaveQuery> query) {
-    List<Address> dataList = convert(query, Address.class);
-    super.saveBatch(dataList);
-  }
-
-  /**
-   * 删除需要手动操作缓存,更新类似
-   *
-   * @param id
-   * @return
-   */
-  @Override
-  @Transactional
-  public Boolean deleteById(Long id) {
-    Address address = selectOne(Address::getId, id);
-    if (address == null) {
-      return Boolean.TRUE;
+    @Override
+    public List<AddrDTO> getByCodesFromCache(List<String> codes) {
+        Map<String, AddrDTO> all = cacheGetAll(codes);
+        return new ArrayList<>(all.values());
     }
-    boolean result = removeById(id);
-    cacheClear(address);
-    return result;
-  }
 
-  /**
-   * ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓框架父类方法重写↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-   * @return
-   */
+    @Override
+    public AddrDTO getByCodeFromCache(String code) {
+        return cacheGetByKey(code);
+    }
+
+    @Override
+    public List<AddrDTO> getList(AddrQuery addrQuery) {
+        addrQuery.setPageNo(PageParam.PAGE_SIZE_NONE);
+        PageResult<Address> pageResult = baseMapper.getPage(addrQuery);
+        return convert(pageResult.getList(), AddrDTO.class);
+    }
+
+
+    /**
+     *↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓增删改部分demo↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+     */
+
+    /**
+     * 默认开启了ReadThrough,读取不到会自动查询数据库
+     *
+     * @param query
+     * @return
+     */
+
+    @Override
+    public Boolean save(AddrSaveQuery query) {
+        Address address = convert(query, Address.class);
+        return save(address);
+    }
+
+    /**
+     * 1.如更新不会更新key相关字段,直接删除缓存即可
+     * 2.如更新会更新key相关字段,则需要先查询数据库原始数据,update后需要删除前后两个值已达到缓存重新加载的目的
+     *
+     * @param addrUpdateQuery
+     * @return
+     */
+    @Override
+    @Transactional
+    public Boolean update(AddrUpdateQuery addrUpdateQuery) {
+        Address address = convert(addrUpdateQuery, Address.class);
+        Address dbAddress = getById(address.getId());
+        boolean result = updateById(address);
+        if (result) {
+            cacheClear(Lists.newArrayList(address, dbAddress));
+        }
+        return null;
+    }
+
+    /**
+     * 默认开启了ReadThrough,读取不到会自动查询数据库
+     *
+     * @param query
+     * @return
+     */
+    @Override
+    public void saveBatch(List<AddrSaveQuery> query) {
+        List<Address> dataList = convert(query, Address.class);
+        super.saveBatch(dataList);
+    }
+
+    /**
+     * 删除需要手动操作缓存,更新类似
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    @Transactional
+    public Boolean deleteById(Long id) {
+        Address address = selectOne(Address::getId, id);
+        if (address == null) {
+            return Boolean.TRUE;
+        }
+        boolean result = removeById(id);
+        cacheClear(address);
+        return result;
+    }
+
+    /**
+     * ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓框架父类方法重写↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+     * @return
+     */
 
 //    /**
 //     * 缓存Service:
@@ -313,27 +321,27 @@ public class AddressServiceImpl extends AllCacheAutoWrapService<Address, AddrDTO
 //        return Lists.newArrayList(Address::getCode, Address::getName);
 //    }
 
-  /**
-   * 缓存Service:
-   * 缓存key和自动装载字段一致,自动装载将走缓存
-   *
-   * @return
-   */
-  @Override
-  public SFunction<Address, ?> cacheDefineDOMapKey() {
-    return Address::getCode;
-  }
+    /**
+     * 缓存Service:
+     * 缓存key和自动装载字段一致,自动装载将走缓存
+     *
+     * @return
+     */
+    @Override
+    public SFunction<Address, ?> cacheDefineDOMapKey() {
+        return Address::getCode;
+    }
 
-  /**
-   * 自动装载Service:
-   * 定义code->AddrDTO自动装载
-   *
-   * @return
-   */
-  @Override
-  public Map<?, AddrDTO> autoWrap(Collection<?> collection) {
-    return convertMap(GenericsUtil.check2Collection(collection), Address::getCode, AddrDTO::getCode);
-  }
+    /**
+     * 自动装载Service:
+     * 定义code->AddrDTO自动装载
+     *
+     * @return
+     */
+    @Override
+    public Map<?, AddrDTO> autoWrap(Collection<?> collection) {
+        return convertMap(GenericsUtil.check2Collection(collection), Address::getCode, AddrDTO::getCode);
+    }
 }
 ```
 
@@ -341,9 +349,12 @@ public class AddressServiceImpl extends AllCacheAutoWrapService<Address, AddrDTO
 
 问题1:如果定义的字段不是id或者[DO->DTO]过程部分字段名称不一致无法自动转换怎么办
 
-答:首先,如果之间名称不一致,使用mapstruct-plus注解可标注对应映射,另外,如果此类情况较多,转换比较复杂,顶层接口定义了autoWrap的方法,支持重写[字段->DO]和[DO->DTO]过程
+答:
+首先,如果之间名称不一致,使用mapstruct-plus注解可标注对应映射,另外,如果此类情况较多,转换比较复杂,顶层接口定义了autoWrap的方法,支持重写[字段->DO]
+和[DO->DTO]过程
 
 ```java
+
 @Service
 public class AddressServiceImpl extends AllCacheAutoWrapService<Address, AddrDTO, AddressMapper> implements IAddressService {
     /**
@@ -367,13 +378,15 @@ public class AddressServiceImpl extends AllCacheAutoWrapService<Address, AddrDTO
 答:自定义AutoWrapper,可以通过再次注册AutoWrapper来为当前表定义其他字段的自动装载
 
 ```java
+
 @Service
 public class RoleServiceImpl extends GenericService<Role, RoleDTO, RoleMapper> implements IRoleService {
-   /**
-   * 为角色表定义code->RoleSimpleDTO自动装载
-   * @return
-   */
-    @Bean public AutoWrapper<Role> roleSimpleDTOAutoWrapper() {
+    /**
+     * 为角色表定义code->RoleSimpleDTO自动装载
+     * @return
+     */
+    @Bean
+    public AutoWrapper<Role> roleSimpleDTOAutoWrapper() {
         //注意:不可以省略后面的泛型否则报错,默认使用maperstruct-plus能力自动转换,也可重写对应方法
         return new AutoWrapService<Role, RoleSimpleDTO, RoleMapper>() {
         };
