@@ -1,6 +1,7 @@
 package com.ty.mid.framework.mybatisplus.core.util;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -16,6 +17,7 @@ import net.sf.jsqlparser.schema.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -32,7 +34,7 @@ public class MyBatisUtils {
 
         // 排序字段:默认降序排列
         if (!CollectionUtil.isEmpty(orderFields)) {
-            page.addOrder(orderFields.stream().map(sortingField -> SortParam.ORDER_ASC.equals(sortingField.getOrder()) ?
+            page.addOrder(orderFields.stream().map(sortingField -> StrUtil.equals(SortParam.ORDER_ASC,sortingField.getOrder(),true) ?
                             OrderItem.asc(sortingField.getField()) : OrderItem.desc(sortingField.getField()))
                     .collect(Collectors.toList()));
         }

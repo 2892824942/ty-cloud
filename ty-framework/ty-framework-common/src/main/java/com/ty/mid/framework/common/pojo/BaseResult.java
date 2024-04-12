@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ty.mid.framework.common.constant.BaseCode;
 import com.ty.mid.framework.common.exception.BaseException;
 import com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -17,15 +18,16 @@ import java.util.Map;
 @ToString(exclude = "extraData")
 @Data
 public class BaseResult<T> implements Serializable, Result<T> {
-
+    @Schema(description = "响应code码 0为成功 其他为失败")
     private String code = "0";
-
+    @Schema(description = "响应信息")
     private String message = "";
-
+    @Schema(description = "响应数据实体")
     private T data;
     /**
      * 分页场景表示总条数
      */
+    @Schema(description = "分页场景表示总条数,其他场景无意义")
     private Long totalCount;
     @JsonIgnore
     private Map<String, Object> extraData = new HashMap<>();

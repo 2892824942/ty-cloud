@@ -14,8 +14,9 @@ import java.io.Serializable;
 
 @Schema(description = "key-value顶层定义")
 public interface KVResp<K, V> extends Serializable {
+    @Schema(description = "键值: 键")
     K getKey();
-
+    @Schema(description = "键值: 值")
     V getValue();
 
 

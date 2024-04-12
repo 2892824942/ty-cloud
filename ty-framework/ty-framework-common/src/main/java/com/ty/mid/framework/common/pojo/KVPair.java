@@ -1,15 +1,17 @@
 package com.ty.mid.framework.common.pojo;
 
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.util.Objects;
 
 /**
  * 键值对
  */
 public class KVPair<K, V> implements KVResp<K, V> {
-
+    @Schema(description = "键值: 键")
     private final K key;
-
+    @Schema(description = "键值: 值")
     private final V value;
 
 
