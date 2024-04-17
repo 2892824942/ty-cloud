@@ -1,5 +1,6 @@
 package com.ty.mid.framework.web.config;
 
+import com.ty.mid.framework.common.constant.DomainConstant;
 import com.ty.mid.framework.core.config.AbstractConfig;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -122,7 +123,7 @@ public class WebConfig extends AbstractConfig {
          * 过滤时,以excludeUri+additionalExcludeUri进行过滤
          */
         @NotNull
-        private String[] excludeUri = new String[]{"/**/webjars/**", "/**/swagger-resources/**", "/**/v3/api-docs/**", "/**/v3/api-docs/**", "/**/doc.html"};
+        private String[] excludeUri = DomainConstant.System.DEFAULT_EXCLUDE_URI;
 
 
         /**

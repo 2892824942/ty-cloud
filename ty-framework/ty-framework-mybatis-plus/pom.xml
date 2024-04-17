@@ -14,10 +14,6 @@
         <!-- 基础依赖-->
         <dependency>
             <groupId>com.ty</groupId>
-            <artifactId>ty-framework-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.ty</groupId>
             <artifactId>ty-framework-core</artifactId>
         </dependency>
         <dependency>

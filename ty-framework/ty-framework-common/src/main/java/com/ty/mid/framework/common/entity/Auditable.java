@@ -2,6 +2,7 @@ package com.ty.mid.framework.common.entity;
 
 import com.ty.mid.framework.common.constant.DefaultTypeConstants;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -51,6 +52,7 @@ public interface Auditable<T extends Serializable> extends BaseIdDO<T> {
      *
      * @return
      */
+    @NotNull
     T getCreator();
 
     /**
@@ -58,6 +60,7 @@ public interface Auditable<T extends Serializable> extends BaseIdDO<T> {
      *
      * @return
      */
+    @NotNull
     T getUpdater();
 
     /**
@@ -65,15 +68,18 @@ public interface Auditable<T extends Serializable> extends BaseIdDO<T> {
      *
      * @return
      */
+    @NotNull
     LocalDateTime getCreateTime();
 
     /**
      * 获取更新时间
      */
+    @NotNull
     LocalDateTime getUpdateTime();
 
     /**
      * 是否删除
      */
+    @NotNull
     Boolean getDeleted();
 }

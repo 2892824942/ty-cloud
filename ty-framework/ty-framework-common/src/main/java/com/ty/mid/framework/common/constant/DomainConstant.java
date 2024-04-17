@@ -7,6 +7,9 @@ public interface DomainConstant {
          * RPC API 的前缀
          */
         String RPC_API_PREFIX = "/rpc-api";
+
+        String[] DEFAULT_EXCLUDE_URI = new String[]{"/**/webjars/**", "/**/swagger-resources/**", "/**/v3/api-docs/**"
+                , "/**/v3/api-docs/**", "/**/doc.html", "/**/*.js", "/**/*.css","/favicon.ico"};
     }
 
     interface Fields {

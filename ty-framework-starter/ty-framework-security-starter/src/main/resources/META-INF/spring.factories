@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  com.ty.mid.framework.starter.configuration.WebSecurityAutoConfiguration
+com.ty.mid.framework.security.config.SaTokenConfiguration

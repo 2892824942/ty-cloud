@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.ty.mid.framework.common.entity.Auditable;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.core.util.ThreadUtils;
-import com.ty.mid.framework.mybatisplus.core.audit.AuditorInfoResolver;
+import com.ty.mid.framework.common.audit.AuditorInfoResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 
@@ -24,7 +24,7 @@ public class AuditorMetaObjectHandler<T extends Serializable> implements MetaObj
 
     @Override
     public void insertFill(MetaObject metaObject) {
-        Auditable info = this.getAuditorInfo();
+        Auditable<?> info = this.getAuditorInfo();
 
         LocalDateTime now = this.getCurrentDate();
 
@@ -66,7 +66,7 @@ public class AuditorMetaObjectHandler<T extends Serializable> implements MetaObj
             log.info("无法解析当前用户信息，使用默认用户信息 {} 代替，当前线程名称：{}, 所属线程组: {}",
                     "DEFAULT_AUDITOR",
                     ThreadUtils.getCurrentThreadNameSafety(), ThreadUtils.getCurrentThreadGroupNameSafety());
-            info = auditorInfoResolver.resolveCurrentAuditor();
+            info = auditorInfoResolver.resolveEmptyAuditorInfo();
             if (null == info) {
                 throw new FrameworkException("默认的用户上下文信息不能为空");
             }

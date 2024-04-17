@@ -6,6 +6,7 @@ import cn.hutool.extra.servlet.ServletUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.ty.mid.framework.common.exception.BizException;
 import com.ty.mid.framework.common.pojo.BaseResult;
+import com.ty.mid.framework.common.pojo.Result;
 import com.ty.mid.framework.common.util.JsonUtils;
 import com.ty.mid.framework.core.monitor.TracerUtils;
 import com.ty.mid.framework.core.util.servlet.ServletUtils;
@@ -19,6 +20,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingPathVariableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -143,6 +145,16 @@ public class GlobalExceptionHandler {
         log.warn("[constraintViolationExceptionHandler]", ex);
         ConstraintViolation<?> constraintViolation = ex.getConstraintViolations().iterator().next();
         return BaseResult.fail(BAD_REQUEST.getCode(), String.format("请求参数不正确:%s", constraintViolation.getMessage()));
+    }
+
+    /**
+     * 请求路径中缺少必需的路径变量
+     */
+    @ExceptionHandler(MissingPathVariableException.class)
+    public Result<Void> handleMissingPathVariableException(MissingPathVariableException e, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        log.error("请求路径中缺少必需的路径变量'{}',发生系统异常.", requestURI);
+        return BaseResult.fail(String.format("请求路径中缺少必需的路径变量[%s]", e.getVariableName()));
     }
 
     /**

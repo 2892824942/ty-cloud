@@ -95,7 +95,7 @@
 
         <springfox-swagger2.version>2.9.2</springfox-swagger2.version>
         <swagger-annotation.version>1.5.20</swagger-annotation.version>
-        <shiro.version>1.7.1</shiro.version>
+        <sa-token.version>1.37.0</sa-token.version>
         <logback-redis.version>1.4.0</logback-redis.version>
         <jackson.version>2.10.0</jackson.version>
         <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
@@ -348,22 +348,25 @@
                 <version>${dm8.jdbc.version}</version>
             </dependency>
             <!--权限相关-->
+            <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
             <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-core</artifactId>
-                <version>${shiro.version}</version>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-spring-boot-starter</artifactId>
+                <version>${sa-token.version}</version>
             </dependency>
+            <!-- Sa-Token 权限认证,jwt实现 -->
             <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-web</artifactId>
-                <version>${shiro.version}</version>
+                <groupId>cn.dev33</groupId>
+                <artifactId>sa-token-jwt</artifactId>
+                <version>${sa-token.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>cn.hutool</groupId>
+                        <artifactId>hutool-all</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
-            <dependency>
-                <groupId>org.apache.shiro</groupId>
-                <artifactId>shiro-spring-boot-web-starter</artifactId>
-                <version>${shiro.version}</version>
-            </dependency>
             <!-- 日志相关-->
             <dependency>
                 <groupId>log4j</groupId>
