@@ -2,7 +2,7 @@ package com.ty.mid.framework.api.switcher.constant;
 
 /**
  * @author suyouliang
- * @createTime 2019-08-14 18:26
+ * @createTime 2023-08-14 18:26
  */
 public interface ApiSwitcherConstant {
 

@@ -8,7 +8,7 @@ import java.lang.annotation.*;
  * 幂等校验接口
  *
  * @author suyouliang
- * @createTime 2019-08-15 14:19
+ * @createTime 2023-08-15 14:19
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)

@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
  * 基于redis 的幂等校验服务
  *
  * @author suyouliang
- * @createTime 2019-08-15 14:29
+ * @createTime 2023-08-15 14:29
  */
 public class RedisIdempotentService extends AbstractIdempotentService {
 

@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
  * 框架异常类
  *
  * @author suyouliang
- * @createTime 2019-08-14 15:21
+ * @createTime 2023-08-14 15:21
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

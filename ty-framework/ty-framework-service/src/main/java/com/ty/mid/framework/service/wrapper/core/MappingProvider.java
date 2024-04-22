@@ -169,7 +169,7 @@ public class MappingProvider {
     static <T extends AbstractNameDTO> void doHandleAbstractNameDTOList(@MappingTarget List<T> abstractNameDTOList) {
         List<Long> creatorIdList = CollectionUtils.convertList(abstractNameDTOList, AbstractNameDTO::getCreator);
         List<Long> updaterIdList = CollectionUtils.convertList(abstractNameDTOList, AbstractNameDTO::getUpdater);
-        Collection<Long> userIdList = CollUtil.addAll(creatorIdList, updaterIdList);
+        Collection<Long> userIdList = CollUtil.addAllIfNotContains(creatorIdList, updaterIdList);
         if (CollUtil.isEmpty(userIdList)) {
             return;
         }

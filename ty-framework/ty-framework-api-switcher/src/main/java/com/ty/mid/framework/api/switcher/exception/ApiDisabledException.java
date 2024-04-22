@@ -8,7 +8,7 @@ import java.util.Date;
  * api 关闭异常
  *
  * @author suyouliang
- * @createTime 2019-08-14 15:22
+ * @createTime 2023-08-14 15:22
  */
 public class ApiDisabledException extends FrameworkException {
 

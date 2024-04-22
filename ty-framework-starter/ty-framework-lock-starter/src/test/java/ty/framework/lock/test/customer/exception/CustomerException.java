@@ -3,8 +3,8 @@ package ty.framework.lock.test.customer.exception;
 /**
  * 框架异常父类
  *
- * @author xuchenglong
- * @createTime 2019-08-14 15:21
+ * @author suyouliang
+ * @createTime 2023-08-14 15:21
  */
 public class CustomerException extends RuntimeException {
 

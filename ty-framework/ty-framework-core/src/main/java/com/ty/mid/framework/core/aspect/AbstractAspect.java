@@ -14,8 +14,8 @@ import java.lang.reflect.Method;
 /**
  * 抽象切面，为切面开发提供支持
  *
- * @author xuchenglong
- * @createTime 2019-08-15 14:13
+ * @author suyouliang
+ * @createTime 2023-08-15 14:13
  */
 public abstract class AbstractAspect {
 

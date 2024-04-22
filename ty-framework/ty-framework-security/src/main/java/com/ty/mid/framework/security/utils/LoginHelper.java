@@ -7,6 +7,9 @@ import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
+import com.ty.mid.framework.common.entity.Auditable;
+import com.ty.mid.framework.common.lang.NeverNull;
+import com.ty.mid.framework.common.lang.NullSafe;
 import com.ty.mid.framework.common.model.LoginUser;
 import com.ty.mid.framework.core.constant.DeviceType;
 import lombok.AccessLevel;
@@ -21,6 +24,8 @@ import lombok.NoArgsConstructor;
  * <p>
  * 多用户体系 针对 多种用户类型 但权限控制不一致
  * 可以组成 多用户类型表与多设备类型 分别控制权限
+ * 注:为了方法的复用性,LoginHelper返回的LoginUser不会为空,而是使用默认值
+ * 主要针对方法可能在登录环境及非登录环境(job,mq场景)调用,不用频繁判空或赋值
  *
  * @author Lion Li
  */
@@ -68,14 +73,14 @@ public class LoginHelper {
     /**
      * 获取用户(多级缓存)
      */
-    public static LoginUser getLoginUser() {
+    public static @NeverNull LoginUser getLoginUser() {
         LoginUser loginUser = (LoginUser) SaHolder.getStorage().get(LOGIN_USER_KEY);
         if (loginUser != null) {
             return loginUser;
         }
         SaSession session = StpUtil.getTokenSession();
         if (ObjectUtil.isNull(session)) {
-            return null;
+            return LoginUser.DEFAULT_LOGIN_USER;
         }
         loginUser = (LoginUser) session.get(LOGIN_USER_KEY);
         SaHolder.getStorage().set(LOGIN_USER_KEY, loginUser);
@@ -85,10 +90,10 @@ public class LoginHelper {
     /**
      * 获取用户基于token
      */
-    public static LoginUser getLoginUser(String token) {
+    public static @NeverNull LoginUser getLoginUser(String token) {
         SaSession session = StpUtil.getTokenSessionByToken(token);
         if (ObjectUtil.isNull(session)) {
-            return null;
+            return LoginUser.DEFAULT_LOGIN_USER;
         }
         return (LoginUser) session.get(LOGIN_USER_KEY);
     }
@@ -96,7 +101,7 @@ public class LoginHelper {
     /**
      * 获取用户id
      */
-    public static Long getUserId() {
+    public static long getUserId() {
         Long userId;
         try {
             userId = Convert.toLong(SaHolder.getStorage().get(USER_KEY));
@@ -105,7 +110,7 @@ public class LoginHelper {
                 SaHolder.getStorage().set(USER_KEY, userId);
             }
         } catch (Exception e) {
-            return null;
+            return Auditable.DEFAULT_USER_ID;
         }
         return userId;
     }

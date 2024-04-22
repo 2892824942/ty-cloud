@@ -8,8 +8,8 @@ import lombok.EqualsAndHashCode;
 /**
  * 业务异常顶级父类
  *
- * @author xuchenglong
- * @createTime 2019-08-14 15:21
+ * @author suyouliang
+ * @createTime 2023-08-14 15:21
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

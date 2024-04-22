@@ -6,7 +6,7 @@ import com.ty.mid.framework.common.exception.FrameworkException;
  * api 开关初始化异常
  *
  * @author suyouliang
- * @createTime 2019-08-14 16:50
+ * @createTime 2023-08-14 16:50
  */
 public class ApiSwitcherInitializeException extends FrameworkException {
 

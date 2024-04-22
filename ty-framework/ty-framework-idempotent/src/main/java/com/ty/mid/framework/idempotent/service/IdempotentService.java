@@ -6,7 +6,7 @@ import com.ty.mid.framework.idempotent.exception.IdempotentServiceException;
  * 幂等性校验服务
  *
  * @author suyouliang
- * @createTime 2019-08-15 14:28
+ * @createTime 2023-08-15 14:28
  */
 public interface IdempotentService {
 

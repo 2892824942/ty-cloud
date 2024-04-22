@@ -1,5 +1,6 @@
 package com.ty.mid.framework.security.audit;
 
+import cn.hutool.core.util.NumberUtil;
 import com.ty.mid.framework.common.audit.AuditorInfoResolver;
 import com.ty.mid.framework.common.entity.Auditable;
 import com.ty.mid.framework.common.model.LoginUser;
@@ -22,8 +23,8 @@ public class SaTokenAuditorInfoResolver implements AuditorInfoResolver<Long> {
     @Override
     public Auditable<Long> resolveCurrentAuditor() {
         LoginUser loginUser = LoginHelper.getLoginUser();
-        if (Objects.isNull(loginUser)){
-            return null;
+        if (loginUser.isDefaultUser()){
+            return Auditable.DEFAULT_AUDITOR;
         }
         return new Auditable<Long>() {
             @Override

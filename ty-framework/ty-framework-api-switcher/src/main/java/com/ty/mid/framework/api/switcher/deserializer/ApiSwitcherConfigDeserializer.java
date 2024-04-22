@@ -10,7 +10,7 @@ import java.util.Map;
  * 用于将行配置转为 ApiSwitcherConfig
  *
  * @author suyouliang
- * @createTime 2019-08-14 18:18
+ * @createTime 2023-08-14 18:18
  */
 public interface ApiSwitcherConfigDeserializer {
 

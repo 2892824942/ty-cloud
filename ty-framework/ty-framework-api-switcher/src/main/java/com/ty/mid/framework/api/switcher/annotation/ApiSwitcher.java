@@ -6,7 +6,7 @@ import java.lang.annotation.*;
  * Api 开关封装
  *
  * @author suyouliang
- * @createTime 2019-08-14 15:17
+ * @createTime 2023-08-14 15:17
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
