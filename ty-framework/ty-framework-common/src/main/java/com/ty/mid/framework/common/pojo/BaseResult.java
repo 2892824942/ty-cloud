@@ -35,6 +35,9 @@ public class BaseResult<T> implements Serializable, Result<T> {
     /**
      * ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓静态方法↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
      */
+    public static <T> BaseResult<T> success() {
+        return new BaseResult<>();
+    }
     public static <T> BaseResult<T> success(T data) {
         BaseResult<T> result = new BaseResult<>();
         result.setData(data);

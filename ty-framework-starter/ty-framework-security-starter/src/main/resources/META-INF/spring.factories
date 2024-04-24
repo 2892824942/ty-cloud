@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.ty.mid.framework.security.config.SaTokenConfiguration
+com.ty.mid.framework.security.configuration.SaTokenConfiguration,\
+com.ty.mid.framework.security.configuration.SecurityConfiguration

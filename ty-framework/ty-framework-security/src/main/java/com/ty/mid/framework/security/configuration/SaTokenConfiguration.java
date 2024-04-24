@@ -1,28 +1,24 @@
-package com.ty.mid.framework.security.config;
+package com.ty.mid.framework.security.configuration;
 
 import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.jwt.StpLogicJwtForSimple;
 import cn.dev33.satoken.stp.StpInterface;
 import cn.dev33.satoken.stp.StpLogic;
 import com.ty.mid.framework.common.audit.AuditorInfoResolver;
-import com.ty.mid.framework.common.entity.Auditable;
 import com.ty.mid.framework.security.audit.SaTokenAuditorInfoResolver;
 import com.ty.mid.framework.security.core.dao.CacheSaTokenDao;
 import com.ty.mid.framework.security.core.service.SaPermissionImpl;
+import com.ty.mid.framework.security.handler.SecurityExceptionHandler;
 import org.redisson.api.RedissonClient;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-
-import java.io.Serializable;
 
 /**
  * Sa-Token 配置
  *
  * @author Lion Li
  */
-@AutoConfiguration
 public class SaTokenConfiguration {
 
     @Bean
@@ -61,5 +57,10 @@ public class SaTokenConfiguration {
     @ConditionalOnMissingBean
     public AuditorInfoResolver<Long> auditorInfoResolver() {
         return new SaTokenAuditorInfoResolver();
+    }
+
+    @Bean
+    public SecurityExceptionHandler securityExceptionHandler() {
+        return new SecurityExceptionHandler();
     }
 }

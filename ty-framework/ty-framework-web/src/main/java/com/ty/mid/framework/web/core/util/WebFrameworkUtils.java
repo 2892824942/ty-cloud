@@ -26,10 +26,10 @@ public class WebFrameworkUtils {
     private static final String REQUEST_ATTRIBUTE_LOGIN_USER_ID = "login_user_id";
     private static final String REQUEST_ATTRIBUTE_LOGIN_USER_TYPE = "login_user_type";
     private static final String REQUEST_ATTRIBUTE_COMMON_RESULT = "common_result";
-    private static WebConfig properties;
+    private static WebConfig webConfig;
 
     public WebFrameworkUtils(WebConfig webConfig) {
-        WebFrameworkUtils.properties = webConfig;
+        WebFrameworkUtils.webConfig = webConfig;
     }
 
     /**

@@ -19,6 +19,7 @@ import com.ty.mid.framework.cache.config.CachePlusConfig;
 import com.ty.mid.framework.cache.configuration.base.AbstractRedisCacheConfiguration;
 import com.ty.mid.framework.cache.constant.CachePlusType;
 import com.ty.mid.framework.cache.support.manager.redis.writer.HashRedisCacheWriter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
@@ -48,6 +49,10 @@ import java.util.Objects;
 @EnableConfigurationProperties(CachePlusConfig.class)
 @Conditional(CachePlusCondition.class)
 public class RedisCacheConfiguration extends AbstractRedisCacheConfiguration {
+
+    public RedisCacheConfiguration(CachePlusConfig cachePlusConfig) {
+        super(cachePlusConfig);
+    }
 
     @Bean
     RedisCacheManager redisCacheManager(CacheManagerCustomizers cacheManagerCustomizers,

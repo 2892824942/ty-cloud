@@ -56,10 +56,8 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
         Map<String, String> queryString = ServletUtils.getParamMap(request);
         //解析出的requestBody中有很多\r\n以及空字符,这里处理
         Map<String, Object> bodyMap = StrUtil.isNotBlank(ServletUtils.getBody(request))
-                ? JsonUtils.parseObject(ServletUtils.getBody(request), new TypeReference<Map<String, Object>>() {
-        })
+                ? JsonUtils.parseObject(ServletUtils.getBody(request), new TypeReference<Map<String, Object>>() {})
                 : Collections.emptyMap();
-
 
         try {
             // 继续过滤器

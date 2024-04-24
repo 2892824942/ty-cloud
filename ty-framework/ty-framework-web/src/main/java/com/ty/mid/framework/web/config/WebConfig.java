@@ -4,6 +4,7 @@ import com.ty.mid.framework.common.constant.DomainConstant;
 import com.ty.mid.framework.core.config.AbstractConfig;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -17,6 +18,7 @@ import java.util.Map;
 
 import static com.ty.mid.framework.web.config.WebConfig.PREFIX;
 
+@EqualsAndHashCode(callSuper = true)
 @ConfigurationProperties(PREFIX)
 @Validated
 @Data
@@ -29,7 +31,6 @@ public class WebConfig extends AbstractConfig {
      * 和context-path path类似,不过context-path是整个项目级别的,这个配置是自定义包级别统一加前缀
      * 具体
      *
-     * @return
      * @see WebConfig#enableMvcUrlPrefix
      * <p>
      * value:api 具体
@@ -62,6 +63,13 @@ public class WebConfig extends AbstractConfig {
      * 是否开启Cors跨域
      */
     private boolean enableCors;
+
+    /**
+     * 是否开启Servlet级异常处理器,此处理器将作为优先级最高的filter
+     * 此filter拦截filter->controller(不包括)中间所有层出现的异常信息
+     * 默认开启
+     */
+    private boolean enableServletExceptionHandle = Boolean.TRUE;
 
 
     @Data

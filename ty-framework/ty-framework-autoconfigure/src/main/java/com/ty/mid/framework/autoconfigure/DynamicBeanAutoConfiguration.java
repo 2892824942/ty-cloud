@@ -3,8 +3,8 @@ package com.ty.mid.framework.autoconfigure;
 import cn.hutool.core.collection.CollUtil;
 import com.ty.mid.framework.web.config.WebConfig;
 import com.ty.mid.framework.web.swagger.SwaggerUtil;
+import lombok.RequiredArgsConstructor;
 import org.springdoc.core.GroupedOpenApi;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -12,13 +12,13 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import javax.annotation.Resource;
 import java.util.Map;
-
+@RequiredArgsConstructor
 public class DynamicBeanAutoConfiguration implements ApplicationListener<ContextRefreshedEvent> {
-    @Resource
-    private WebConfig webConfig;
 
-    @Autowired
-    private ConfigurableApplicationContext applicationContext;
+    private final WebConfig webConfig;
+
+
+    private final ConfigurableApplicationContext applicationContext;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {

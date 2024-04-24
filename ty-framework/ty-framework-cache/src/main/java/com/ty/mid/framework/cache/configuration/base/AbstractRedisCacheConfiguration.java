@@ -3,6 +3,7 @@ package com.ty.mid.framework.cache.configuration.base;
 import cn.hutool.core.util.ReflectUtil;
 import com.ty.mid.framework.cache.config.CachePlusConfig;
 import com.ty.mid.framework.cache.constant.CachePlusType;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.data.redis.cache.CacheKeyPrefix;
@@ -17,10 +18,10 @@ import java.lang.reflect.Field;
 import java.util.LinkedHashSet;
 import java.util.List;
 
-
+@RequiredArgsConstructor
 public abstract class AbstractRedisCacheConfiguration {
-    @Resource
-    protected CachePlusConfig cachePlusConfig;
+
+    protected final CachePlusConfig cachePlusConfig;
 
     protected RedisCacheManagerBuilder handleBuilder(CachePlusType cachePlusType,
                                                      ObjectProvider<org.springframework.data.redis.cache.RedisCacheConfiguration> redisCacheConfiguration,

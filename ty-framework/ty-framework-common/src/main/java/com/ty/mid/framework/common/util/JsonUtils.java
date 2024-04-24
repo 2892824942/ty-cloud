@@ -153,6 +153,9 @@ public class JsonUtils {
     }
 
     public static <T> T parseObject(String text, TypeReference<T> typeReference) {
+        if (StrUtil.isEmpty(text)) {
+            return null;
+        }
         try {
             return om.readValue(text, typeReference);
         } catch (IOException e) {
@@ -200,6 +203,9 @@ public class JsonUtils {
     }
 
     public static JsonNode parseTree(String text) {
+        if (StrUtil.isEmpty(text)) {
+            return null;
+        }
         try {
             return om.readTree(text);
         } catch (IOException e) {
@@ -209,6 +215,9 @@ public class JsonUtils {
     }
 
     public static JsonNode parseTree(byte[] text) {
+        if (ArrayUtil.isEmpty(text)) {
+            return null;
+        }
         try {
             return om.readTree(text);
         } catch (IOException e) {

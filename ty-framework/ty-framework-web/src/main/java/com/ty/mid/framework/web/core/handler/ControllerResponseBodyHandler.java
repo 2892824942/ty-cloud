@@ -1,9 +1,11 @@
 package com.ty.mid.framework.web.core.handler;
 
 import com.ty.mid.framework.common.pojo.BaseResult;
+import com.ty.mid.framework.common.pojo.Result;
 import com.ty.mid.framework.web.core.filter.ApiAccessLogFilter;
 import com.ty.mid.framework.web.core.util.WebFrameworkUtils;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -23,7 +25,7 @@ import java.util.Objects;
  * 方便 {@link ApiAccessLogFilter} 记录访问日志
  */
 @ControllerAdvice
-public class GlobalResponseBodyHandler implements ResponseBodyAdvice<Object> {
+public class ControllerResponseBodyHandler implements ResponseBodyAdvice<Object> {
 
     @Override
     @SuppressWarnings("NullableProblems") // 避免 IDEA 警告
@@ -31,8 +33,8 @@ public class GlobalResponseBodyHandler implements ResponseBodyAdvice<Object> {
         if (returnType.getMethod() == null) {
             return false;
         }
-        // 只拦截返回结果为 CommonResult 类型
-        return returnType.getMethod().getReturnType() == BaseResult.class;
+        // 只拦截返回结果为 Result及其子类型
+        return Result.class.isAssignableFrom(returnType.getMethod().getReturnType());
     }
 
     @Override

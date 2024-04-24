@@ -1,6 +1,5 @@
 package com.ty.mid.framework.web.core.filter;
 
-import com.ty.mid.framework.core.util.servlet.ServletUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -20,12 +19,6 @@ public class CacheRequestBodyFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
         filterChain.doFilter(new CacheRequestBodyWrapper(request), response);
-    }
-
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        // 只处理 json 请求内容
-        return !ServletUtils.isJsonRequest(request);
     }
 
 }

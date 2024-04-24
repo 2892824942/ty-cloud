@@ -15,6 +15,7 @@ import com.ty.mid.framework.lock.parser.LocalLockParser;
 import com.ty.mid.framework.lock.registry.AbstractDecorateLockRegistry;
 import com.ty.mid.framework.lock.registry.TypeLockRegistry;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -37,6 +38,7 @@ import java.util.Objects;
 @Component
 @Order(0)
 @Slf4j
+@RequiredArgsConstructor
 public class LockAspect extends AbstractAspect {
     /**
      * 不可以使用HashMap或ConcurrentHashMap，存在无锁降级执行业务逻辑的可能，并发则可能出现LockRes被覆盖
@@ -45,10 +47,10 @@ public class LockAspect extends AbstractAspect {
      * 使用TreadLocal，支持线程内 存在多个lock。每个lock执行完成后将清理lock上下文的lockRes，执行下一个lock时，lock的上下文是干净的。
      */
     private static final ThreadLocal<Map<String, LockContext>> CURRENT_THREAD_LOCAL_LOCKRES_MAP = new ThreadLocal<>();
-    @Resource
-    LockManagerKeeper lockManagerKeeper;
-    @Resource
-    private LockInfoProvider lockInfoProvider;
+
+    final LockManagerKeeper lockManagerKeeper;
+
+    private final LockInfoProvider lockInfoProvider;
 
     public static LockContext getLockContext(String lockName) {
         Map<String, LockContext> lockContextMap = CURRENT_THREAD_LOCAL_LOCKRES_MAP.get();

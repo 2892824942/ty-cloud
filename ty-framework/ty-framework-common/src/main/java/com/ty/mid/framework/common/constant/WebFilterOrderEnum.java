@@ -8,8 +8,9 @@ package com.ty.mid.framework.common.constant;
  * @author suyouliang
  */
 public interface WebFilterOrderEnum {
-
-    int CORS_FILTER = Integer.MIN_VALUE;
+    //全局servlet级异常拦截,优先级最高,兜底filter层处理异常
+    int SERVLET_EXCEPTION_FILTER = Integer.MIN_VALUE;
+    int CORS_FILTER = Integer.MIN_VALUE + 10;
 
     int TRACE_FILTER = CORS_FILTER + 1;
 

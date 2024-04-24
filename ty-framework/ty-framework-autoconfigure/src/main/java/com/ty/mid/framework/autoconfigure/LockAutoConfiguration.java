@@ -47,7 +47,7 @@ public class LockAutoConfiguration {
     @Bean
     public BusinessKeyProvider businessKeyProvider(LockConfig lockConfig) {
         loadStrategy(lockConfig);
-        return new BusinessKeyProvider();
+        return new BusinessKeyProvider(lockConfig);
     }
 
     @Bean
@@ -79,8 +79,8 @@ public class LockAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    LockAspect lockAspect() {
-        return new LockAspect();
+    LockAspect lockAspect(LockManagerKeeper lockManagerKeeper, LockInfoProvider lockInfoProvider) {
+        return new LockAspect(lockManagerKeeper, lockInfoProvider);
     }
 
     private void loadStrategy(LockConfig lockConfig) {

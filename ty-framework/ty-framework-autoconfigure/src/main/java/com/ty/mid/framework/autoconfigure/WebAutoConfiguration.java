@@ -5,12 +5,13 @@ import com.ty.mid.framework.core.bus.EventPublisher;
 import com.ty.mid.framework.web.config.WebConfig;
 import com.ty.mid.framework.web.core.filter.ApiAccessLogFilter;
 import com.ty.mid.framework.web.core.filter.CacheRequestBodyFilter;
-import com.ty.mid.framework.web.core.handler.GlobalExceptionHandler;
-import com.ty.mid.framework.web.core.handler.GlobalResponseBodyHandler;
+import com.ty.mid.framework.web.core.filter.GlobalServletExceptionHandleFilter;
+import com.ty.mid.framework.web.core.handler.ControllerExceptionHandler;
+import com.ty.mid.framework.web.core.handler.ControllerResponseBodyHandler;
 import com.ty.mid.framework.web.core.service.ApiLogService;
-import com.ty.mid.framework.web.core.util.WebFrameworkUtils;
 import com.ty.mid.framework.web.core.util.WebUtil;
 import com.ty.mid.framework.web.mvc.HashedIdHandlerMethodArgumentResolver;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -31,17 +32,16 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 @EnableConfigurationProperties(WebConfig.class)
+@RequiredArgsConstructor
 public class WebAutoConfiguration implements WebMvcConfigurer {
 
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher(".");
-    @Resource
-    private WebConfig webConfig;
+    private final WebConfig webConfig;
     /**
      * 应用名
      */
@@ -103,20 +103,13 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
     }
 
     @Bean
-    public GlobalExceptionHandler globalExceptionHandler(ApiLogService apiLogService) {
-        return new GlobalExceptionHandler(applicationName, apiLogService);
+    public ControllerExceptionHandler controllerExceptionHandler(ApiLogService apiLogService) {
+        return new ControllerExceptionHandler(applicationName, apiLogService);
     }
 
     @Bean
-    public GlobalResponseBodyHandler globalResponseBodyHandler() {
-        return new GlobalResponseBodyHandler();
-    }
-
-    @Bean
-    @SuppressWarnings("InstantiationOfUtilityClass")
-    public WebFrameworkUtils webFrameworkUtils(WebConfig webConfig) {
-        // 由于 WebFrameworkUtils 需要使用到 webProperties 属性，所以注册为一个 Bean
-        return new WebFrameworkUtils(webConfig);
+    public ControllerResponseBodyHandler controllerResponseBodyHandler() {
+        return new ControllerResponseBodyHandler();
     }
 
     // ========== Filter 相关 ==========
@@ -148,6 +141,17 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config); // 对接口配置跨域设置
         return WebUtil.createFilterBean(new CorsFilter(source), WebFilterOrderEnum.CORS_FILTER);
+    }
+
+
+    /**
+     * 创建全局异常处理 Filter,此异常处理器处理GlobalExceptionHandler处理不了的异常
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = WebConfig.PREFIX, name = "enable-servlet-exception-handle", havingValue = "true")
+    public FilterRegistrationBean<GlobalServletExceptionHandleFilter> globalServletExceptionFilter(ControllerExceptionHandler controllerExceptionHandler) {
+        // 创建 CorsConfiguration 对象
+        return WebUtil.createFilterBean(new GlobalServletExceptionHandleFilter(controllerExceptionHandler), WebFilterOrderEnum.SERVLET_EXCEPTION_FILTER);
     }
 
     /**

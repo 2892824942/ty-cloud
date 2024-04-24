@@ -5,6 +5,7 @@ import com.ty.mid.framework.common.util.SafeGetUtil;
 import com.ty.mid.framework.lock.annotation.Lock;
 import com.ty.mid.framework.lock.annotation.LockKey;
 import com.ty.mid.framework.lock.config.LockConfig;
+import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.context.expression.MethodBasedEvaluationContext;
@@ -27,11 +28,11 @@ import java.util.List;
  * Created by suyouliang on 2018/1/24.
  * Content :获取用户定义业务key
  */
+@RequiredArgsConstructor
 public class BusinessKeyProvider {
     private final ParameterNameDiscoverer nameDiscoverer = new DefaultParameterNameDiscoverer();
     private final ExpressionParser parser = new SpelExpressionParser();
-    @Resource
-    private LockConfig lockConfig;
+    private final LockConfig lockConfig;
 
     public String getKeyName(JoinPoint joinPoint, Lock lock) {
         Method method = getMethod(joinPoint);

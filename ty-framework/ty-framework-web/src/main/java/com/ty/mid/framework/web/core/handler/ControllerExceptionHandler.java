@@ -4,6 +4,7 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.extra.servlet.ServletUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.ty.mid.framework.common.constant.OrderConstant;
 import com.ty.mid.framework.common.exception.BizException;
 import com.ty.mid.framework.common.pojo.BaseResult;
 import com.ty.mid.framework.common.pojo.Result;
@@ -15,6 +16,7 @@ import com.ty.mid.framework.web.core.service.ApiLogService;
 import com.ty.mid.framework.web.core.util.WebFrameworkUtils;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.annotation.Order;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -39,14 +41,15 @@ import static com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum.*;
 
 
 /**
- * 全局异常处理器，将 Exception 翻译成 BaseResult + 对应的异常编号
- *
+ * 全局Controller层异常处理器，将 Exception 翻译成 BaseResult + 对应的异常编号
+ * 1.执行在ApiLogFilter之后,定义的异常处理,从业务上说都是可控的,因此,ApiLogFilter会记录访问成功日志,而不会将异常上下文传递.但是log会打印
  * @author suyouliang
  */
 @RestControllerAdvice
 @AllArgsConstructor
 @Slf4j
-public class GlobalExceptionHandler {
+@Order(OrderConstant.GLOBAL_EXCEPTION_HANDLER)
+public class ControllerExceptionHandler {
 
     private final String applicationName;
 
@@ -60,7 +63,7 @@ public class GlobalExceptionHandler {
      * @param ex      异常
      * @return 通用返回
      */
-    public BaseResult<?> allExceptionHandler(HttpServletRequest request, Throwable ex) {
+    public Result<?> allExceptionHandler(HttpServletRequest request, Throwable ex) {
         if (ex instanceof MissingServletRequestParameterException) {
             return missingServletRequestParameterExceptionHandler((MissingServletRequestParameterException) ex);
         }
@@ -99,7 +102,7 @@ public class GlobalExceptionHandler {
      * 例如说，接口上设置了 @RequestParam("xx") 参数，结果并未传递 xx 参数
      */
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
-    public BaseResult<?> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException ex) {
+    public Result<?> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException ex) {
         log.warn("[missingServletRequestParameterExceptionHandler]", ex);
         return BaseResult.fail(BAD_REQUEST.getCode(), String.format("请求参数缺失:%s", ex.getParameterName()));
     }
@@ -110,7 +113,7 @@ public class GlobalExceptionHandler {
      * 例如说，接口上设置了 @RequestParam("xx") 参数为 Integer，结果传递 xx 参数类型为 String
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    public BaseResult<?> methodArgumentTypeMismatchExceptionHandler(MethodArgumentTypeMismatchException ex) {
+    public Result<?> methodArgumentTypeMismatchExceptionHandler(MethodArgumentTypeMismatchException ex) {
         log.warn("[missingServletRequestParameterExceptionHandler]", ex);
         return BaseResult.fail(BAD_REQUEST.getCode(), String.format("请求参数类型错误:%s", ex.getMessage()));
     }
@@ -119,7 +122,7 @@ public class GlobalExceptionHandler {
      * 处理 SpringMVC 参数校验不正确
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public BaseResult<?> methodArgumentNotValidExceptionExceptionHandler(MethodArgumentNotValidException ex) {
+    public Result<?> methodArgumentNotValidExceptionExceptionHandler(MethodArgumentNotValidException ex) {
         log.warn("[methodArgumentNotValidExceptionExceptionHandler]", ex);
         FieldError fieldError = ex.getBindingResult().getFieldError();
         assert fieldError != null; // 断言，避免告警
@@ -130,7 +133,7 @@ public class GlobalExceptionHandler {
      * 处理 SpringMVC 参数绑定不正确，本质上也是通过 Validator 校验
      */
     @ExceptionHandler(BindException.class)
-    public BaseResult<?> bindExceptionHandler(BindException ex) {
+    public Result<?> bindExceptionHandler(BindException ex) {
         log.warn("[handleBindException]", ex);
         FieldError fieldError = ex.getFieldError();
         assert fieldError != null; // 断言，避免告警
@@ -141,7 +144,7 @@ public class GlobalExceptionHandler {
      * 处理 Validator 校验不通过产生的异常
      */
     @ExceptionHandler(value = ConstraintViolationException.class)
-    public BaseResult<?> constraintViolationExceptionHandler(ConstraintViolationException ex) {
+    public Result<?> constraintViolationExceptionHandler(ConstraintViolationException ex) {
         log.warn("[constraintViolationExceptionHandler]", ex);
         ConstraintViolation<?> constraintViolation = ex.getConstraintViolations().iterator().next();
         return BaseResult.fail(BAD_REQUEST.getCode(), String.format("请求参数不正确:%s", constraintViolation.getMessage()));
@@ -161,7 +164,7 @@ public class GlobalExceptionHandler {
      * 处理 Dubbo Consumer 本地参数校验时，抛出的 ValidationException 异常
      */
     @ExceptionHandler(value = ValidationException.class)
-    public BaseResult<?> validationException(ValidationException ex) {
+    public Result<?> validationException(ValidationException ex) {
         log.warn("[constraintViolationExceptionHandler]", ex);
         // 无法拼接明细的错误信息，因为 Dubbo Consumer 抛出 ValidationException 异常时，是直接的字符串信息，且人类不可读
         return BaseResult.fail(BAD_REQUEST);
@@ -175,7 +178,7 @@ public class GlobalExceptionHandler {
      * 2. spring.mvc.static-path-pattern 为 /statics/**
      */
     @ExceptionHandler(NoHandlerFoundException.class)
-    public BaseResult<?> noHandlerFoundExceptionHandler(NoHandlerFoundException ex) {
+    public Result<?> noHandlerFoundExceptionHandler(NoHandlerFoundException ex) {
         log.warn("[noHandlerFoundExceptionHandler]", ex);
         return BaseResult.fail(NOT_FOUND.getCode(), String.format("请求地址不存在:%s", ex.getRequestURL()));
     }
@@ -186,7 +189,7 @@ public class GlobalExceptionHandler {
      * 例如说，A 接口的方法为 GET 方式，结果请求方法为 POST 方式，导致不匹配
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public BaseResult<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex) {
+    public Result<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex) {
         log.warn("[httpRequestMethodNotSupportedExceptionHandler]", ex);
         return BaseResult.fail(METHOD_NOT_ALLOWED.getCode(), String.format("请求方法不正确:%s", ex.getMessage()));
     }
@@ -195,7 +198,7 @@ public class GlobalExceptionHandler {
     /**
      * 处理 Resilience4j 限流抛出的异常
      */
-    public BaseResult<?> requestNotPermittedExceptionHandler(HttpServletRequest req, Throwable ex) {
+    public Result<?> requestNotPermittedExceptionHandler(HttpServletRequest req, Throwable ex) {
         log.warn("[requestNotPermittedExceptionHandler][url({}) 访问过于频繁]", req.getRequestURL(), ex);
         return BaseResult.fail(TOO_MANY_REQUESTS);
     }
@@ -205,7 +208,7 @@ public class GlobalExceptionHandler {
      * <p>
      */
     @ExceptionHandler(value = BizException.class)
-    public BaseResult<?> bizException(BizException ex) {
+    public Result<?> bizException(BizException ex) {
         log.info("[bizException]", ex);
         return BaseResult.fail(ex.getCode(), ex.getMessage());
     }
@@ -215,9 +218,9 @@ public class GlobalExceptionHandler {
      * 处理系统异常，兜底处理所有的一切
      */
     @ExceptionHandler(value = Exception.class)
-    public BaseResult<?> defaultExceptionHandler(HttpServletRequest req, Throwable ex) {
+    public Result<?> defaultExceptionHandler(HttpServletRequest req, Throwable ex) {
         // 情况一：处理表不存在的异常
-        BaseResult<?> tableNotExistsResult = handleTableNotExists(ex);
+        Result<?> tableNotExistsResult = handleTableNotExists(ex);
         if (tableNotExistsResult != null) {
             return tableNotExistsResult;
         }
@@ -285,7 +288,7 @@ public class GlobalExceptionHandler {
      * @param ex 异常
      * @return 如果是 Table 不存在的异常，则返回对应的 BaseResult
      */
-    private BaseResult<?> handleTableNotExists(Throwable ex) {
+    private Result<?> handleTableNotExists(Throwable ex) {
         return null;
     }
 

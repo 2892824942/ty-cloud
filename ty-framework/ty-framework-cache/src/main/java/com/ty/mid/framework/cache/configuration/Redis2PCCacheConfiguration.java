@@ -45,6 +45,10 @@ import java.util.Objects;
 public class Redis2PCCacheConfiguration extends AbstractRedisCacheConfiguration {
 
 
+    public Redis2PCCacheConfiguration(CachePlusConfig cachePlusConfig) {
+        super(cachePlusConfig);
+    }
+
     private static RedisCacheWriter getRedisCacheWriter(RedisConnectionFactory redisConnectionFactory, CachePlusConfig.Redis redisProperties) {
         CachePlusConfig.Redis.StoreType storeType = redisProperties.getStoreType();
         return Objects.isNull(storeType) || CachePlusConfig.Redis.StoreType.KEY_VALUE.equals(storeType) ?

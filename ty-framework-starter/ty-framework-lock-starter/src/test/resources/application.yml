@@ -17,7 +17,6 @@ framework:
     sleep-time-out: 3000 #重试初试时间 毫秒
     max-retries: 3 #重试次数
     name-space: curator #命名空间
-
 spring:
   redis:
     database: 0
