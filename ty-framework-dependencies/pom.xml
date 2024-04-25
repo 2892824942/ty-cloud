@@ -38,6 +38,8 @@
         <mybatis-plus-join-boot-starter.version>1.4.8.1</mybatis-plus-join-boot-starter.version>
         <redisson.version>3.18.0</redisson.version>
         <dm8.jdbc.version>8.1.2.141</dm8.jdbc.version>
+        <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
+        <mysql-connector-j.version>8.0.31</mysql-connector-j.version>
         <!-- 消息队列 -->
         <rocketmq-spring.version>2.2.3</rocketmq-spring.version>
 
@@ -98,8 +100,6 @@
         <sa-token.version>1.37.0</sa-token.version>
         <logback-redis.version>1.4.0</logback-redis.version>
         <jackson.version>2.10.0</jackson.version>
-        <mysql-connector-java.version>8.0.16</mysql-connector-java.version>
-
 
         <zxing.version>3.4.0</zxing.version>
         <commons-lang3.version>3.10</commons-lang3.version>
@@ -289,9 +289,7 @@
                 <version>${knife4j.version}</version>
             </dependency>
 
-
             <!-- DB 相关 -->
-
             <dependency>
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-boot-starter</artifactId>
@@ -308,19 +306,22 @@
                 <artifactId>mybatis-plus-core</artifactId>
                 <version>${mybatis-plus.version}</version>
             </dependency>
+            <!-- 代码生成器，使用它解析表结构 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>mybatis-plus-generator</artifactId> <!-- 代码生成器，使用它解析表结构 -->
+                <artifactId>mybatis-plus-generator</artifactId>
                 <version>${mybatis-plus-generator.version}</version>
             </dependency>
+            <!-- 多数据源 -->
             <dependency>
                 <groupId>com.baomidou</groupId>
-                <artifactId>dynamic-datasource-spring-boot-starter</artifactId> <!-- 多数据源 -->
+                <artifactId>dynamic-datasource-spring-boot-starter</artifactId>
                 <version>${dynamic-datasource.version}</version>
             </dependency>
+            <!-- MyBatis 联表查询 -->
             <dependency>
                 <groupId>com.github.yulichang</groupId>
-                <artifactId>mybatis-plus-join-boot-starter</artifactId> <!-- MyBatis 联表查询 -->
+                <artifactId>mybatis-plus-join-boot-starter</artifactId>
                 <version>${mybatis-plus-join-boot-starter.version}</version>
             </dependency>
             <dependency>
@@ -341,12 +342,29 @@
                 <artifactId>redisson</artifactId>
                 <version>${redisson.version}</version>
             </dependency>
-
+            <!--数据库驱动-->
             <dependency>
                 <groupId>com.dameng</groupId>
                 <artifactId>DmJdbcDriver18</artifactId>
                 <version>${dm8.jdbc.version}</version>
+                <scope>runtime</scope>
             </dependency>
+
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>8.0.31</version>
+                <scope>runtime</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql-connector-java.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
+
             <!--权限相关-->
             <!-- Sa-Token 权限认证，在线文档：https://sa-token.cc -->
             <dependency>

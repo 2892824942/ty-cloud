@@ -53,8 +53,7 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven-surefire-plugin.version}</version>
                 </plugin>
-                <!--mapstruct-plus 和lombok整合-->
-                <!--https://www.mapstruct.plus/guide/faq.html -->
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -63,6 +62,8 @@
                         <source>1.8</source>
                         <target>1.8</target>
                         <annotationProcessorPaths>
+                            <!--mapstruct-plus 和lombok整合-->
+                            <!--https://www.mapstruct.plus/guide/faq.html -->
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
@@ -77,6 +78,12 @@
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok-mapstruct-binding</artifactId>
                                 <version>0.2.0</version>
+                            </path>
+                            <!--解决yaml,properties配置文件提示-->
+                            <path>
+                                <groupId>org.springframework.boot</groupId>
+                                <artifactId>spring-boot-configuration-processor</artifactId>
+                                <version>${spring-boot.version}</version>
                             </path>
                         </annotationProcessorPaths>
                         <compilerArgs>
