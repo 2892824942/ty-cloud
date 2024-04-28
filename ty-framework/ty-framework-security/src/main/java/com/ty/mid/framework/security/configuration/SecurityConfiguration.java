@@ -9,6 +9,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.dev33.satoken.util.SaResult;
 import com.ty.mid.framework.common.constant.DomainConstant;
 import com.ty.mid.framework.security.config.SecurityConfig;
+import com.ty.mid.framework.security.core.interceptor.UserGuiseInterceptor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -44,7 +45,11 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                     .notMatch(securityConfig.getExcludePattern())
                     .notMatch(DomainConstant.System.DEFAULT_EXCLUDE_URI)
                     .check(r -> StpUtil.checkLogin());
-        }).isAnnotation(securityConfig.isAnnotation())).addPathPatterns("/**");
+        }).isAnnotation(securityConfig.isEnableAnnotation())).addPathPatterns("/**");
+        if (securityConfig.isEnableGuise()){
+            //全局用户伪装
+            registry.addInterceptor(new UserGuiseInterceptor(securityConfig));
+        }
     }
 
     /**

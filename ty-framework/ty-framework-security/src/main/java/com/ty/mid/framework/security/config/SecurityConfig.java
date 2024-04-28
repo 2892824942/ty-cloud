@@ -7,7 +7,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import static com.ty.mid.framework.security.config.SecurityConfig.PREFIX;
 
 /**
- * Created by suyouliang on 2020/03/21.
+ * 安全权限配置类
+ * 目前框架默认使用路由+注解权限组合
+ * 最佳实践:
+ * 路由默认过滤uri比较规律的部分接口,注解则处理某些特殊接口
  */
 @ConfigurationProperties(prefix = PREFIX)
 @Data
@@ -32,10 +35,24 @@ public class SecurityConfig extends AbstractConfig {
 
 
     /**
-     * 是否关闭注解鉴权能力,关闭后框架就只会做路由拦截校验
+     * 是否开启注解鉴权能力,关闭后框架就只会做路由拦截校验
      * 开启则路由鉴权及注解鉴权均生效
      */
-    private boolean isAnnotation = true;
+    private boolean enableAnnotation = true;
+
+    /**
+     * 是否开启token伪装能力,默认为false
+     * 即:开启伪装后,可通过LoginHelper当前的token伪装成另外一个user,直至关闭
+     * 开启则路由鉴权及注解鉴权均生效
+     */
+    private boolean enableGuise = false;
+
+    /**
+     * 可开启token伪装能力userId白名单,默认为空,即:所有用户均为白名单
+     * 设置后则仅设置的用户可使用token伪装能力
+     * 注意:需开启 enableGuise生效
+     */
+    private String[] enableGuiseUserIds = new String[]{};
 
 
 }

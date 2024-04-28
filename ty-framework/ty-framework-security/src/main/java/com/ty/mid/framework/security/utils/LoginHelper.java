@@ -1,19 +1,23 @@
 package com.ty.mid.framework.security.utils;
 
+import cn.dev33.satoken.SaManager;
 import cn.dev33.satoken.context.SaHolder;
 import cn.dev33.satoken.context.model.SaStorage;
+import cn.dev33.satoken.dao.SaTokenDao;
 import cn.dev33.satoken.session.SaSession;
 import cn.dev33.satoken.stp.SaLoginModel;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import com.ty.mid.framework.common.entity.Auditable;
+import com.ty.mid.framework.common.exception.BizException;
 import com.ty.mid.framework.common.lang.NeverNull;
-import com.ty.mid.framework.common.lang.NullSafe;
 import com.ty.mid.framework.common.model.LoginUser;
 import com.ty.mid.framework.core.constant.DeviceType;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+
+import java.util.Objects;
 
 /**
  * 登录鉴权助手
@@ -34,6 +38,10 @@ public class LoginHelper {
 
     public static final String LOGIN_USER_KEY = "loginUser";
     public static final String USER_KEY = "userId";
+    /**
+     * 存储在saToken中的伪装用户信息的key
+     */
+    public static final String GUISE_KEY = "guise_user";
 
     /**
      * 登录系统
@@ -123,5 +131,68 @@ public class LoginHelper {
         return getLoginUser().getUsername();
     }
 
+
+    /**
+     * 伪装成另外一个用户
+     * 和saToken本身的伪装区别:
+     * saToken的伪装是请求级别,即开启伪装仅在当前请求内有效(使用lambda则在lambda内有效)
+     * 本类:增强了伪装,将伪装生命周期扩展到全局(基于Filter实现),一旦开启,将在失效内一直有效,不受请求限制
+     *
+     * 使用场景示例:知道用户id的情况下
+     * 1.通过自己的账号直接模拟对应用户,去除造token或找token的成本----非生产环境开发测试使用
+     * 2.生产环境紧急救援
+     * 部分B端业务,某些特定的bug不好复现,可能存在紧急救援或用户授权登录B端企业账号处理问题的场景
+     *
+     * 注意:使用时慎重!!!!必须保证入口私密,不要在线上直接暴露(通过授权,密码登方式),否则后果自负
+     * @See
+     */
+    public static String getUserGuise() {
+        SaTokenDao saTokenDao = SaManager.getSaTokenDao();
+        if (StpUtil.isLogin()){
+            Object loginId = StpUtil.getLoginId();
+            return saTokenDao.get(getGuiseKey(loginId));
+        }
+        return null;
+    }
+
+
+    /**
+     * 伪装成另外一个用户
+     * 和saToken本身的伪装区别:
+     * saToken的伪装是请求级别,即开启伪装仅在当前请求内有效(使用lambda则在lambda内有效)
+     * 本类:增强了伪装,将伪装生命周期扩展到全局(基于Interceptor实现),一旦开启,将在失效内一直有效,不受请求限制
+     * <p>
+     * 使用场景示例:知道用户id的情况下
+     * 1.通过自己的账号直接模拟对应用户,去除造token或找token的成本----非生产环境开发测试使用
+     * 2.生产环境紧急救援
+     * 部分B端业务,某些特定的bug不好复现,可能存在紧急救援或用户授权登录B端企业账号处理问题的场景
+     *
+     * 注意:使用时慎重!!!!必须保证入口私密,不要在线上直接暴露(通过授权,密码登方式),否则后果自负
+     * @see  com.ty.mid.framework.security.core.interceptor.UserGuiseInterceptor
+     */
+    public static void switchTo(String userId) {
+        if (Objects.isNull(userId)){
+            throw new BizException("伪装的用户id不能为空");
+        }
+        SaTokenDao saTokenDao = SaManager.getSaTokenDao();
+        Object loginId = StpUtil.getLoginId();
+        saTokenDao.set(getGuiseKey(loginId),userId,60*60);
+    }
+
+
+    /**
+     * 结束伪装成另外一个用户
+     * 具体用法
+     * @see LoginHelper#switchTo(String)
+     */
+    public static void endSwitch(String userId) {
+        SaTokenDao saTokenDao = SaManager.getSaTokenDao();
+        Object loginId = StpUtil.getLoginId();
+        saTokenDao.delete(getGuiseKey(loginId));
+    }
+
+    private static String getGuiseKey(Object userId){
+        return GUISE_KEY.concat("_").concat(userId.toString());
+    }
 
 }
