@@ -14,9 +14,8 @@ import org.springframework.context.annotation.Bean;
 import java.util.Iterator;
 
 /**
- * MyBaits 配置类
- *
- * @author suyouliang
+ * MyBaits 配置类 <p>
+ * @author suyouliang 
  */
 
 public class MybatisAutoConfiguration {

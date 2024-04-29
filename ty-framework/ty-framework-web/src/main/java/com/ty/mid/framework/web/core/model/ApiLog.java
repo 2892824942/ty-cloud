@@ -8,9 +8,8 @@ import java.io.Serializable;
 import java.util.Map;
 
 /**
- * API 访问日志
- *
- * @author suyouliang
+ * API 访问日志 <p>
+ * @author suyouliang 
  */
 @Data
 public class ApiLog implements Serializable {

@@ -9,8 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Xss 请求 Wrapper
- *
+ * Xss 请求 Wrapper <p>
  * @author suyouliang
  */
 public class XssRequestWrapper extends HttpServletRequestWrapper {

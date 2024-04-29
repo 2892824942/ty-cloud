@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 字符串工具类
- *
+ * 字符串工具类 <p>
  * @author suyoulinag
  */
 public class StrUtils {

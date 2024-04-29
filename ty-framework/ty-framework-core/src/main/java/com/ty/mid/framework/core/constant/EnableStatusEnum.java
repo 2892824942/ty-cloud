@@ -7,9 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 通用状态枚举
- *
- * @author suyoulinag
+ * 通用状态枚举 <p>
+ * @author suyoulinag 
  */
 @Getter
 @AllArgsConstructor

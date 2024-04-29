@@ -12,9 +12,8 @@ import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Method;
 
 /**
- * 抽象切面，为切面开发提供支持
- *
- * @author suyouliang
+ * 抽象切面，为切面开发提供支持 <p>
+ * @author suyouliang <p>
  * @createTime 2023-08-15 14:13
  */
 public abstract class AbstractAspect {

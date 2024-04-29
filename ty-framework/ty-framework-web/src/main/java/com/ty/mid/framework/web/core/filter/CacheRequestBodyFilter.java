@@ -9,9 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Request Body 缓存 Filter，实现它的可重复读取
- *
- * @author suyouliang
+ * Request Body 缓存 Filter，实现它的可重复读取 <p>
+ * @author suyouliang 
  */
 public class CacheRequestBodyFilter extends OncePerRequestFilter {
 

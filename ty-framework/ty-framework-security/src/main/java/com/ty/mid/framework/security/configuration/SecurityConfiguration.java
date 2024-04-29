@@ -20,8 +20,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import javax.annotation.Resource;
 
 /**
- * 权限安全配置
- *
+ * 权限安全配置 <p>
  * @author Lion Li
  */
 @EnableConfigurationProperties(SecurityConfig.class)

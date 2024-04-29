@@ -8,8 +8,8 @@ import com.ty.mid.framework.common.lang.ThreadSafe;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * AES 加密工具类
- * 注意：aesKey必须是16位
+ * AES 加密工具类 <p>
+ * 注意：aesKey必须是16位 
  */
 @Slf4j
 @ThreadSafe

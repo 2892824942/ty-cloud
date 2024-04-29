@@ -21,10 +21,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * General cache condition used with all cache configuration classes.
- *
- * @author Stephane Nicoll
- * @author Phillip Webb
+ * General cache condition used with all cache configuration classes. <p>
+ * @author Stephane Nicoll <p>
+ * @author Phillip Webb <p>
  * @author Madhura Bhave
  */
 @Slf4j

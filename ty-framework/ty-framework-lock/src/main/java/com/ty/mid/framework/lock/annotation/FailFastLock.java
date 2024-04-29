@@ -4,8 +4,8 @@ package com.ty.mid.framework.lock.annotation;
 import java.lang.annotation.*;
 
 /**
- * @author suyouliang
- * @date 2022/03/26
+ * @author suyouliang <p>
+ * @date 2022/03/26 <p>
  * Content :加锁注解
  */
 @Target(value = {ElementType.METHOD})

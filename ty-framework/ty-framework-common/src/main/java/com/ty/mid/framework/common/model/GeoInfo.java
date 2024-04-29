@@ -1,7 +1,7 @@
 package com.ty.mid.framework.common.model;
 
 /**
- * 地理信息
+ * 地理信息 
  */
 public interface GeoInfo {
 

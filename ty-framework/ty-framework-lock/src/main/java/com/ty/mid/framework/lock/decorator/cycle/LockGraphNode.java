@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A {@code LockGraphNode} associated with each lock instance keeps track of the directed edges in
- * the lock acquisition graph.
+ * A {@code LockGraphNode} associated with each lock instance keeps track of the directed edges in <p>
+ * the lock acquisition graph. 
  */
 public class LockGraphNode {
 
@@ -51,7 +51,7 @@ public class LockGraphNode {
      * Checks the acquisition-ordering between {@code this}, which is about to be acquired, and the
      * specified {@code acquiredLock}.
      *
-     * <p>When this method returns, the {@code acquiredLock} should be in either the {@code
+     *When this method returns, the {@code acquiredLock} should be in either the {@code
      * preAcquireLocks} map, for the case in which it is safe to acquire {@code this} after the
      * {@code acquiredLock}, or in the {@code disallowedPriorLocks} map, in which case it is not
      * safe.

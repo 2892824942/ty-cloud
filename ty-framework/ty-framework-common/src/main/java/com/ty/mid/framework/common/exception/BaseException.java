@@ -6,10 +6,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 业务异常顶级父类
- *
- * @author suyouliang
- * @createTime 2023-08-14 15:21
+ * 业务异常顶级父类 <p>
+ * @author suyouliang <p>
+ * @createTime 2023-08-14 15:21 
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

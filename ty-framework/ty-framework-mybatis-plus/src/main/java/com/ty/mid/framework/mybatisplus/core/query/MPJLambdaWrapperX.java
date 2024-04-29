@@ -33,11 +33,10 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
- * 参考 {@link com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper}
- * Lambda 语法使用 Wrapper
- * 由于原MPJLambdaWrapper某些链式调用方法返回为具体的类型,导致直接继承无法丝滑使用链式调用,这里直接继承父AbstractLambdaWrapper
- * 也可以直接继承MPJLambdaWrapper重写父类所有方法(包括MPJAbstractLambdaWrapper更上层的父类方法,这种方式比较麻烦)
- *
+ * 参考 {@link com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper} <p>
+ * Lambda 语法使用 Wrapper <p>
+ * 由于原MPJLambdaWrapper某些链式调用方法返回为具体的类型,导致直接继承无法丝滑使用链式调用,这里直接继承父AbstractLambdaWrapper <p>
+ * 也可以直接继承MPJLambdaWrapper重写父类所有方法(包括MPJAbstractLambdaWrapper更上层的父类方法,这种方式比较麻烦) <p>
  * @author yulichang
  */
 @SuppressWarnings({"unused"})
@@ -236,10 +235,10 @@ public class MPJLambdaWrapperX<T> extends MPJAbstractLambdaWrapper<T, MPJLambdaW
 
     /**
      * 对字段添加时效条件查询
-     * <p>
+     *
      * 开始时间字段名称: from_date
      * 结束时间字段名称： to_date
-     * <p>
+     *
      * 查询条件举例:  from_date >= now() and (to_date <= to_date)
      *
      * @param fromDate
@@ -262,10 +261,10 @@ public class MPJLambdaWrapperX<T> extends MPJAbstractLambdaWrapper<T, MPJLambdaW
 
     /**
      * 对字段添加时效条件查询
-     * <p>
+     *
      * 开始时间字段名称: from_date
      * 结束时间字段名称：to_date
-     * <p>
+     *
      * 查询条件举例:  from_date >= now
      *
      * @return
@@ -466,7 +465,7 @@ public class MPJLambdaWrapperX<T> extends MPJAbstractLambdaWrapper<T, MPJLambdaW
 
     /**
      * 用于生成嵌套 sql
-     * <p>故 sqlSelect 不向下传递</p>
+     *故 sqlSelect 不向下传递</p>
      */
     @Override
     protected MPJLambdaWrapperX<T> instance() {

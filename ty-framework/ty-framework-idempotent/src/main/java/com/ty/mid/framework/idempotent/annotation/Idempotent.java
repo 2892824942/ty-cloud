@@ -5,9 +5,8 @@ import com.ty.mid.framework.idempotent.strategy.IdempotentRejectStrategy;
 import java.lang.annotation.*;
 
 /**
- * 幂等校验接口
- *
- * @author suyouliang
+ * 幂等校验接口 <p>
+ * @author suyouliang <p>
  * @createTime 2023-08-15 14:19
  */
 @Target({ElementType.METHOD, ElementType.TYPE})

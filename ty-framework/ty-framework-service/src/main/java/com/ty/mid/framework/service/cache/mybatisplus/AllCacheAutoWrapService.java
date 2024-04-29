@@ -12,12 +12,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 抽象的带缓存service，基于mybatis-plus,实现自动缓存全量数据的功能
- * 注意:
- * 1.此类适合缓存如字典,全国省市区等基本不变且数量不多的场景
- * 2.如果不需要缓存全部,请使用BaseCacheService 定制缓存的内容
- * <p>
- *
+ * 抽象的带缓存service，基于mybatis-plus,实现自动缓存全量数据的功能 <p>
+ * 注意: <p>
+ * 1.此类适合缓存如字典,全国省市区等基本不变且数量不多的场景 <p>
+ * 2.如果不需要缓存全部,请使用BaseCacheService 定制缓存的内容 <p>
+
  * @see CacheAutoWrapService
  */
 @Slf4j

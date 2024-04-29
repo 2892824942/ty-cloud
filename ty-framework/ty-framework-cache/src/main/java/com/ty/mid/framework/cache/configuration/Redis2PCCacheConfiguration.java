@@ -29,13 +29,12 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * 两阶段提交cache redis实现
- * 使用场景:支持事务系统中,存在缓存及mysql在事务中同时使用,且需要满足读写强一致
- * 实现策略:
- * 1.redis写入延迟到事务提交成功后
- * 2.事务期间,为保持Redis数据可重复读,增加事务期间读锁,读取数据时,先从缓存中读取,如果缓存中不存在,则从Redis中读取,并将读取的数据写入缓存
- *
- * @author suyoulaing
+ * 两阶段提交cache redis实现 <p>
+ * 使用场景:支持事务系统中,存在缓存及mysql在事务中同时使用,且需要满足读写强一致 <p>
+ * 实现策略: <p>
+ * 1.redis写入延迟到事务提交成功后 <p>
+ * 2.事务期间,为保持Redis数据可重复读,增加事务期间读锁,读取数据时,先从缓存中读取,如果缓存中不存在,则从Redis中读取,并将读取的数据写入缓存 <p>
+ * @author suyoulaing 
  */
 @ConditionalOnClass(RedisConnectionFactory.class)
 @AutoConfigureAfter(RedissonAutoConfiguration.class)

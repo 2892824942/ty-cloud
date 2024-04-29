@@ -1,8 +1,8 @@
 package com.ty.mid.framework.lock.exception;
 
 /**
- * @author
- * @since 2023/4/16
+ * @author <p>
+ * @since 2023/4/16 <p>
  **/
 public class LockTransactionForbiddenException extends RuntimeException {
 

@@ -12,8 +12,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 
 /**
- * @date 2022/03/26
- * Content :lock自动装配
+ * @date 2022/03/26 <p>
+ * Content :lock自动装配 <p>
  * 只要加入自动配置,直接会加载,除非enable设置为false
  */
 @ConditionalOnClass(CuratorFramework.class)

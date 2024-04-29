@@ -5,11 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * 业务异常定级父类
- * 继承此类的接口返回的错误信息将直接通过全局异常处理抛给用户,使用时需区分
- *
- * @author suyouliang
- * @createTime 2023-08-14 15:21
+ * 业务异常定级父类 <p>
+ * 继承此类的接口返回的错误信息将直接通过全局异常处理抛给用户,使用时需区分 <p>
+ * @author suyouliang <p>
+ * @createTime 2023-08-14 15:21 
  */
 @EqualsAndHashCode(callSuper = true)
 @Data

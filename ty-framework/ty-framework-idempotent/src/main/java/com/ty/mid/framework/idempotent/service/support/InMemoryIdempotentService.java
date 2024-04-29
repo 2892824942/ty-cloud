@@ -9,12 +9,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 基于内存的幂等校验服务
- * ATTENTION: this class is test only
- * do not use this class in production
- *
- * @author suyouliang
- * @createTime 2023-08-15 14:29
+ * 基于内存的幂等校验服务 <p>
+ * ATTENTION: this class is test only <p>
+ * do not use this class in production <p>
+ * @author suyouliang <p>
+ * @createTime 2023-08-15 14:29 
  */
 public class InMemoryIdempotentService extends AbstractIdempotentService {
 

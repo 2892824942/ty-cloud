@@ -5,24 +5,21 @@ import com.ty.mid.framework.lock.decorator.cycle.LockGraphNode;
 import static java.util.Objects.requireNonNull;
 
 /**
- * Represents a detected cycle in lock acquisition ordering. The exception includes a causal chain
- * of {@code ExampleStackTrace} instances to illustrate the cycle, e.g.
- *
- * <pre>
- * com....PotentialDeadlockException: Potential Deadlock from LockC -&gt; ReadWriteA
- *   at ...
- *   at ...
- * Caused by: com...ExampleStackTrace: LockB -&gt; LockC
- *   at ...
- *   at ...
- * Caused by: com...ExampleStackTrace: ReadWriteA -&gt; LockB
- *   at ...
- *   at ...
- * </pre>
- *
- * <p>Instances are logged for the {@code Policies.WARN}, and thrown for {@code Policies.THROW}.
- *
- * @since 13.0
+ * Represents a detected cycle in lock acquisition ordering. The exception includes a causal chain <p>
+ * of {@code ExampleStackTrace} instances to illustrate the cycle, e.g. <p>
+ * <pre> <p>
+ * com....PotentialDeadlockException: Potential Deadlock from LockC -&gt; ReadWriteA <p>
+ *   at ... <p>
+ *   at ... <p>
+ * Caused by: com...ExampleStackTrace: LockB -&gt; LockC <p>
+ *   at ... <p>
+ *   at ... <p>
+ * Caused by: com...ExampleStackTrace: ReadWriteA -&gt; LockB <p>
+ *   at ... <p>
+ *   at ... <p>
+ * </pre> <p>
+ *Instances are logged for the {@code Policies.WARN}, and thrown for {@code Policies.THROW}. <p>
+ * @since 13.0 
  */
 public final class PotentialDeadlockException extends ExampleStackTrace {
 

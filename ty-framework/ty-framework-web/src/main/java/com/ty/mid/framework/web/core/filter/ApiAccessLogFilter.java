@@ -29,9 +29,8 @@ import java.util.Map;
 
 
 /**
- * API 访问日志 Filter
- *
- * @author suyouliang
+ * API 访问日志 Filter <p>
+ * @author suyouliang 
  */
 @Slf4j
 public class ApiAccessLogFilter extends ApiRequestFilter {

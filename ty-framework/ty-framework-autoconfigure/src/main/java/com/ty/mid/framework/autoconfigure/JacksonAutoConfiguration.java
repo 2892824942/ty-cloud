@@ -33,7 +33,7 @@ import java.util.List;
 public class JacksonAutoConfiguration {
     /**
      * 注入的JsonUtils bean没啥意义,主要是针对spring中已经定义的ObjectMapper,对其定制增加逻辑
-     * <p>
+     *
      * 其中:Date和LocalDateTime都默认使用dataFormat配置
      * 另外:如果LocalDate以及DateTime格式不是想要的,参考此方法自行配置
      *

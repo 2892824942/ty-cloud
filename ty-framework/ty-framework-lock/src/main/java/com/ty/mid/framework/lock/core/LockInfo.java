@@ -10,8 +10,8 @@ import org.aspectj.lang.JoinPoint;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Created by 苏友良 on 2022/03/26.
- * Content :锁基本信息
+ * Created by 苏友良 on 2022/03/26. <p>
+ * Content :锁基本信息 
  */
 @Data
 public class LockInfo {

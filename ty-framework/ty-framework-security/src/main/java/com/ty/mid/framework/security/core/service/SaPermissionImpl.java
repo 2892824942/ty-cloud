@@ -7,9 +7,8 @@ import com.ty.mid.framework.security.utils.LoginHelper;
 import java.util.*;
 
 /**
- * sa-token 权限管理实现类
- *
- * @author Lion Li
+ * sa-token 权限管理实现类 <p>
+ * @author Lion Li 
  */
 public class SaPermissionImpl implements StpInterface {
 

@@ -91,7 +91,7 @@ public interface UserMapper extends BaseMapperX<User, Long> {
 
 
 /**
- * 实体DO
+ * 实体DO 
  */
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "address", autoResultMap = true)
@@ -129,9 +129,8 @@ BaseMapperX提供快速分页查询,简单条件查询list,简单条件查询Map
     import com.ty.mid.framework.core.constant.DeletedEnum;
 
 /**
- * 基础实体对象
- *
- * @author suyoulinag
+ * 基础实体对象 <p>
+ * @author suyoulinag 
  */
 @Setter
 public abstract class BaseDO implements Auditable<Long>, Serializable {

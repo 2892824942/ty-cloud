@@ -6,8 +6,7 @@ import com.ty.mid.framework.web.annotation.desensitize.handler.DefaultSliderDese
 import java.lang.annotation.*;
 
 /**
- * 密码
- *
+ * 密码 <p>
  * @author suyouliang
  */
 @Documented
@@ -29,7 +28,7 @@ public @interface PasswordDesensitize {
 
     /**
      * 替换规则，密码;
-     * <p>
+     *
      * 比如：123456 脱敏之后为 ******
      */
     String replacer() default "*";

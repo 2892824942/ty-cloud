@@ -1,7 +1,7 @@
 package com.ty.mid.framework.lock.enums;
 
 /**
- * @author 苏友良
+ * @author 苏友良 
  */
 public enum LockScopeType {
     /**

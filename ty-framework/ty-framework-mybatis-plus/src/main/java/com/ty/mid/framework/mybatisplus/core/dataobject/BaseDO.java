@@ -11,8 +11,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 基础实体对象
- *
+ * 基础实体对象 <p>
  * @author suyoulinag
  */
 @Setter

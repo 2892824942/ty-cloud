@@ -14,8 +14,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 /**
- * lock过程处理装饰者
- * 作用:
+ * lock过程处理装饰者 <p>
+ * 作用: <p>
  * 在上锁解锁过程中出现特定问题,如获取锁失败,释放锁异常等场景,执行配置定义的的对应策略
  */
 @Slf4j

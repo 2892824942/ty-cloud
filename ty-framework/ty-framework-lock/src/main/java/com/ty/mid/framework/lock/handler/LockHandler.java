@@ -15,10 +15,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * lockHandler顶级接口
- *
- * @author 苏友良
- * @since 2022/5/11
+ * lockHandler顶级接口 <p>
+ * @author 苏友良 <p>
+ * @since 2022/5/11 <p>
  **/
 public interface LockHandler {
     default <T extends LockHandler> void customerHandlerValidate(List<T> lockHandlers, Class<T> customerHandlerClass) {

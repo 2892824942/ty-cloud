@@ -3,10 +3,9 @@ package com.ty.mid.framework.idempotent.exception;
 import com.ty.mid.framework.common.exception.FrameworkException;
 
 /**
- * 幂等异常
- *
- * @author suyouliang
- * @createTime 2023-08-15 14:26
+ * 幂等异常 <p>
+ * @author suyouliang <p>
+ * @createTime 2023-08-15 14:26 
  */
 public class IdempotentException extends FrameworkException {
 

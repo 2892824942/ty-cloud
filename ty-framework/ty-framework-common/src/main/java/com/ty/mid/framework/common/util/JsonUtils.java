@@ -21,9 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 基于Jackson的JSON转换工具类
- *
- * @author ye17186
+ * 基于Jackson的JSON转换工具类 <p>
+ * @author ye17186 <p>
  * @version 2018/6/29 12:06
  */
 @Slf4j
@@ -47,7 +46,7 @@ public class JsonUtils {
 
     /**
      * 初始化 objectMapper 属性
-     * <p>
+     *
      * 通过这样的方式，使用 Spring 创建的 ObjectMapper Bean
      *
      * @param objectMapper ObjectMapper 对象

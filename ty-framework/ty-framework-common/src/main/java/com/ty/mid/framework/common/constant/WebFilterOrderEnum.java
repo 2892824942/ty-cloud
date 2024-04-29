@@ -1,11 +1,9 @@
 package com.ty.mid.framework.common.constant;
 
 /**
- * Web 过滤器顺序的枚举类，保证过滤器按照符合我们的预期
- * <p>
- * 考虑到每个 starter 都需要用到该工具类，所以放到 common 模块下的 enum 包下
- *
- * @author suyouliang
+ * Web 过滤器顺序的枚举类，保证过滤器按照符合我们的预期 <p>
+ * 考虑到每个 starter 都需要用到该工具类，所以放到 common 模块下的 enum 包下 <p>
+ * @author suyouliang 
  */
 public interface WebFilterOrderEnum {
     //全局servlet级异常拦截,优先级最高,兜底filter层处理异常

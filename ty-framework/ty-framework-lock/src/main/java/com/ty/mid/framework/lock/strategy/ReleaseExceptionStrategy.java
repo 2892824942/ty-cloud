@@ -11,8 +11,8 @@ import org.aspectj.lang.JoinPoint;
 import java.util.concurrent.locks.Lock;
 
 /**
- * @author 苏友良
- * @since 2022/4/15
+ * @author 苏友良 <p>
+ * @since 2022/4/15 <p>
  **/
 @Slf4j
 public enum ReleaseExceptionStrategy implements ReleaseExceptionHandler {

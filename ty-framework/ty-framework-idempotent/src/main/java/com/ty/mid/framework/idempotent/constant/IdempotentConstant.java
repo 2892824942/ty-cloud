@@ -3,8 +3,8 @@ package com.ty.mid.framework.idempotent.constant;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author suyouliang
- * @createTime 2023-08-15 14:40
+ * @author suyouliang <p>
+ * @createTime 2023-08-15 14:40 
  */
 public interface IdempotentConstant {
 

@@ -1,10 +1,9 @@
 package com.ty.mid.framework.idempotent.exception;
 
 /**
- * 服务已经执行过异常
- *
- * @author suyouliang
- * @createTime 2023-08-15 14:26
+ * 服务已经执行过异常 <p>
+ * @author suyouliang <p>
+ * @createTime 2023-08-15 14:26 
  */
 public class AlreadyExecutedIdempotentException extends IdempotentException {
 

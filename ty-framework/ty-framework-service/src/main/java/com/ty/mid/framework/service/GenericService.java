@@ -14,17 +14,16 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * service约定:
- * 1.service中禁止出现wrapper相关语句,因此service没有getPage方法
- *
- * @param <S>
- * @param <M>
+ * service约定: <p>
+ * 1.service中禁止出现wrapper相关语句,因此service没有getPage方法 <p>
+ * @param <S> <p>
+ * @param <M> 
  */
 public abstract class GenericService<S extends BaseDO, M extends BaseMapperX<S, Long>> extends ServiceImpl<M, S> implements IService<S> {
 
     /**
      * id 是否空
-     * <p>
+     *
      * id != null 且  id != 0
      *
      * @param id
@@ -36,7 +35,7 @@ public abstract class GenericService<S extends BaseDO, M extends BaseMapperX<S, 
 
     /**
      * id 是为正数
-     * <p>
+     *
      * id != null && id > 0L
      *
      * @param id
@@ -48,7 +47,7 @@ public abstract class GenericService<S extends BaseDO, M extends BaseMapperX<S, 
 
     /**
      * id 是为负数或空
-     * <p>
+     *
      * id == null || id < 0L
      *
      * @param id
@@ -63,7 +62,7 @@ public abstract class GenericService<S extends BaseDO, M extends BaseMapperX<S, 
      * 将DO实体的分页参数转换为目标DTO分页参数,与BaseAutoConvert一致
      * BaseAutoConvert#covertPage(com.ty.mid.framework.common.pojo.PageResult, java.util.function.Function)
      * 具体使用按个人习惯
-     * <p>
+     *
      *
      * @param dataPage DO实体的分页参数
      * @param function 转换方法

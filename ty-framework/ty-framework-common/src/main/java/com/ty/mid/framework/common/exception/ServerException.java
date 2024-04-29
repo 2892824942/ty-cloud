@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * 服务器异常 Exception
+ * 服务器异常 Exception 
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

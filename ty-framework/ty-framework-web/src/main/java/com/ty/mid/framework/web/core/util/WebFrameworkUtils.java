@@ -12,9 +12,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 专属于 web 包的工具类
- *
- * @author suyouliang
+ * 专属于 web 包的工具类 <p>
+ * @author suyouliang 
  */
 public class WebFrameworkUtils {
 
@@ -131,7 +130,7 @@ public class WebFrameworkUtils {
 
     /**
      * 判断是否为 RPC 请求
-     * <p>
+     *
      * 约定大于配置，只要以 Api 结尾，都认为是 RPC 接口
      *
      * @param className 类名

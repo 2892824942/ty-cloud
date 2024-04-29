@@ -19,10 +19,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Objects;
 
 /**
- * 全局响应结果（ResponseBody）处理器
- * <p>
- * 目前，GlobalResponseBodyHandler 的主要作用是，记录 Controller 的返回结果，
- * 方便 {@link ApiAccessLogFilter} 记录访问日志
+ * 全局响应结果（ResponseBody）处理器 <p>
+ * 目前，GlobalResponseBodyHandler 的主要作用是，记录 Controller 的返回结果， <p>
+ * 方便 {@link ApiAccessLogFilter} 记录访问日志 
  */
 @ControllerAdvice
 public class ControllerResponseBodyHandler implements ResponseBodyAdvice<Object> {

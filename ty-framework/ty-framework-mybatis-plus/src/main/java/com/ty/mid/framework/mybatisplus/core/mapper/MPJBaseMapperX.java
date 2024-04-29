@@ -14,11 +14,10 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 在 MyBatis Plus 的 BaseMapper 的基础上拓展，提供更多的能力
- * <p>
- * 1. {@link BaseMapper} 为 MyBatis Plus 的基础接口，提供基础的 CRUD 能力
- * 2. {@link MPJBaseMapper} 为 MyBatis Plus Join 的基础接口，提供连表 Join 能力
- * 3.为 MyBatis Plus 的List接口，快速转换Map能力
+ * 在 MyBatis Plus 的 BaseMapper 的基础上拓展，提供更多的能力 <p>
+ * 1. {@link BaseMapper} 为 MyBatis Plus 的基础接口，提供基础的 CRUD 能力 <p>
+ * 2. {@link MPJBaseMapper} 为 MyBatis Plus Join 的基础接口，提供连表 Join 能力 <p>
+ * 3.为 MyBatis Plus 的List接口，快速转换Map能力 
  */
 public interface MPJBaseMapperX<T extends BaseIdDO<ID>, ID extends Serializable> extends BaseMapperX<T, ID>, MPJBaseMapper<T> {
 

@@ -30,8 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @date 2022/03/26
- * Content :lock自动装配
+ * @date 2022/03/26 <p>
+ * Content :lock自动装配 <p>
  * 只要加入自动配置,直接会加载,除非enable设置为false
  */
 @ConditionalOnProperty(prefix = LockConfig.PREFIX, name = "enable", matchIfMissing = true)

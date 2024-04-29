@@ -8,11 +8,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Mappings between {@link CachePlusType} and {@code @Configuration}.
- * If you want expand your cache：
- * 1.
- *
- * @author Phillip Webb
+ * Mappings between {@link CachePlusType} and {@code @Configuration}. <p>
+ * If you want expand your cache： <p>
+ * 1. <p>
+ * @author Phillip Webb <p>
  * @author Eddú Meléndez
  */
 public class CacheConfigurations {

@@ -1,16 +1,13 @@
-package com.ty.mid.framework.cache.configuration;/*
- * Copyright 2012-2023 the original author or authors.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
+package com.ty.mid.framework.cache.configuration;/* <p>
+ * Copyright 2012-2023 the original author or authors. <p>
+ * Licensed under the Apache License, Version 2.0 (the "License"); <p>
+ * you may not use this file except in compliance with the License. <p>
+ * You may obtain a copy of the License at <p>
+ *      https://www.apache.org/licenses/LICENSE-2.0 <p>
+ * Unless required by applicable law or agreed to in writing, software <p>
+ * distributed under the License is distributed on an "AS IS" BASIS, <p>
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. <p>
+ * See the License for the specific language governing permissions and <p>
  * limitations under the License.
  */
 
@@ -38,10 +35,9 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import java.util.Objects;
 
 /**
- * Redis cache configuration.
- *
- * @author Stephane Nicoll
- * @author Mark Paluch
+ * Redis cache configuration. <p>
+ * @author Stephane Nicoll <p>
+ * @author Mark Paluch <p>
  * @author Ryon Day
  */
 @AutoConfigureAfter(RedisAutoConfiguration.class)

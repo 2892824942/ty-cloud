@@ -15,10 +15,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * redis 工具类
- *
- * @author Lion Li
- * @version 3.1.0 新增
+ * redis 工具类 <p>
+ * @author Lion Li <p>
+ * @version 3.1.0 新增 
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
@@ -144,7 +143,7 @@ public class RedisUtils {
 
     /**
      * 注册对象监听器
-     * <p>
+     *
      * key 监听器需开启 `notify-keyspace-events` 等 redis 相关配置
      *
      * @param key      缓存的键值
@@ -245,7 +244,7 @@ public class RedisUtils {
 
     /**
      * 注册List监听器
-     * <p>
+     *
      * key 监听器需开启 `notify-keyspace-events` 等 redis 相关配置
      *
      * @param key      缓存的键值
@@ -281,7 +280,7 @@ public class RedisUtils {
 
     /**
      * 注册Set监听器
-     * <p>
+     *
      * key 监听器需开启 `notify-keyspace-events` 等 redis 相关配置
      *
      * @param key      缓存的键值
@@ -318,7 +317,7 @@ public class RedisUtils {
 
     /**
      * 注册Map监听器
-     * <p>
+     *
      * key 监听器需开启 `notify-keyspace-events` 等 redis 相关配置
      *
      * @param key      缓存的键值

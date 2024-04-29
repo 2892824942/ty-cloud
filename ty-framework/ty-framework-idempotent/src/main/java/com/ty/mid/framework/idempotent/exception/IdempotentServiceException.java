@@ -1,8 +1,8 @@
 package com.ty.mid.framework.idempotent.exception;
 
 /**
- * @author suyouliang
- * @createTime 2023-08-15 14:26
+ * @author suyouliang <p>
+ * @createTime 2023-08-15 14:26 
  */
 public class IdempotentServiceException extends IdempotentException {
 

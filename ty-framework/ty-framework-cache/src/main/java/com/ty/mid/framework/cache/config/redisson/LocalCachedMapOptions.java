@@ -29,7 +29,7 @@ public class LocalCachedMapOptions<K, V> extends MapOptions<K, V> {
 
     /**
      * Creates a new instance of LocalCachedMapOptions with default options.
-     * <p>
+     *
      * This is equivalent to:
      * <pre>
      *     new LocalCachedMapOptions()

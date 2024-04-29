@@ -8,9 +8,8 @@ import org.springframework.util.StringUtils;
 import java.util.Map;
 
 /**
- * 抽象开关配置反序列化类
- *
- * @author suyouliang
+ * 抽象开关配置反序列化类 <p>
+ * @author suyouliang <p>
  * @createTime 2023-08-14 18:21
  */
 public abstract class AbstractApiSwitcherConfigDeserializer implements ApiSwitcherConfigDeserializer {

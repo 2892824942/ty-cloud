@@ -12,10 +12,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 
 /**
- * 抽象幂等校验服务
- *
- * @author suyouliang
- * @createTime 2023-08-15 14:36
+ * 抽象幂等校验服务 <p>
+ * @author suyouliang <p>
+ * @createTime 2023-08-15 14:36 
  */
 @Slf4j
 public abstract class AbstractIdempotentService implements IdempotentService {

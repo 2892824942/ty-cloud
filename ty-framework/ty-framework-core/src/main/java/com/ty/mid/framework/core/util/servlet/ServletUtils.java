@@ -17,8 +17,7 @@ import java.net.URLEncoder;
 import java.util.Map;
 
 /**
- * 客户端工具类
- *
+ * 客户端工具类 <p>
  * @author suyouliang
  */
 public class ServletUtils {

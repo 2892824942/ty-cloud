@@ -11,9 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 优先级最高的filter
- * 此filter拦截filter->controller(不包括)中间所有层出现的异常信息
- *
+ * 优先级最高的filter <p>
+ * 此filter拦截filter->controller(不包括)中间所有层出现的异常信息 <p>
  * @author suyouliang
  */
 @RequiredArgsConstructor

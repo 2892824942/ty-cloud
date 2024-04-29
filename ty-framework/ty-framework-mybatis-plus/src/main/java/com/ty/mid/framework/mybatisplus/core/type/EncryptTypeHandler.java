@@ -14,10 +14,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * 字段字段的 TypeHandler 实现类，基于 {@link AES} 实现
- * 可通过 mybatis-plus.encryptor.password 配置项，设置密钥
- *
- * @author suyoulinag
+ * 字段字段的 TypeHandler 实现类，基于 {@link AES} 实现 <p>
+ * 可通过 mybatis-plus.encryptor.password 配置项，设置密钥 <p>
+ * @author suyoulinag 
  */
 public class EncryptTypeHandler extends BaseTypeHandler<String> {
 

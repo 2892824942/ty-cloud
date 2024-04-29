@@ -9,9 +9,8 @@ import org.springframework.integration.support.locks.LockRegistry;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 基于redis 的幂等校验服务
- *
- * @author suyouliang
+ * 基于redis 的幂等校验服务 <p>
+ * @author suyouliang <p>
  * @createTime 2023-08-15 14:29
  */
 public class RedisIdempotentService extends AbstractIdempotentService {

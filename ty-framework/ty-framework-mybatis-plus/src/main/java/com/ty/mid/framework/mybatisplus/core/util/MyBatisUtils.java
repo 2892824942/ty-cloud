@@ -21,7 +21,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * MyBatis 工具类
+ * MyBatis 工具类 
  */
 public class MyBatisUtils {
 
@@ -57,7 +57,7 @@ public class MyBatisUtils {
 
     /**
      * 获得 Table 对应的表名
-     * <p>
+     *
      * 兼容 MySQL 转义表名 `t_xxx`
      *
      * @param table 表

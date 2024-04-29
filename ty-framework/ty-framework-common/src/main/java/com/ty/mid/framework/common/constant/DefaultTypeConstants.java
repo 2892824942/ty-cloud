@@ -8,8 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Date;
 
 /**
- * 类型数据默认值常量类
- *
+ * 类型数据默认值常量类 <p>
  * @author suyoulinag
  */
 public interface DefaultTypeConstants {

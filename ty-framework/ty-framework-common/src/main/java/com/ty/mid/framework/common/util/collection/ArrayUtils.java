@@ -12,9 +12,8 @@ import static com.ty.mid.framework.common.util.collection.CollectionUtils.conver
 
 
 /**
- * Array 工具类
- *
- * @author suyoulinag
+ * Array 工具类 <p>
+ * @author suyoulinag 
  */
 public class ArrayUtils {
 

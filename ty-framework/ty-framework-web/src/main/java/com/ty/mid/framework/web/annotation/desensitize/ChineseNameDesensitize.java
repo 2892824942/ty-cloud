@@ -7,9 +7,8 @@ import com.ty.mid.framework.web.annotation.desensitize.handler.DefaultSliderDese
 import java.lang.annotation.*;
 
 /**
- * 中文名
- *
- * @author suyouliang
+ * 中文名 <p>
+ * @author suyouliang 
  */
 @Documented
 @Target({ElementType.FIELD})

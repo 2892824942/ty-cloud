@@ -45,12 +45,10 @@
 ```java
 
 /**
- * <p>
- * 服务实现类
- * </p>
- *
- * @author suyouliang
- * @since 2023-11-27
+ * 服务实现类 <p>
+ * </p> <p>
+ * @author suyouliang <p>
+ * @since 2023-11-27 
  */
 @Service
 public class UserServiceImpl extends AutoWrapService<User, UserFullDTO, UserMapper> implements IUserService, UserNameTranslation {

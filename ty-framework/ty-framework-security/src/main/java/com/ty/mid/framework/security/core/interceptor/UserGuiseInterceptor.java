@@ -15,9 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Arrays;
 
 /**
- * 用户伪装拦截器 基于sa-token 请求级伪装实现的全局伪装
- *
- * @author 苏友良
+ * 用户伪装拦截器 基于sa-token 请求级伪装实现的全局伪装 <p>
+ * @author 苏友良 
  */
 @RequiredArgsConstructor
 @Slf4j

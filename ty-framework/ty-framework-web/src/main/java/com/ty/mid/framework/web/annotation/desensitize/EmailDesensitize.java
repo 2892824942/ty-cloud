@@ -6,8 +6,7 @@ import com.ty.mid.framework.web.annotation.desensitize.handler.DefaultRegexDesen
 import java.lang.annotation.*;
 
 /**
- * 邮箱脱敏注解
- *
+ * 邮箱脱敏注解 <p>
  * @author suyouliang
  */
 @Documented
@@ -24,7 +23,7 @@ public @interface EmailDesensitize {
 
     /**
      * 替换规则，邮箱;
-     * <p>
+     *
      * 比如：example@gmail.com 脱敏之后为 e****@gmail.com
      */
     String replacer() default "$1****$2";

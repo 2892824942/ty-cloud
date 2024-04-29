@@ -6,8 +6,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 /**
- * API 错误日志
- *
+ * API 错误日志 <p>
  * @author suyouliang
  */
 @Data

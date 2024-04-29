@@ -8,17 +8,16 @@ import java.util.Arrays;
 import java.util.Set;
 
 /**
- * A Throwable used to record a stack trace that illustrates an example of a specific lock
- * acquisition ordering. The top of the stack trace is truncated such that it starts with the
- * acquisition of the lock in question, e.g.
- *
- * <pre>
- * com...ExampleStackTrace: LockB -&gt; LockC
- *   at com...CycleDetectingReentrantLock.lock(CycleDetectingLockFactory.java:443)
- *   at ...
- *   at ...
- *   at com...MyClass.someMethodThatAcquiresLockB(MyClass.java:123)
- * </pre>
+ * A Throwable used to record a stack trace that illustrates an example of a specific lock <p>
+ * acquisition ordering. The top of the stack trace is truncated such that it starts with the <p>
+ * acquisition of the lock in question, e.g. <p>
+ * <pre> <p>
+ * com...ExampleStackTrace: LockB -&gt; LockC <p>
+ *   at com...CycleDetectingReentrantLock.lock(CycleDetectingLockFactory.java:443) <p>
+ *   at ... <p>
+ *   at ... <p>
+ *   at com...MyClass.someMethodThatAcquiresLockB(MyClass.java:123) <p>
+ * </pre> 
  */
 public class ExampleStackTrace extends IllegalStateException {
 

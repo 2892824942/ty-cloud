@@ -6,9 +6,8 @@ import org.slf4j.LoggerFactory;
 import java.util.Stack;
 
 /**
- * 幂等校验结果上下文
- *
- * @author suyouliang
+ * 幂等校验结果上下文 <p>
+ * @author suyouliang <p>
  * @createTime 2023-08-15 15:09
  */
 public class IdempotentContextHolder {

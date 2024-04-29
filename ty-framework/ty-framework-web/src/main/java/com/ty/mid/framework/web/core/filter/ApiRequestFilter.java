@@ -12,9 +12,8 @@ import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 
 /**
- * 过滤 API 请求的过滤器
- *
- * @author suyouliang
+ * 过滤 API 请求的过滤器 <p>
+ * @author suyouliang 
  */
 @RequiredArgsConstructor
 public abstract class ApiRequestFilter extends OncePerRequestFilter {

@@ -21,11 +21,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 
 /**
- * 脱敏序列化器
- * <p>
- * 实现 JSON 返回数据时，使用 {@link DesensitizationHandler} 对声明脱敏注解的字段，进行脱敏处理。
- *
- * @author suyouliang
+ * 脱敏序列化器 <p>
+ * 实现 JSON 返回数据时，使用 {@link DesensitizationHandler} 对声明脱敏注解的字段，进行脱敏处理。 <p>
+ * @author suyouliang 
  */
 @Getter
 @SuppressWarnings("rawtypes")

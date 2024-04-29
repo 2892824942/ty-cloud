@@ -10,9 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * 用户信息
- *
- * @author ruoyi
+ * 用户信息 <p>
+ * @author ruoyi 
  */
 @Data
 @NoArgsConstructor

@@ -8,10 +8,9 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 后续替换为java的实现
- *
- * @param <K>
- * @param <V>
+ * 后续替换为java的实现 <p>
+ * @param <K> <p>
+ * @param <V> 
  */
 public interface Cache<K, V> {
     @Nullable

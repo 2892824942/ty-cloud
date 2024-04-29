@@ -6,8 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author suyouliang
- * @date 2018/1/24
+ * @author suyouliang <p>
+ * @date 2018/1/24 <p>
  * Content :
  */
 @Target(value = {ElementType.PARAMETER, ElementType.TYPE})

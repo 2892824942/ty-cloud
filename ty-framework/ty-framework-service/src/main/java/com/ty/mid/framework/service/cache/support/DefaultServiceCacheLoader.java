@@ -14,10 +14,10 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * cache加载器
- * 用于获取全局的基于CacheService实现的所有的缓存
- * 用途:
- * 1.可统一处理缓存过期刷新逻辑,比如使用job跑批更新缓存或删除缓存
+ * cache加载器 <p>
+ * 用于获取全局的基于CacheService实现的所有的缓存 <p>
+ * 用途: <p>
+ * 1.可统一处理缓存过期刷新逻辑,比如使用job跑批更新缓存或删除缓存 
  */
 @Slf4j
 public class DefaultServiceCacheLoader implements ServiceCacheLoader {

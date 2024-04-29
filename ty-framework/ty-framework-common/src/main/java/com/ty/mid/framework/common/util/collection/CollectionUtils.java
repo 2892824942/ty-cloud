@@ -13,9 +13,8 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 
 /**
- * Collection 工具类
- *
- * @author suyoulinag
+ * Collection 工具类 <p>
+ * @author suyoulinag 
  */
 public class CollectionUtils {
 

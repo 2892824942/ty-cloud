@@ -13,9 +13,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 可缓存service的定义，附带实现方法
- *
- * @param <S>
+ * 可缓存service的定义，附带实现方法 <p>
+ * @param <S> <p>
  * @param <T>
  */
 public interface BaseCacheService<S, T> extends Converter<S, T> {

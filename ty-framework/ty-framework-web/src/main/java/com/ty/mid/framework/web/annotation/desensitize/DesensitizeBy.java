@@ -8,8 +8,7 @@ import com.ty.mid.framework.web.annotation.desensitize.serializer.StringDesensit
 import java.lang.annotation.*;
 
 /**
- * 顶级脱敏注解，自定义注解需要使用此注解
- *
+ * 顶级脱敏注解，自定义注解需要使用此注解 <p>
  * @author suyouliang
  */
 @Documented

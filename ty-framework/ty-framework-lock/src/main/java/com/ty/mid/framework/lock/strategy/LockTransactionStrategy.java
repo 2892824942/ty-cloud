@@ -1,7 +1,7 @@
 package com.ty.mid.framework.lock.strategy;
 
 /**
- * 当lock存在于事务上下文中的策略
+ * 当lock存在于事务上下文中的策略 
  */
 public enum LockTransactionStrategy {
     /**

@@ -1,9 +1,9 @@
 package com.ty.mid.framework.common.constant;
 
 /**
- * description: EncryptConstant
- * date: 2021/7/14 10:13
- * author: wuqiuhang
+ * description: EncryptConstant <p>
+ * date: 2021/7/14 10:13 <p>
+ * author: wuqiuhang 
  */
 public interface EncryptConstant {
     interface EncryptType {

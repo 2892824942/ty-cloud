@@ -20,8 +20,7 @@ import java.util.Objects;
 import java.util.TimeZone;
 
 /**
- * 项目启动成功后，提供文档相关的地址
- *
+ * 项目启动成功后，提供文档相关的地址 <p>
  * @author suyoulinag
  */
 @Slf4j

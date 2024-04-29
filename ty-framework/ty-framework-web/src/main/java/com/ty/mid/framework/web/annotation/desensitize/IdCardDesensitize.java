@@ -6,9 +6,8 @@ import com.ty.mid.framework.web.annotation.desensitize.handler.DefaultSliderDese
 import java.lang.annotation.*;
 
 /**
- * 身份证
- *
- * @author suyouliang
+ * 身份证 <p>
+ * @author suyouliang 
  */
 @Documented
 @Target({ElementType.FIELD})

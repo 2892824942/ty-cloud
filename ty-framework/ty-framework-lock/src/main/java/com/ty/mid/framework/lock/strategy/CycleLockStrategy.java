@@ -4,7 +4,7 @@ import com.ty.mid.framework.lock.exception.PotentialDeadlockException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 当存在死锁时的策略
+ * 当存在死锁时的策略 <p>
  * 由于实现方式的原因,增强了死锁检测的能力,但是特殊情况性能方面不佳,不建议生产启用
  */
 @Slf4j

@@ -26,12 +26,10 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Swagger 自动配置类，基于 OpenAPI + Springdoc 实现。
- * <p>
- * 友情提示：
- * 1. Springdoc 文档地址：<a href="https://github.com/springdoc/springdoc-openapi">仓库</a>
- * 2. Swagger 规范，于 2015 更名为 OpenAPI 规范，本质是一个东西
- *
+ * Swagger 自动配置类，基于 OpenAPI + Springdoc 实现。 <p>
+ * 友情提示： <p>
+ * 1. Springdoc 文档地址：<a href="https://github.com/springdoc/springdoc-openapi">仓库</a> <p>
+ * 2. Swagger 规范，于 2015 更名为 OpenAPI 规范，本质是一个东西 <p>
  * @author suyouliang
  */
 @ConditionalOnClass({OpenAPI.class})

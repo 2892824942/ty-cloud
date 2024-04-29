@@ -1,7 +1,7 @@
 package com.ty.mid.framework.lock.enums;
 
 /**
- * Created by suyouliang
+ * Created by suyouliang <p>
  * Content :锁类型
  */
 public enum LockType {

@@ -8,9 +8,8 @@ import com.ty.mid.framework.web.core.model.event.ApiErrorLogEvent;
 import lombok.NoArgsConstructor;
 
 /**
- * API 访问日志 Framework Service 接口
- *
- * @author suyouliang
+ * API 访问日志 Framework Service 接口 <p>
+ * @author suyouliang 
  */
 @NoArgsConstructor
 public class ApiLogService {

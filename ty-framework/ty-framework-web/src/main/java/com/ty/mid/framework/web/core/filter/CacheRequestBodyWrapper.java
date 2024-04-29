@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Request Body 缓存 Wrapper
- *
+ * Request Body 缓存 Wrapper <p>
  * @author suyouliang
  */
 public class CacheRequestBodyWrapper extends HttpServletRequestWrapper {

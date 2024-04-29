@@ -3,8 +3,7 @@ package com.ty.mid.framework.mybatisplus.core.enums;
 import com.baomidou.mybatisplus.annotation.DbType;
 
 /**
- * SQL相关常量类
- *
+ * SQL相关常量类 <p>
  * @author suyoulinag
  */
 public class SqlConstants {

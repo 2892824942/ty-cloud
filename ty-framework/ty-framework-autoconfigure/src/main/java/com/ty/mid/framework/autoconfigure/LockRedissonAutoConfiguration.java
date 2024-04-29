@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @date 2022/03/26
- * Content :lock自动装配
- * 满足条件,redis分布式锁就会自动加载到Spring上下文已供使用
+ * @date 2022/03/26 <p>
+ * Content :lock自动装配 <p>
+ * 满足条件,redis分布式锁就会自动加载到Spring上下文已供使用 
  */
 @ConditionalOnProperty(prefix = LockConfig.PREFIX, name = "enable", matchIfMissing = true)
 @AutoConfigureAfter(RedisAutoConfiguration.class)

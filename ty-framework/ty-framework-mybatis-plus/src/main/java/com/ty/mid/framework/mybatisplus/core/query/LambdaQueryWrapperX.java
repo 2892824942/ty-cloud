@@ -27,11 +27,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
 
 /**
- * 拓展 MyBatis Plus QueryWrapper 类，主要增加如下功能：
- * <p>
- * 1. 拼接条件的方法，增加 xxxIfPresent 方法，用于判断值不存在的时候，不要拼接到条件中。
- * <p>
- * 由于原LambdaQueryWrapper某些链式调用方法返回为具体的类型,导致直接集成无法丝滑使用链式调用,这里直接继承父AbstractLambdaWrapper
+ * 拓展 MyBatis Plus QueryWrapper 类，主要增加如下功能： <p>
+ * 1. 拼接条件的方法，增加 xxxIfPresent 方法，用于判断值不存在的时候，不要拼接到条件中。 <p>
+ * 由于原LambdaQueryWrapper某些链式调用方法返回为具体的类型,导致直接集成无法丝滑使用链式调用,这里直接继承父AbstractLambdaWrapper <p>
  * 也可以直接继承LambdaQueryWrapper重写父类所有方法(包括MPJAbstractLambdaWrapper更上层的父类方法,这种方式比较麻烦)
  */
 public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQueryWrapperX<T>>
@@ -173,10 +171,10 @@ public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQuery
 
     /**
      * 对字段添加时效条件查询
-     * <p>
+     *
      * 开始时间字段名称: from_date
      * 结束时间字段名称： to_date
-     * <p>
+     *
      * 查询条件举例:  from_date >= now() and (to_date <= to_date)
      *
      * @param fromDate
@@ -199,10 +197,10 @@ public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQuery
 
     /**
      * 对字段添加时效条件查询
-     * <p>
+     *
      * 开始时间字段名称: from_date
      * 结束时间字段名称：to_date
-     * <p>
+     *
      * 查询条件举例:  from_date >= now
      *
      * @return
@@ -218,11 +216,11 @@ public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQuery
 
     /**
      * 过滤查询的字段信息(主键除外!)
-     * <p>例1: 只要 java 字段名以 "test" 开头的             -> select(i -&gt; i.getProperty().startsWith("test"))</p>
-     * <p>例2: 只要 java 字段属性是 CharSequence 类型的     -> select(TableFieldInfo::isCharSequence)</p>
-     * <p>例3: 只要 java 字段没有填充策略的                 -> select(i -&gt; i.getFieldFill() == FieldFill.DEFAULT)</p>
-     * <p>例4: 要全部字段                                   -> select(i -&gt; true)</p>
-     * <p>例5: 只要主键字段                                 -> select(i -&gt; false)</p>
+     *例1: 只要 java 字段名以 "test" 开头的             -> select(i -&gt; i.getProperty().startsWith("test"))</p>
+     *例2: 只要 java 字段属性是 CharSequence 类型的     -> select(TableFieldInfo::isCharSequence)</p>
+     *例3: 只要 java 字段没有填充策略的                 -> select(i -&gt; i.getFieldFill() == FieldFill.DEFAULT)</p>
+     *例4: 要全部字段                                   -> select(i -&gt; true)</p>
+     *例5: 只要主键字段                                 -> select(i -&gt; false)</p>
      *
      * @param predicate 过滤方式
      * @return this
@@ -268,7 +266,7 @@ public class LambdaQueryWrapperX<T> extends AbstractLambdaWrapper<T, LambdaQuery
 
     /**
      * 用于生成嵌套 sql
-     * <p>故 sqlSelect 不向下传递</p>
+     *故 sqlSelect 不向下传递</p>
      */
     @Override
     protected LambdaQueryWrapperX<T> instance() {

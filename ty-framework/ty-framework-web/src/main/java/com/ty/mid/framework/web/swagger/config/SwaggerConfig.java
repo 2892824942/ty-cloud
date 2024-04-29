@@ -10,9 +10,8 @@ import javax.validation.constraints.NotEmpty;
 import static com.ty.mid.framework.core.config.AbstractConfig.FRAMEWORK_PREFIX;
 
 /**
- * Swagger 配置属性
- *
- * @author suyouliang
+ * Swagger 配置属性 <p>
+ * @author suyouliang 
  */
 @EqualsAndHashCode(callSuper = true)
 @ConfigurationProperties(FRAMEWORK_PREFIX + "swagger")

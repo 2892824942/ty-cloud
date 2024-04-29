@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 import java.lang.annotation.Annotation;
 
 /**
- * 脱敏处理器接口
- *
- * @author suyouliang
+ * 脱敏处理器接口 <p>
+ * @author suyouliang 
  */
 public interface DesensitizationHandler<S extends Annotation> {
 

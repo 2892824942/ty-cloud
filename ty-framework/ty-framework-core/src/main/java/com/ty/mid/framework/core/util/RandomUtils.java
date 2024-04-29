@@ -9,7 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * 随机数工具类
+ * 随机数工具类 
  */
 @ThreadSafe
 public abstract class RandomUtils {
@@ -318,7 +318,7 @@ public abstract class RandomUtils {
 
 
     /*
-     * <p>18位身份证验证</p>
+     *18位身份证验证</p>
      * 根据〖中华人民共和国国家标准 GB 11643-1999〗中有关公民身份号码的规定，公民身份号码是特征组合码，由十七位数字本体码和一位数字校验码组成。
      * 排列顺序从左至右依次为：六位数字地址码，八位数字出生日期码，三位数字顺序码和一位数字校验码。
      * 第十八位数字(校验码)的计算方法为：

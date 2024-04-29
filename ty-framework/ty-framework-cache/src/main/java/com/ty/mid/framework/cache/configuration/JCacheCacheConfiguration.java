@@ -29,9 +29,8 @@ import java.util.Iterator;
 import java.util.Properties;
 
 /**
- * 暂时还不完善，不可使用
- *
- * @author Stephane Nicoll
+ * 暂时还不完善，不可使用 <p>
+ * @author Stephane Nicoll <p>
  * @author Madhura Bhave
  */
 @ConditionalOnClass({Caching.class, JCacheCacheManager.class})

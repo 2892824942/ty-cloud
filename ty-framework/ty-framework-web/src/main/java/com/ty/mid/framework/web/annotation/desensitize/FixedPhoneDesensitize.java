@@ -6,8 +6,7 @@ import com.ty.mid.framework.web.annotation.desensitize.handler.DefaultSliderDese
 import java.lang.annotation.*;
 
 /**
- * 固定电话
- *
+ * 固定电话 <p>
  * @author suyouliang
  */
 @Documented

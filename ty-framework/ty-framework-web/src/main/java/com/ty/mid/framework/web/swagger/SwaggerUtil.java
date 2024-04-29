@@ -42,7 +42,7 @@ public class SwaggerUtil {
 
     /**
      * 构建 Authorization 认证请求头参数
-     * <p>
+     *
      * 解决 Knife4j <a href="https://gitee.com/xiaoym/knife4j/issues/I69QBU">Authorize 未生效，请求header里未包含参数</a>
      *
      * @return 认证参数

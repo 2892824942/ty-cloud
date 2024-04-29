@@ -6,9 +6,8 @@ import com.ty.mid.framework.web.annotation.desensitize.handler.DefaultSliderDese
 import java.lang.annotation.*;
 
 /**
- * 车牌号
- *
- * @author suyouliang
+ * 车牌号 <p>
+ * @author suyouliang 
  */
 @Documented
 @Target({ElementType.FIELD})

@@ -4,9 +4,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 /**
- * JDBC 工具类
- *
- * @author suyoulinag
+ * JDBC 工具类 <p>
+ * @author suyoulinag 
  */
 public class JdbcUtils {
 

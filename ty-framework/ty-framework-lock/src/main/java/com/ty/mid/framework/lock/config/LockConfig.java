@@ -76,7 +76,7 @@ public class LockConfig extends AbstractConfig {
      * 优先级：注解exceptionClass>lockConfig exceptionClass>系统默认
      * 比如：com.ty.mid.framework.common.exception.FrameworkException
      * 注意：必须是RuntimeException的子类
-     * <p>
+     *
      * 关于系统默认msg
      *
      * @see FailOnLockStrategy#THROWING
@@ -87,7 +87,7 @@ public class LockConfig extends AbstractConfig {
      * 获取锁失败时，报错的错误信息
      * 仅当LockFailStrategy.FAIL_FAST或者ReleaseTimeoutStrategy.FAIL_FAST 生效  此处设置二者都会生效
      * 优先级：注解exceptionClass>lockConfig.exceptionClass>系统默认
-     * <p>
+     *
      * 关于系统默认msg
      *
      * @see FailOnLockStrategy#THROWING
@@ -99,18 +99,18 @@ public class LockConfig extends AbstractConfig {
 
     /**
      * 此配置仅对@AntiReLock生效
-     * <p>
+     *
      * AntiReLock是为了更好的语义以及针对web层防重这一类业务做的注解,可和@FailFastLock在Msg以及防重方面大部分相同,
      * 但是又存在业务自定义的内容,比如msg可能不一致(需要更好的用户体验msg),部分业务可能需要有容忍的防重锁(waitTime>0)等
-     * <p>
+     *
      * 仅当LockFailStrategy.FAIL_FAST或者ReleaseTimeoutStrategy.FAIL_FAST 生效  暂时不支持二者同时设置
      * 对于基础实现Lock的优先级：注解exceptionMsg>lockConfig.exceptionMsg>系统默认
      * 本类的message优先级:注解exceptionMsg>LockConfig.antiReLockMsg>lockConfig.exceptionMsg>系统默认
-     * <p>
+     *
      * 关于优先级
      *
      * @see LockInfoProvider#getExceptionMsg(Lock, LockConfig)
-     * <p>
+     *
      * 关于系统默认msg
      * @see FailOnLockStrategy#THROWING
      * @see ReleaseExceptionStrategy#THROWING

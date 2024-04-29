@@ -6,7 +6,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * Created by suyouliang on 2022/03/26
+ * Created by suyouliang on 2022/03/26 
  */
 @SpringBootApplication
 @EnableAspectJAutoProxy

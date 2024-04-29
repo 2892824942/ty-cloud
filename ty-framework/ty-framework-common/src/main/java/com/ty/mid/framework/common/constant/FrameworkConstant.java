@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author suyouliang
- * @createTime 2023-08-15 10:07
+ * @author suyouliang <p>
+ * @createTime 2023-08-15 10:07 
  */
 public interface FrameworkConstant {
 

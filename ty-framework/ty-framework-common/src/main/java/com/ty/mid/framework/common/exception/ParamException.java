@@ -5,9 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * 业务异常类
- *
- * @author suyouliang
+ * 业务异常类 <p>
+ * @author suyouliang <p>
  * @createTime 2023-08-14 15:21
  */
 @EqualsAndHashCode(callSuper = true)

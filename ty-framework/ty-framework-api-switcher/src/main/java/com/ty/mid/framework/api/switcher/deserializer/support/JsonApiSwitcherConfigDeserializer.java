@@ -12,10 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 基于json的开关配置
- *
- * @author suyouliang
- * @createTime 2023-08-14 19:10
+ * 基于json的开关配置 <p>
+ * @author suyouliang <p>
+ * @createTime 2023-08-14 19:10 
  */
 public class JsonApiSwitcherConfigDeserializer extends AbstractApiSwitcherConfigDeserializer {
 

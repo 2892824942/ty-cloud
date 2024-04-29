@@ -20,17 +20,14 @@ import lombok.NoArgsConstructor;
 import java.util.Objects;
 
 /**
- * 登录鉴权助手
- * <p>
- * user_type 为 用户类型 同一个用户表 可以有多种用户类型 例如 pc,app
- * deivce 为 设备类型 同一个用户类型 可以有 多种设备类型 例如 web,ios
- * 可以组成 用户类型与设备类型多对多的 权限灵活控制
- * <p>
- * 多用户体系 针对 多种用户类型 但权限控制不一致
- * 可以组成 多用户类型表与多设备类型 分别控制权限
- * 注:为了方法的复用性,LoginHelper返回的LoginUser不会为空,而是使用默认值
- * 主要针对方法可能在登录环境及非登录环境(job,mq场景)调用,不用频繁判空或赋值
- *
+ * 登录鉴权助手 <p>
+ * user_type 为 用户类型 同一个用户表 可以有多种用户类型 例如 pc,app <p>
+ * deivce 为 设备类型 同一个用户类型 可以有 多种设备类型 例如 web,ios <p>
+ * 可以组成 用户类型与设备类型多对多的 权限灵活控制 <p>
+ * 多用户体系 针对 多种用户类型 但权限控制不一致 <p>
+ * 可以组成 多用户类型表与多设备类型 分别控制权限 <p>
+ * 注:为了方法的复用性,LoginHelper返回的LoginUser不会为空,而是使用默认值 <p>
+ * 主要针对方法可能在登录环境及非登录环境(job,mq场景)调用,不用频繁判空或赋值 <p>
  * @author Lion Li
  */
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -131,20 +128,20 @@ public class LoginHelper {
         return getLoginUser().getUsername();
     }
 
-
     /**
-     * 伪装成另外一个用户
-     * 和saToken本身的伪装区别:
-     * saToken的伪装是请求级别,即开启伪装仅在当前请求内有效(使用lambda则在lambda内有效)
-     * 本类:增强了伪装,将伪装生命周期扩展到全局(基于Filter实现),一旦开启,将在失效内一直有效,不受请求限制
-     *
-     * 使用场景示例:知道用户id的情况下
-     * 1.通过自己的账号直接模拟对应用户,去除造token或找token的成本----非生产环境开发测试使用
-     * 2.生产环境紧急救援
-     * 部分B端业务,某些特定的bug不好复现,可能存在紧急救援或用户授权登录B端企业账号处理问题的场景
-     *
-     * 注意:使用时慎重!!!!必须保证入口私密,不要在线上直接暴露(通过授权,密码登方式),否则后果自负
-     * @See
+     *可开启token伪装能力userId白名单,默认为空,即:所有用户均为白名单
+     *设置后则仅设置的用户可使用token伪装能力
+     *注意:需开启 enableGuise生效
+     *伪装成另外一个用户和saToken本身的伪装区别:
+     *saToken的伪装是请求级别,即开启伪装仅在当前请求内有效(使用lambda则在lambda内有效)
+     *本类:增强了伪装,将伪装生命周期扩展到全局(基于Interceptor实现),一旦开启,将在失效内一直有效,不受请求限制
+     * *
+     *使用场景示例:知道用户id的情况下
+     *1.通过自己的账号直接模拟对应用户,去除造token或找token的成本----非生产环境开发测试使用
+     *2.生产环境紧急救援
+     *部分B端业务,某些特定的bug不好复现,可能存在紧急救援或用户授权登录B端企业账号处理问题的场景
+     *注意:使用时慎重!!!!必须保证入口私密,不要在线上直接暴露(应通过授权,密码登方式),否则后果自负
+     * @see com.ty.mid.framework.security.core.interceptor.UserGuiseInterceptor
      */
     public static String getUserGuise() {
         SaTokenDao saTokenDao = SaManager.getSaTokenDao();
@@ -161,7 +158,7 @@ public class LoginHelper {
      * 和saToken本身的伪装区别:
      * saToken的伪装是请求级别,即开启伪装仅在当前请求内有效(使用lambda则在lambda内有效)
      * 本类:增强了伪装,将伪装生命周期扩展到全局(基于Interceptor实现),一旦开启,将在失效内一直有效,不受请求限制
-     * <p>
+     *
      * 使用场景示例:知道用户id的情况下
      * 1.通过自己的账号直接模拟对应用户,去除造token或找token的成本----非生产环境开发测试使用
      * 2.生产环境紧急救援

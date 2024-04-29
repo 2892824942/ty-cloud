@@ -1,8 +1,8 @@
 package com.ty.mid.framework.lock.exception;
 
 /**
- * @author 苏友良
- * @since 2023/4/16
+ * @author 苏友良 <p>
+ * @since 2023/4/16 <p>
  **/
 public class LockException extends RuntimeException {
 

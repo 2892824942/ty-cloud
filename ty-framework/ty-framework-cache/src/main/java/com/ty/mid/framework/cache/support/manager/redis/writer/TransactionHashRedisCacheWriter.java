@@ -22,20 +22,19 @@ import java.util.Optional;
 import java.util.function.Function;
 
 /**
- * {@link RedisCacheWriter} implementation capable of reading/writing binary data from/to Redis in {@literal standalone}
- * and {@literal cluster} environments. Works upon a given {@link RedisConnectionFactory} to obtain the actual
- * {@link RedisConnection}. <br />
- * {@link TransactionHashRedisCacheWriter} can be used in
- * {@link RedisCacheWriter#lockingRedisCacheWriter(RedisConnectionFactory) locking} or
- * {@link RedisCacheWriter#nonLockingRedisCacheWriter(RedisConnectionFactory) non-locking} mode. While
- * {@literal non-locking} aims for maximum performance it may result in overlapping, non atomic, command execution for
- * operations spanning multiple Redis interactions like {@code putIfAbsent}. The {@literal locking} counterpart prevents
- * command overlap by setting an explicit lock key and checking against presence of this key which leads to additional
- * requests and potential command wait times.
- *
- * @author Christoph Strobl
- * @author Mark Paluch
- * @since 2.0
+ * {@link RedisCacheWriter} implementation capable of reading/writing binary data from/to Redis in {@literal standalone} <p>
+ * and {@literal cluster} environments. Works upon a given {@link RedisConnectionFactory} to obtain the actual <p>
+ * {@link RedisConnection}. <br /> <p>
+ * {@link TransactionHashRedisCacheWriter} can be used in <p>
+ * {@link RedisCacheWriter#lockingRedisCacheWriter(RedisConnectionFactory) locking} or <p>
+ * {@link RedisCacheWriter#nonLockingRedisCacheWriter(RedisConnectionFactory) non-locking} mode. While <p>
+ * {@literal non-locking} aims for maximum performance it may result in overlapping, non atomic, command execution for <p>
+ * operations spanning multiple Redis interactions like {@code putIfAbsent}. The {@literal locking} counterpart prevents <p>
+ * command overlap by setting an explicit lock key and checking against presence of this key which leads to additional <p>
+ * requests and potential command wait times. <p>
+ * @author Christoph Strobl <p>
+ * @author Mark Paluch <p>
+ * @since 2.0 
  */
 @Slf4j
 public class TransactionHashRedisCacheWriter implements RedisCacheWriter {
