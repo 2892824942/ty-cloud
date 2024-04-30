@@ -1,4 +1,4 @@
-package com.ty.mid.framework.mybatisplus.config;
+package com.ty.mid.framework.autoconfigure;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.ty.mid.framework.common.audit.AuditorInfoResolver;
 import com.ty.mid.framework.common.audit.DefaultLongAuditorInfoResolver;
 import com.ty.mid.framework.mybatisplus.core.handler.AuditorMetaObjectHandler;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -15,9 +16,11 @@ import java.util.Iterator;
 
 /**
  * MyBaits 配置类 <p>
- * @author suyouliang 
+ *
+ * @author suyouliang
  */
 
+@MapperScan("com.ty.mid.framework.mybatisplus.core.mapper")
 public class MybatisAutoConfiguration {
 
     @Bean
@@ -39,7 +42,7 @@ public class MybatisAutoConfiguration {
         // 自动填充参数类
         Iterator<AuditorInfoResolver<Long>> iterator = auditorInfoResolvers.stream().iterator();
         //如果默认没有定义审计处理器,使用默认的
-        if (!iterator.hasNext()){
+        if (!iterator.hasNext()) {
             DefaultLongAuditorInfoResolver longDefaultLongAuditorInfoResolver = new DefaultLongAuditorInfoResolver();
             return new AuditorMetaObjectHandler<>(longDefaultLongAuditorInfoResolver);
         }

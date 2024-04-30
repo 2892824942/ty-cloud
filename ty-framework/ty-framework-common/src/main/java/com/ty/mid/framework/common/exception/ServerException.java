@@ -4,6 +4,8 @@ import com.ty.mid.framework.common.constant.BaseCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 服务器异常 Exception 
  */
@@ -21,9 +23,8 @@ public final class ServerException extends BizException {
         this(String.valueOf(code), message);
     }
 
-    public ServerException(BaseCode baseCode) {
-        super(baseCode.getMessage());
-        super.code = baseCode.getCode();
+    public ServerException(@NotNull BaseCode baseCode) {
+        super(baseCode);
     }
 
     public ServerException(String code, String message) {
@@ -35,7 +36,7 @@ public final class ServerException extends BizException {
         super(message);
     }
 
-    public static ServerException of(BaseCode baseCode) {
+    public static ServerException of(@NotNull BaseCode baseCode) {
         return new ServerException(baseCode);
     }
 

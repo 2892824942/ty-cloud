@@ -3,6 +3,7 @@ package com.ty.mid.framework.mybatisplus.core.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import org.apache.ibatis.annotations.Mapper;
+import org.mybatis.spring.annotation.MapperScan;
 
 /**
  * 在使用存在父类的泛型的Lambda表达式时会报错： <p>

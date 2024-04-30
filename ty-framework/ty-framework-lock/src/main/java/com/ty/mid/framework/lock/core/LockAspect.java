@@ -1,8 +1,8 @@
 package com.ty.mid.framework.lock.core;
 
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import com.ty.mid.framework.common.exception.FrameworkException;
-import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.aspect.AbstractAspect;
 import com.ty.mid.framework.lock.annotation.AntiReLock;
 import com.ty.mid.framework.lock.annotation.FailFastLock;
@@ -24,7 +24,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.integration.support.locks.LockRegistry;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -67,7 +66,7 @@ public class LockAspect extends AbstractAspect {
      * @return
      */
     private static String getCurrentLockId(String lockName) {
-        Validator.requireNonEmpty(lockName, "lockName can not be empty");
+        Assert.notEmpty(lockName, "lockName can not be empty");
         return Thread.currentThread().getId() + ":" + lockName;
     }
 

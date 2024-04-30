@@ -1,15 +1,15 @@
 package com.ty.mid.framework.core.util;
 
 
+import cn.hutool.core.lang.Assert;
 import com.ty.mid.framework.common.lang.ThreadSafe;
-import com.ty.mid.framework.common.util.Validator;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * 随机数工具类 
+ * 随机数工具类
  */
 @ThreadSafe
 public abstract class RandomUtils {
@@ -407,7 +407,7 @@ public abstract class RandomUtils {
         }
 
         public static byte[] nextBytes(final int count) {
-            Validator.requireTrue(count >= 0, "Count cannot be negative.");
+            Assert.isTrue(count >= 0, "Count cannot be negative.");
 
             final byte[] result = new byte[count];
             RANDOM.nextBytes(result);
@@ -415,9 +415,9 @@ public abstract class RandomUtils {
         }
 
         public static int nextInt(final int startInclusive, final int endExclusive) {
-            Validator.requireTrue(endExclusive >= startInclusive,
+            Assert.isTrue(endExclusive >= startInclusive,
                     "Start value must be smaller or equal to end value.");
-            Validator.requireTrue(startInclusive >= 0, "Both range values must be non-negative.");
+            Assert.isTrue(startInclusive >= 0, "Both range values must be non-negative.");
 
             if (startInclusive == endExclusive) {
                 return startInclusive;
@@ -431,9 +431,9 @@ public abstract class RandomUtils {
         }
 
         public static long nextLong(final long startInclusive, final long endExclusive) {
-            Validator.requireTrue(endExclusive >= startInclusive,
+            Assert.isTrue(endExclusive >= startInclusive,
                     "Start value must be smaller or equal to end value.");
-            Validator.requireTrue(startInclusive >= 0, "Both range values must be non-negative.");
+            Assert.isTrue(startInclusive >= 0, "Both range values must be non-negative.");
 
             if (startInclusive == endExclusive) {
                 return startInclusive;
@@ -447,9 +447,9 @@ public abstract class RandomUtils {
         }
 
         public static double nextDouble(final double startInclusive, final double endInclusive) {
-            Validator.requireTrue(endInclusive >= startInclusive,
+            Assert.isTrue(endInclusive >= startInclusive,
                     "Start value must be smaller or equal to end value.");
-            Validator.requireTrue(startInclusive >= 0, "Both range values must be non-negative.");
+            Assert.isTrue(startInclusive >= 0, "Both range values must be non-negative.");
 
             if (startInclusive == endInclusive) {
                 return startInclusive;
@@ -463,9 +463,9 @@ public abstract class RandomUtils {
         }
 
         public static float nextFloat(final float startInclusive, final float endInclusive) {
-            Validator.requireTrue(endInclusive >= startInclusive,
+            Assert.isTrue(endInclusive >= startInclusive,
                     "Start value must be smaller or equal to end value.");
-            Validator.requireTrue(startInclusive >= 0, "Both range values must be non-negative.");
+            Assert.isTrue(startInclusive >= 0, "Both range values must be non-negative.");
 
             if (startInclusive == endInclusive) {
                 return startInclusive;

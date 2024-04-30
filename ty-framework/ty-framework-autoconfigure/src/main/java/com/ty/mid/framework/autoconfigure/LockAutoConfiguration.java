@@ -1,6 +1,6 @@
 package com.ty.mid.framework.autoconfigure;
 
-import com.ty.mid.framework.common.util.Validator;
+import cn.hutool.core.lang.Assert;
 import com.ty.mid.framework.lock.config.LockConfig;
 import com.ty.mid.framework.lock.config.spi.LockSpiClassLoader;
 import com.ty.mid.framework.lock.core.BusinessKeyProvider;
@@ -92,7 +92,7 @@ public class LockAutoConfiguration {
     private void doLoadStrategy(Class<? extends LockHandler> lockHandlerClass, boolean validate) {
         List<? extends LockHandler> lockHandlers = LockSpiClassLoader.getInstance().loaderClass(lockHandlerClass);
         if (validate) {
-            Validator.requireNonEmpty(lockHandlers, "No customer " + lockHandlerClass.getName() + " find in your application resource dir: META-INFO/services");
+            Assert.notEmpty(lockHandlers, "No customer " + lockHandlerClass.getName() + " find in your application resource dir: META-INFO/services");
         }
     }
 

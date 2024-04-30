@@ -2,9 +2,9 @@ package com.ty.mid.framework.core;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.impl.BeanConverter;
+import cn.hutool.core.lang.Assert;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.GenericsUtil;
-import com.ty.mid.framework.common.util.Validator;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -38,7 +38,7 @@ public interface Converter<S, T> {
         if (dto == null) {
             return null;
         }
-        Validator.requireNonNull(toClass, "to model Class can not be null");
+        Assert.notNull(toClass);
         try {
             BeanConverter<TO> beanConverter = new BeanConverter<>(toClass);
             return beanConverter.convert(dto, null);

@@ -1,6 +1,7 @@
 package com.ty.mid.framework.service.wrapper.core;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
@@ -8,7 +9,6 @@ import com.ty.mid.framework.common.dto.AbstractNameDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.GenericsUtil;
-import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.common.util.collection.CollectionUtils;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
 import com.ty.mid.framework.service.wrapper.AutoWrapService;
@@ -255,7 +255,7 @@ public class MappingProvider {
         if (CollUtil.isEmpty(fieldList)) {
             return null;
         }
-        Validator.requireTrue(fieldList.size() == 1, "目标中存在多个标注为特定类型的属性");
+        Assert.isTrue(fieldList.size() == 1, "目标中存在多个标注为特定类型的属性");
         return fieldList.get(0);
     }
 

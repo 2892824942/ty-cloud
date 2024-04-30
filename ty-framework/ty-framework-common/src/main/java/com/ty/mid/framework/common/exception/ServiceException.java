@@ -4,6 +4,8 @@ import com.ty.mid.framework.common.constant.BaseCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * 业务逻辑异常 Exception
  */
@@ -22,21 +24,19 @@ public final class ServiceException extends BizException {
         this(String.valueOf(code), message);
     }
 
-    public ServiceException(BaseCode baseCode) {
-        super(baseCode.getMessage());
-        super.code = baseCode.getCode();
+    public ServiceException(@NotNull BaseCode baseCode) {
+        super(baseCode);
     }
 
     public ServiceException(String code, String message) {
-        super(message);
-        this.code = code;
+        super(code, message);
     }
 
     public ServiceException(String message) {
         super(message);
     }
 
-    public static ServiceException of(BaseCode baseCode) {
+    public static ServiceException of(@NotNull BaseCode baseCode) {
         return new ServiceException(baseCode);
     }
 

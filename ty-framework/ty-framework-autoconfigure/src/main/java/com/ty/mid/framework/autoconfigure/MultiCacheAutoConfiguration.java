@@ -12,6 +12,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 @AutoConfigureBefore(CacheAutoConfiguration.class)
 @EnableConfigurationProperties(CachePlusConfig.class)
 @ConditionalOnProperty(prefix = CachePlusConfig.CACHE_PREFIX, name = CachePlusConfig.CACHE_MULTI_ENABLE, havingValue = "true")
+@EnableCaching
 @Slf4j
 public class MultiCacheAutoConfiguration {
     @Bean

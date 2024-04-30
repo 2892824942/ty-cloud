@@ -1,6 +1,6 @@
 package com.ty.mid.framework.core.expression.support;
 
-import com.ty.mid.framework.common.util.Validator;
+import cn.hutool.core.lang.Assert;
 import com.ty.mid.framework.core.expression.ExpressionManager;
 import org.springframework.context.expression.EnvironmentAccessor;
 import org.springframework.context.expression.MapAccessor;
@@ -71,7 +71,7 @@ public class DefaultExpressionManager implements ExpressionManager {
     }
 
     protected Expression parseExpression(String expression) {
-        Validator.requireNonEmpty(expression, "expression 不能为空");
+        Assert.notEmpty(expression, "expression 不能为空");
 
         if (!expressionCache.containsKey(expression)) {
             synchronized (expressionCache) {

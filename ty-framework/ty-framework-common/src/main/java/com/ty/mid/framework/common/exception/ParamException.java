@@ -1,8 +1,11 @@
 package com.ty.mid.framework.common.exception;
 
+import com.ty.mid.framework.common.constant.BaseCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 业务异常类 <p>
@@ -13,33 +16,28 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class ParamException extends BizException {
+    public ParamException(@NotNull BaseCode baseCode) {
+        super(baseCode);
+    }
 
     public ParamException(String code, String message) {
-        super(message);
-        this.code = code;
-        this.message = message;
+        super(code,message);
     }
 
     public ParamException(String message) {
         super(message);
-        this.message = message;
     }
 
     public ParamException(String message, Throwable cause) {
         super(message, cause);
-        this.message = message;
     }
 
     public ParamException(Throwable cause) {
         super(cause);
-        if (cause != null && cause.getMessage() != null) {
-            this.message = cause.getMessage();
-        }
     }
 
     public ParamException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-        this.message = message;
     }
 
     public static ParamException of(String code, String message) {
@@ -48,6 +46,10 @@ public class ParamException extends BizException {
 
     public static ParamException of(String message) {
         return new ParamException(message);
+    }
+
+    public static ParamException of(@NotNull BaseCode baseCode) {
+        return new ParamException(baseCode);
     }
 
 }

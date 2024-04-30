@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
@@ -93,16 +94,16 @@ public class BaseResult<T> implements Serializable, Result<T> {
     /**
      * 通用枚举构建返回值
      *
-     * @param baseCodeEnum
+     * @param baseCode
      * @param <T>
      * @return
      */
 
-    public static <T> BaseResult<T> fail(BaseCode baseCodeEnum) {
+    public static <T> BaseResult<T> fail(@NotNull BaseCode baseCode) {
         BaseResult<T> result = new BaseResult<>();
         result.setCode(GlobalErrorCodeEnum.FAIL.getCode());
-        result.setCode(baseCodeEnum.getCode());
-        result.setMessage(baseCodeEnum.getMessage());
+        result.setCode(baseCode.getCode());
+        result.setMessage(baseCode.getMessage());
         return result;
     }
 

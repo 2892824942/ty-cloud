@@ -37,6 +37,12 @@
 
         <dependency>
             <groupId>com.ty</groupId>
+            <artifactId>ty-framework-mybatis-plus</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ty</groupId>
             <artifactId>ty-framework-api-switcher</artifactId>
             <scope>provided</scope>
         </dependency>

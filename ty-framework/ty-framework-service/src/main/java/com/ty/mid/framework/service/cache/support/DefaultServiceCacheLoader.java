@@ -1,8 +1,8 @@
 package com.ty.mid.framework.service.cache.support;
 
+import cn.hutool.core.lang.Assert;
 import com.ty.mid.framework.common.dto.AbstractDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
-import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.service.cache.ServiceCacheLoader;
 import com.ty.mid.framework.service.cache.generic.BaseCacheService;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,7 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
 
     protected BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO> resolveService(String cacheName) {
         BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO> service = cacheServices.stream().filter(c -> c.getCacheName().equals(cacheName)).findFirst().orElse(null);
-        Validator.requireNonNull(cacheName, Validator.formatMessage("缓存 [%s] 不存在", cacheName));
+        Assert.notEmpty(cacheName, "缓存 [%s] 不存在", cacheName);
         return service;
     }
 }

@@ -1,5 +1,6 @@
 package com.ty.mid.framework.common.util;
 
+import cn.hutool.core.lang.Assert;
 import com.ty.mid.framework.common.lang.NonNull;
 import com.ty.mid.framework.common.lang.Nullable;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
@@ -55,7 +56,7 @@ public class DateUtils {
     }
 
     public static String resolveSeasonName(DatePeriod period) {
-        Validator.requireNonNull(period, "参数不能为空");
+        Assert.notNull(period);
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(period.getFrom());
@@ -86,7 +87,7 @@ public class DateUtils {
     }
 
     public static DatePeriod resolveSeasonRange(Date calcDate, int seasonOffset) {
-        Validator.requireNonNull(calcDate, "参数不能为空");
+        Assert.notNull(calcDate, "参数不能为空");
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(calcDate);
@@ -183,12 +184,12 @@ public class DateUtils {
      * @return
      */
     public static String formatDateTime(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return new SimpleDateFormat(DATE_TIME_PATTERN).format(date);
     }
 
     public static String formatDateZh(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return new SimpleDateFormat(DATE_PATTERN_ZH).format(date);
     }
 
@@ -199,22 +200,22 @@ public class DateUtils {
      * @return
      */
     public static String formatDate(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return new SimpleDateFormat(DATE_PATTERN).format(date);
     }
 
     public static String formatDateDot(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return new SimpleDateFormat(DATE_DOT_PATTERN).format(date);
     }
 
     public static String formatDateTimeDot(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return new SimpleDateFormat(DATE_TIME_DOT_PATTERN).format(date);
     }
 
     public static String formatMinuteDot(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return new SimpleDateFormat(DATE_MINUTE_DOT_PATTERN).format(date);
     }
 
@@ -225,7 +226,7 @@ public class DateUtils {
      * @return
      */
     public static String formatYearMonth(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return new SimpleDateFormat(YEAR_MONTH_PATTERN).format(date);
     }
 
@@ -236,7 +237,7 @@ public class DateUtils {
      * @return
      */
     public static String formatTime(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return new SimpleDateFormat(TIME_PATTERN).format(date);
     }
 
@@ -247,13 +248,13 @@ public class DateUtils {
      * @return
      */
     public static String formatToMinute(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return new SimpleDateFormat(DATE_MINUTE_PATTERN).format(date);
     }
 
     public static String format(Date date, String pattern) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
-        Validator.requireNonEmpty(pattern, Validator.formatNonNullMessage("pattern"));
+        Assert.notNull(date, "date不能为空！");
+        Assert.notEmpty(pattern, "pattern不能为空");
         return new SimpleDateFormat(pattern).format(date);
     }
 
@@ -264,12 +265,12 @@ public class DateUtils {
      * @return
      */
     public static Date getStartOfDate(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         return resolveDate(date, 0, 0, true);
     }
 
     public static Date getStartOfMonth(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
@@ -279,7 +280,7 @@ public class DateUtils {
     }
 
     public static Date getEndOfMonth(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
 
@@ -363,7 +364,7 @@ public class DateUtils {
     }
 
     public static Date getEndOfDate(Date date) {
-        Validator.requireNonNull(date, "date can not be null");
+        Assert.notNull(date, "date can not be null");
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
@@ -439,8 +440,8 @@ public class DateUtils {
      * @return 0 相等 ， 大于 0：a > b 小于 0： a < b
      */
     public static int isEquals(@NonNull Date a, @NonNull Date b) {
-        Validator.requireNonNull(a, Validator.formatNonNullMessage("a"));
-        Validator.requireNonNull(b, Validator.formatNonNullMessage("b"));
+        Assert.notNull(a, "时间1不能为空");
+        Assert.notNull(b, "时间2不能为空");
 
         return (int) (a.getTime() - b.getTime());
     }
@@ -465,8 +466,8 @@ public class DateUtils {
      * @return
      */
     public static boolean isDateInRange(@NonNull Date date, @NonNull Date fromDate, @Nullable Date thruDate) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
-        Validator.requireNonNull(fromDate, Validator.formatNonNullMessage("fromDate"));
+        Assert.notNull(date, "date不能为空！");
+        Assert.notNull(fromDate);
 
         log.info("checking date date[{}] in range:[{}, {}}", date, fromDate, thruDate);
         if (date.getTime() < fromDate.getTime()) {
@@ -574,7 +575,7 @@ public class DateUtils {
      * @return
      */
     public static LocalDateTime toLocalDateTime(@NonNull Date date) {
-        Validator.requireNonNull(date, Validator.formatNonNullMessage("date"));
+        Assert.notNull(date, "date不能为空！");
 
         Instant instant = date.toInstant();
         ZoneId zoneId = ZoneId.systemDefault();

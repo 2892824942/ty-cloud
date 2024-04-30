@@ -1,7 +1,7 @@
 package com.ty.mid.framework.common.constant;
 
 /**
- * @desc BaseCodeEnum 通用返回枚举 
+ * 错误码定级父类, 定义了错误码的规范
  */
 public interface BaseCode {
     String getCode();

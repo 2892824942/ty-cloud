@@ -1,7 +1,10 @@
 package com.ty.mid.framework.common.exception;
 
+import com.ty.mid.framework.common.constant.BaseCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * 框架异常类 <p>
@@ -11,11 +14,11 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class FrameworkException extends BaseException {
-
+    public FrameworkException(@NotNull BaseCode baseCode) {
+        super(baseCode);
+    }
     public FrameworkException(String code, String message) {
-        super(message);
-        this.code = code;
-        this.message = message;
+        super(code,message);
     }
 
     public FrameworkException() {
@@ -23,24 +26,18 @@ public class FrameworkException extends BaseException {
 
     public FrameworkException(String message) {
         super(message);
-        this.message = message;
     }
 
     public FrameworkException(String message, Throwable cause) {
         super(message, cause);
-        this.message = message;
     }
 
     public FrameworkException(Throwable cause) {
         super(cause);
-        if (cause != null && cause.getMessage() != null) {
-            this.message = cause.getMessage();
-        }
     }
 
     public FrameworkException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
-        this.message = message;
     }
 
     public static FrameworkException of(String code, String message) {
@@ -49,5 +46,9 @@ public class FrameworkException extends BaseException {
 
     public static FrameworkException of(String message) {
         return new FrameworkException(message);
+    }
+
+    public static FrameworkException of(@NotNull BaseCode baseCode) {
+        return new FrameworkException(baseCode);
     }
 }

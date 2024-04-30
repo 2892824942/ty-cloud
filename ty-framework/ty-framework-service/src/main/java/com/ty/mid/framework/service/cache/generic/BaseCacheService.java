@@ -1,8 +1,8 @@
 package com.ty.mid.framework.service.cache.generic;
 
 import cn.hutool.core.collection.CollUtil;
-import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.core.Converter;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 
 /**
  * 可缓存service的定义，附带实现方法 <p>
+ *
  * @param <S> <p>
  * @param <T>
  */
@@ -226,7 +227,9 @@ public interface BaseCacheService<S, T> extends Converter<S, T> {
      * @return
      */
     default T cacheGetByKey(String key) {
-        Validator.requireNonEmpty(key, "key不能为空");
+        if (StringUtils.isBlank(key)) {
+            return null;
+        }
         T ret = getCache().get(key);
         log.info("get data in map cache [{}], key [{}], and cache {}", getCacheName(), key, ret == null ? "miss" : "found");
         return ret;

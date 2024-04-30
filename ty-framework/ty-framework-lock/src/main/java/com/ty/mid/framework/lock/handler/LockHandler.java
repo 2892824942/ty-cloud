@@ -1,8 +1,8 @@
 package com.ty.mid.framework.lock.handler;
 
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Assert;
 import com.ty.mid.framework.common.exception.FrameworkException;
-import com.ty.mid.framework.common.util.Validator;
 import com.ty.mid.framework.lock.config.spi.LockSpiClassLoader;
 import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.exception.LockException;
@@ -16,13 +16,14 @@ import java.util.Objects;
 
 /**
  * lockHandler顶级接口 <p>
+ *
  * @author 苏友良 <p>
  * @since 2022/5/11 <p>
  **/
 public interface LockHandler {
     default <T extends LockHandler> void customerHandlerValidate(List<T> lockHandlers, Class<T> customerHandlerClass) {
         if (CollectionUtil.isEmpty(lockHandlers)) {
-            Validator.requireNonEmpty(lockHandlers, "No customer " + customerHandlerClass.getName() + " find in your application resource dir: META-INFO/services");
+            Assert.notEmpty(lockHandlers, "No customer %s find in your application resource dir: META-INFO/services", customerHandlerClass.getName());
         }
     }
 
