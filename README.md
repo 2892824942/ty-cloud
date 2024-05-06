@@ -8,7 +8,7 @@ Spring Cloud Alibaba集成框架
 
 - [Lock组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-lock)
 - [Cache组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-cache)
-- [Mybatis-plus ORM框架](https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-mybatis-plus)
+- [Mybatis-plus增强组件](https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-mybatis-plus)
 - [Web组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-web)
 - [Service组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-service)
 - [Security框架](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-security)
