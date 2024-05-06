@@ -6,12 +6,12 @@ Spring Cloud Alibaba集成框架
 
 第一个版本出来啦!!!
 
-- [集成并设计通用Lock组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-lock)
-- [集成并设计Cache组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-cache)
-- [Mybatis-plus作为ORM框架](https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-mybatis-plus)
-- [集成并设计Web组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-web)
-- [集成并设计Service组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-service)
-- [集成并设计Sa-Token作为Security框架](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-security)
+- [Lock组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-lock)
+- [Cache组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-cache)
+- [Mybatis-plus ORM框架](https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-mybatis-plus)
+- [Web组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-web)
+- [Service组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-service)
+- [Security框架](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-security)
 
 后续计划:
 - nacos作为服务注册中心和注册中心
