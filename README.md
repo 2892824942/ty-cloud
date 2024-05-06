@@ -3,7 +3,7 @@ Spring Cloud Alibaba集成框架
 目的:
 - 简化Spring Cloud Alibaba的集成
 - 封装通用组件, 提高开发效率
-- 给自己一个场景,把学到的,没学到的,有沉淀的东西,都写出来,形成一个完整的项目
+
 第一个版本出来啦!!!
 
 - [集成并设计通用Lock组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-lock)
