@@ -50,12 +50,14 @@ public class LoginUser implements Serializable {
     private String token;
 
     /**
-     * 菜单权限
+     * 菜单权限,如鉴权使用此菜单对象,则菜单将不会随角色权限更改,需重新登录生效
+     * 如需角色权限更改后生效,则需重写获取方法
      */
     private Set<String> menuPermission = new HashSet<>();
 
     /**
-     * 角色权限
+     * 角色权限,如鉴权使用此角色对象,则角色将不会随用户角色更改,需重新登录生效
+     * 如需用户角色更改后生效,则需重写获取方法
      */
     private Set<String> rolePermission = new HashSet<>();
 

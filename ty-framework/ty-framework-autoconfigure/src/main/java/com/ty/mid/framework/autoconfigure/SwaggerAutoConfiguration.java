@@ -1,5 +1,6 @@
 package com.ty.mid.framework.autoconfigure;
 
+import cn.dev33.satoken.config.SaTokenConfig;
 import com.ty.mid.framework.web.config.WebConfig;
 import com.ty.mid.framework.web.swagger.SwaggerUtil;
 import com.ty.mid.framework.web.swagger.config.SwaggerConfig;
@@ -12,24 +13,25 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springdoc.core.*;
 import org.springdoc.core.customizers.OpenApiBuilderCustomizer;
+import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.core.customizers.ServerBaseUrlCustomizer;
 import org.springdoc.core.providers.JavadocProvider;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Swagger 自动配置类，基于 OpenAPI + Springdoc 实现。 <p>
  * 友情提示： <p>
  * 1. Springdoc 文档地址：<a href="https://github.com/springdoc/springdoc-openapi">仓库</a> <p>
  * 2. Swagger 规范，于 2015 更名为 OpenAPI 规范，本质是一个东西 <p>
+ *
  * @author suyouliang
  */
 @ConditionalOnClass({OpenAPI.class})
@@ -38,6 +40,8 @@ import java.util.Optional;
 public class SwaggerAutoConfiguration {
 
     // ========== 全局 OpenAPI 配置 ==========
+    @Autowired
+    private ObjectProvider<SaTokenConfig> SaTokenConfigProvider;
 
     @Bean
     public OpenAPI createApi(SwaggerConfig properties) {
@@ -100,7 +104,30 @@ public class SwaggerAutoConfiguration {
      */
     @Bean
     public GroupedOpenApi allGroupedOpenApi() {
-        return SwaggerUtil.buildGroupedOpenApi("all", "");
+        GroupedOpenApi groupedOpenApi = SwaggerUtil.buildGroupedOpenApi("all", "");
+        return handlerApiSecurityParam(groupedOpenApi);
+    }
+
+    public GroupedOpenApi handlerApiSecurityParam(GroupedOpenApi groupedOpenApi) {
+        SaTokenConfig saTokenConfig = SaTokenConfigProvider.getIfAvailable();
+        if (Objects.isNull(saTokenConfig)) {
+            return groupedOpenApi;
+        }
+        ArrayList<OperationCustomizer> operationCustomizer = new ArrayList<>();
+        operationCustomizer.add((operation, handlerMethod) -> {
+            if (saTokenConfig.getIsReadHeader()) {
+                operation.addParametersItem(SwaggerUtil.buildSecurityHeaderParameter(saTokenConfig.getTokenName(), SecurityScheme.In.HEADER));
+            }
+            if (saTokenConfig.getIsReadCookie()) {
+                operation.addParametersItem(SwaggerUtil.buildSecurityHeaderParameter(saTokenConfig.getTokenName(), SecurityScheme.In.COOKIE));
+            } else if (saTokenConfig.getIsReadBody()) {
+                //同时添加cookie及query,会在界面上显示两个,这里使用排他方式
+                operation.addParametersItem(SwaggerUtil.buildSecurityHeaderParameter(saTokenConfig.getTokenName(), SecurityScheme.In.QUERY));
+            }
+            return operation;
+        });
+        groupedOpenApi.addAllOperationCustomizer(operationCustomizer);
+        return groupedOpenApi;
     }
 
 

@@ -181,7 +181,7 @@ public class LoginHelper {
      *
      * @see LoginHelper#switchTo(String)
      */
-    public static void endSwitch(String userId) {
+    public static void endSwitch() {
         SaTokenDao saTokenDao = SaManager.getSaTokenDao();
         Object loginId = StpUtil.getLoginId();
         saTokenDao.delete(getGuiseKey(loginId));
