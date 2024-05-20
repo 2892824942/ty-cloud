@@ -12,7 +12,7 @@ import com.baomidou.mybatisplus.extension.toolkit.Db;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.pojo.PageParam;
 import com.ty.mid.framework.common.pojo.PageResult;
-import com.ty.mid.framework.mybatisplus.core.util.MyBatisUtils;
+import com.ty.mid.framework.mybatisplus.util.MyBatisUtils;
 import org.apache.ibatis.annotations.Param;
 
 import java.io.Serializable;

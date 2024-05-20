@@ -20,6 +20,7 @@
         <module>ty-framework-service</module>
         <module>ty-framework-lock</module>
         <module>ty-framework-cache</module>
+        <module>ty-framework-encrypt</module>
         <module>ty-framework-sms</module>
         <module>ty-framework-autoconfigure</module>
 

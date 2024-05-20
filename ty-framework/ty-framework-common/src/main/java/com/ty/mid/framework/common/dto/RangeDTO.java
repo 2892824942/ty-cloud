@@ -3,7 +3,7 @@ package com.ty.mid.framework.common.dto;
 import lombok.Data;
 
 @Data
-public class RangeDTO<T> extends AbstractDTO {
+public class RangeDTO<T> extends BaseDTO {
 
     private T low;
 

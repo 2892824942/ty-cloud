@@ -10,6 +10,7 @@ import com.ty.mid.framework.web.core.handler.ControllerExceptionHandler;
 import com.ty.mid.framework.web.core.handler.ControllerResponseBodyHandler;
 import com.ty.mid.framework.web.core.service.ApiLogService;
 import com.ty.mid.framework.web.core.util.WebUtil;
+import com.ty.mid.framework.web.mvc.HashedIdFieldFormatter;
 import com.ty.mid.framework.web.mvc.HashedIdHandlerMethodArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.CollectionUtils;
@@ -65,6 +67,13 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         if (webConfig.getHashId().isEnable()) {
             resolvers.add(new HashedIdHandlerMethodArgumentResolver(webConfig));
+        }
+    }
+
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        if (webConfig.getHashId().isEnable()) {
+            registry.addFormatterForFieldAnnotation(new HashedIdFieldFormatter(webConfig)) ;
         }
 
     }

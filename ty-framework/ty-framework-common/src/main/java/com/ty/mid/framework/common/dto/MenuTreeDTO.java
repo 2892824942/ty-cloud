@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class MenuTreeDTO extends AbstractTreeDTO<MenuTreeDTO> {
+public class MenuTreeDTO extends BaseTreeDTO<MenuTreeDTO> {
 
     // @JsonIgnore
     private Long id;

@@ -11,12 +11,6 @@
     <artifactId>ty-framework-lock-starter</artifactId>
 
     <dependencies>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.ty</groupId>
             <artifactId>ty-framework-autoconfigure</artifactId>

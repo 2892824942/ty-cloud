@@ -16,7 +16,17 @@ import java.sql.SQLException;
 /**
  * 字段字段的 TypeHandler 实现类，基于 {@link AES} 实现 <p>
  * 可通过 mybatis-plus.encryptor.password 配置项，设置密钥 <p>
- * @author suyoulinag 
+ * 关于update过程,typeHandler不生效的问题:<p>
+ * 首先该问题存在于低版本中,对于updateById,lambdaUpdateWrapper有不同程度的不兼容,但是当前框架版本是兼容的<p>
+ * 另外:对于LambadaUpdateWrapper,不使用entity赋值,而是直接使用set方式,例如<p>
+ * update(new LambdaUpdateWrapper<User>().eq(User::getId, userId).set(User::getPassword,password));
+ * 这种方式是不生效的,当然,使用Mybatis的Interceptor可以解决以上这个特殊场景,但是,需要自定义加密注解
+ * 我的考虑:
+ * 1.Mybatis层面使用TypeHandler能做到这个层面完全可以接受,因为这个特殊场景(我个人觉得不支持可以接受,毕竟没有用entity).如果使用Interceptor解决这个问题
+ * 对于只读的如DefaultTYpeHandler,显然使用Interceptor有点大材小用,可是如果关于字段处理,有两个处理方案,我觉得是很糟心的
+ * 2.对于加密以及逗号拼接转list(或者其他集合),这种场景web上可能也要用到,使用自定义的加密注解,一定程度上,在加密这个领域算是统一了
+ *
+ * @author suyoulinag
  */
 public class EncryptTypeHandler extends BaseTypeHandler<String> {
 

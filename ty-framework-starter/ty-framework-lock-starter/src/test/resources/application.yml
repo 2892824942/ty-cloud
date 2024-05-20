@@ -1,7 +1,7 @@
 framework:
   lock:
     enable: true
-    exception-class: ty.framework.sms.test.customer.exception.Customer2Exception
+    exception-class: ty.framework.lock.test.customer.exception.Customer2Exception
     exception-msg: "我是全局默认的快速失败信息"
     implementer: zookeeper
     transaction-strategy: throwing

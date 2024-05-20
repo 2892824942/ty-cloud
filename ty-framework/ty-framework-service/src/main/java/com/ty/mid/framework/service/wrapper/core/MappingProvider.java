@@ -5,7 +5,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.core.toolkit.reflect.GenericTypeUtils;
-import com.ty.mid.framework.common.dto.AbstractNameDTO;
+import com.ty.mid.framework.common.dto.BaseNameDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.GenericsUtil;
@@ -155,20 +155,20 @@ public class MappingProvider {
     }
 
 
-    static <T extends AbstractNameDTO> void handleAbstractNameDTOList(@MappingTarget List<Object> objects) {
+    static <T extends BaseNameDTO> void handleAbstractNameDTOList(@MappingTarget List<Object> objects) {
         if (CollUtil.isEmpty(objects)) {
             return;
         }
-        if (AbstractNameDTO.class.isAssignableFrom(objects.iterator().next().getClass())) {
+        if (BaseNameDTO.class.isAssignableFrom(objects.iterator().next().getClass())) {
             doHandleAbstractNameDTOList(GenericsUtil.toList(objects));
         }
     }
 
     //后续可沉淀为策略
 
-    static <T extends AbstractNameDTO> void doHandleAbstractNameDTOList(@MappingTarget List<T> abstractNameDTOList) {
-        List<Long> creatorIdList = CollectionUtils.convertList(abstractNameDTOList, AbstractNameDTO::getCreator);
-        List<Long> updaterIdList = CollectionUtils.convertList(abstractNameDTOList, AbstractNameDTO::getUpdater);
+    static <T extends BaseNameDTO> void doHandleAbstractNameDTOList(@MappingTarget List<T> abstractNameDTOList) {
+        List<Long> creatorIdList = CollectionUtils.convertList(abstractNameDTOList, BaseNameDTO::getCreator);
+        List<Long> updaterIdList = CollectionUtils.convertList(abstractNameDTOList, BaseNameDTO::getUpdater);
         Collection<Long> userIdList = CollUtil.addAllIfNotContains(creatorIdList, updaterIdList);
         if (CollUtil.isEmpty(userIdList)) {
             return;

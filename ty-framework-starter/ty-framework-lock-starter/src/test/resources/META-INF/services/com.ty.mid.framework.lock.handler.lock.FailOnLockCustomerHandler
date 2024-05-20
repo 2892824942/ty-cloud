@@ -1,1 +1,1 @@
-ty.framework.sms.test.customer.CustomerFailOnLockHandler
+ty.framework.lock.test.customer.CustomerFailOnLockHandler

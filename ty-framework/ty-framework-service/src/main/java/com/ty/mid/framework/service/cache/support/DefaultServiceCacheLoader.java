@@ -1,7 +1,7 @@
 package com.ty.mid.framework.service.cache.support;
 
 import cn.hutool.core.lang.Assert;
-import com.ty.mid.framework.common.dto.AbstractDTO;
+import com.ty.mid.framework.common.dto.BaseDTO;
 import com.ty.mid.framework.common.entity.BaseIdDO;
 import com.ty.mid.framework.service.cache.ServiceCacheLoader;
 import com.ty.mid.framework.service.cache.generic.BaseCacheService;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 public class DefaultServiceCacheLoader implements ServiceCacheLoader {
 
     @Autowired(required = false)
-    private List<BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO>> cacheServices = new ArrayList<>();
+    private List<BaseCacheService<? extends BaseIdDO<?>, ? extends BaseDTO>> cacheServices = new ArrayList<>();
 
     @Override
     public void init() {
@@ -47,8 +47,8 @@ public class DefaultServiceCacheLoader implements ServiceCacheLoader {
         log.info("successfully clear cache: {}", cacheName);
     }
 
-    protected BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO> resolveService(String cacheName) {
-        BaseCacheService<? extends BaseIdDO<?>, ? extends AbstractDTO> service = cacheServices.stream().filter(c -> c.getCacheName().equals(cacheName)).findFirst().orElse(null);
+    protected BaseCacheService<? extends BaseIdDO<?>, ? extends BaseDTO> resolveService(String cacheName) {
+        BaseCacheService<? extends BaseIdDO<?>, ? extends BaseDTO> service = cacheServices.stream().filter(c -> c.getCacheName().equals(cacheName)).findFirst().orElse(null);
         Assert.notEmpty(cacheName, "缓存 [%s] 不存在", cacheName);
         return service;
     }

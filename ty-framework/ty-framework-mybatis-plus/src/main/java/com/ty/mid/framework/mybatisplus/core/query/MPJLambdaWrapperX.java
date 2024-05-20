@@ -24,6 +24,7 @@ import com.ty.mid.framework.common.constant.DefaultTypeEnum;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.mybatisplus.entity.TimeRangeDO;
+import com.ty.mid.framework.mybatisplus.util.WrapperUtils;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -348,7 +349,7 @@ public class MPJLambdaWrapperX<T> extends MPJAbstractLambdaWrapper<T, MPJLambdaW
         wrapper.subTableAlias = st;
         consumer.accept(wrapper);
         addCustomWrapper(wrapper);
-        String sql = com.ty.mid.framework.mybatisplus.core.util.WrapperUtils.buildSubSqlByWrapper(clazz, wrapper, LambdaUtils.getName(alias));
+        String sql = WrapperUtils.buildSubSqlByWrapper(clazz, wrapper, LambdaUtils.getName(alias));
         this.selectColumns.add(new SelectString(sql, hasAlias, this.alias));
         return typedThis;
     }
@@ -364,7 +365,7 @@ public class MPJLambdaWrapperX<T> extends MPJAbstractLambdaWrapper<T, MPJLambdaW
             Class<?> entityClass = wrapper.getEntityClass();
             Assert.notNull(entityClass, "请使用 new MPJLambdaWrapper(主表.class) 或 JoinWrappers.lambda(主表.class) 构造方法");
             sb.append(" UNION ")
-                    .append(com.ty.mid.framework.mybatisplus.core.util.WrapperUtils.buildUnionSqlByWrapper(entityClass, wrapper));
+                    .append(WrapperUtils.buildUnionSqlByWrapper(entityClass, wrapper));
         }
         if (Objects.isNull(unionSql)) {
             unionSql = SharedString.emptyString();
@@ -384,7 +385,7 @@ public class MPJLambdaWrapperX<T> extends MPJAbstractLambdaWrapper<T, MPJLambdaW
             Class<?> entityClass = wrapper.getEntityClass();
             Assert.notNull(entityClass, "请使用 new MPJLambdaWrapper(主表.class) 或 JoinWrappers.lambda(主表.class) 构造方法");
             sb.append(" UNION ALL ")
-                    .append(com.ty.mid.framework.mybatisplus.core.util.WrapperUtils.buildUnionSqlByWrapper(entityClass, wrapper));
+                    .append(WrapperUtils.buildUnionSqlByWrapper(entityClass, wrapper));
         }
         if (Objects.isNull(unionSql)) {
             unionSql = SharedString.emptyString();

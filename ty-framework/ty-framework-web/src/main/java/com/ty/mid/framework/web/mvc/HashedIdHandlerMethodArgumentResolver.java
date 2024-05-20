@@ -1,5 +1,6 @@
 package com.ty.mid.framework.web.mvc;
 
+import cn.hutool.core.util.ArrayUtil;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.HashIdUtil;
 import com.ty.mid.framework.web.annotation.desensitize.HashedId;
@@ -14,8 +15,15 @@ import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.StringJoiner;
+import java.util.stream.Collectors;
 
+/**
+ * 对于表单形式,不经过序列化,入参情况下HashId注解解密处理
+ * 注:方法注入时已经判断开启Hashed能力,所以方法直接进行数据操作
+ */
 @Slf4j
 @NoArgsConstructor
 public class HashedIdHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
@@ -36,37 +44,48 @@ public class HashedIdHandlerMethodArgumentResolver implements HandlerMethodArgum
         if (StringUtils.isBlank(parameterName)) {
             throw new IllegalArgumentException("parameterName must not be blank!");
         }
-
         log.info("resolving hashed id, parameter name: {}", parameterName);
-        String val = webRequest.getParameter(parameterName);
-
-        if (StringUtils.isEmpty(val)) {
-            log.warn("resolve origin id for [p:{} ,v:{}] fail, because parameter value is null or empty!", parameterName, val);
-            return null;
-        }
-
+        Class<?> parameterType = parameter.getParameterType();
         WebConfig.HashId hashId = webConfig.getHashId();
-        //兼容多个加密id使用","隔开的情况
-        if (val.contains(",") && val.split(",").length >= 1) {
-            StringJoiner stringJoiner = new StringJoiner(",");
-            String[] split = val.split(",");
-            for (String s : split) {
-                if (StringUtils.isEmpty(s)) {
-                    stringJoiner.add("");
-                } else {
-                    try {
-                        stringJoiner.add(String.valueOf(HashIdUtil.decode(s, hashId.getSalt(), hashId.getMinLength())));
-                    } catch (Exception e) {
-                        log.warn("resolve origin id for [p:{} ,v:{}] fail, because of parameter value decode error!", parameterName, val);
-                        throw new FrameworkException("加解密异常");
+        if (parameterType.isAssignableFrom(String.class)) {
+            String val = webRequest.getParameter(parameterName);
+            if (StringUtils.isEmpty(val)) {
+                log.warn("resolve origin id for [p:{} ,v:{}] fail, because parameter value is null or empty!", parameterName, val);
+                return null;
+            }
+
+            //兼容多个加密id使用","隔开的情况
+            if (val.contains(",") && val.split(",").length >= 1) {
+                StringJoiner stringJoiner = new StringJoiner(",");
+                String[] split = val.split(",");
+                for (String s : split) {
+                    if (StringUtils.isEmpty(s)) {
+                        stringJoiner.add("");
+                    } else {
+                        try {
+                            stringJoiner.add(String.valueOf(HashIdUtil.decode(s, hashId.getSalt(), hashId.getMinLength())));
+                        } catch (Exception e) {
+                            log.warn("resolve origin id for [p:{} ,v:{}] fail, because of parameter value decode error!", parameterName, val);
+                            throw new FrameworkException("加解密异常[HashedId]");
+                        }
                     }
                 }
+                return stringJoiner.toString();
             }
-            return stringJoiner.toString();
-        }
-        if (parameter.getParameterType().isAssignableFrom(String.class)) {
+            //单纯的字符串
             return String.valueOf(HashIdUtil.decode(val, hashId.getSalt(), hashId.getMinLength()));
         }
-        return HashIdUtil.decode(val, hashId.getSalt(), hashId.getMinLength());
+        //数组形式
+        if (parameter.getParameterType().isAssignableFrom(List.class)||parameter.getParameterType().isAssignableFrom(String[].class)){
+            String[] parameterValues = webRequest.getParameterValues(parameterName);
+            if (ArrayUtil.isNotEmpty(parameterValues)){
+                return Arrays.stream(parameterValues).map(data -> {
+                    return HashIdUtil.decode(data, hashId.getSalt(), hashId.getMinLength());
+                }).collect(Collectors.toList());
+            }
+        }
+
+        //其他形式
+        throw new FrameworkException("暂只支持String及List<Long>形式![HashedId]");
     }
 }
