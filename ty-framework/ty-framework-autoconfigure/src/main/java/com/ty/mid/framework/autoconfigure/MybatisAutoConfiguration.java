@@ -13,7 +13,6 @@ import com.ty.mid.framework.mybatisplus.interceptor.MybatisDecryptInterceptor;
 import com.ty.mid.framework.mybatisplus.interceptor.MybatisEncryptInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -28,7 +27,7 @@ import java.util.Iterator;
  */
 
 @MapperScan("com.ty.mid.framework.mybatisplus.core.mapper")
-@ConditionalOnClass()
+@EnableConfigurationProperties(EncryptorConfig.class)
 public class MybatisAutoConfiguration {
 
     @Bean
@@ -65,6 +64,29 @@ public class MybatisAutoConfiguration {
     public MybatisPlusInterceptor mybatisPlusInterceptor(MybatisPlusInterceptor mybatisPlusInterceptor) {
         mybatisPlusInterceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         return mybatisPlusInterceptor;
+    }
+
+    /**
+     * 加密拦截器
+     * @param encryptorManager
+     * @param encryptorConfig
+     * @return
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
+    public MybatisEncryptInterceptor mybatisEncryptInterceptor(EncryptorManager encryptorManager, EncryptorConfig encryptorConfig) {
+        return new MybatisEncryptInterceptor(encryptorManager, encryptorConfig);
+    }
+    /**
+     * 解密拦截器
+     * @param encryptorManager
+     * @param encryptorConfig
+     * @return
+     */
+    @Bean
+    @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
+    public MybatisDecryptInterceptor mybatisDecryptInterceptor(EncryptorManager encryptorManager, EncryptorConfig encryptorConfig) {
+        return new MybatisDecryptInterceptor(encryptorManager, encryptorConfig);
     }
 
 }

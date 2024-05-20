@@ -30,8 +30,8 @@
 
         <!-- DB 相关 -->
         <druid.version>1.2.19</druid.version>
-        <mybatis-plus.version>3.5.4.1</mybatis-plus.version>
-        <mybatis-plus-generator.version>3.5.4.1</mybatis-plus-generator.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus-generator.version>3.5.5</mybatis-plus-generator.version>
         <mybatis-spring.version>2.1.1</mybatis-spring.version>
 
         <dynamic-datasource.version>3.6.1</dynamic-datasource.version>

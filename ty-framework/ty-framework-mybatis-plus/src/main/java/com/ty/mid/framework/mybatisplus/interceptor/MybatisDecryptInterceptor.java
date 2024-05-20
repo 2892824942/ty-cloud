@@ -16,6 +16,7 @@ import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.*;
 
 import java.lang.reflect.Field;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.*;
 

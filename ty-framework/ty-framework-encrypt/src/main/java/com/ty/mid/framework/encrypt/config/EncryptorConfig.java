@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import static com.ty.mid.framework.encrypt.config.EncryptorConfig.PREFIX;
+
 /**
  * 加解密属性配置类
  *
@@ -14,6 +16,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @version 4.6.0
  */
 @EqualsAndHashCode(callSuper = true)
+@ConfigurationProperties(PREFIX)
 @Data
 public class EncryptorConfig extends AbstractConfig {
     public static final String PREFIX = FRAMEWORK_PREFIX + "encrypt";
