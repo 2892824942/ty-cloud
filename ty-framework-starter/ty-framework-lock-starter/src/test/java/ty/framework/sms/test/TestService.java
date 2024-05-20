@@ -1,4 +1,4 @@
-package ty.framework.lock.test;
+package ty.framework.sms.test;
 
 import com.ty.mid.framework.lock.annotation.*;
 import com.ty.mid.framework.lock.strategy.FailOnLockStrategy;

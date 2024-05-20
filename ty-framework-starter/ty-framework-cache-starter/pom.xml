@@ -42,11 +42,6 @@
             <artifactId>ty-framework-cache</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.ty</groupId>
-            <artifactId>ty-framework-lock</artifactId>
-        </dependency>
-
         <!--  test   -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

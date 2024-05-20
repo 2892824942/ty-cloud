@@ -1,4 +1,4 @@
-package ty.framework.lock.test;
+package ty.framework.sms.test;
 
 public class User {
     private int id;

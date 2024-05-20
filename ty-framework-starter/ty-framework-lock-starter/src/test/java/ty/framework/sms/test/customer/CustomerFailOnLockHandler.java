@@ -1,4 +1,4 @@
-package ty.framework.lock.test.customer;
+package ty.framework.sms.test.customer;
 
 import com.ty.mid.framework.lock.handler.lock.FailOnLockCustomerHandler;
 import com.ty.mid.framework.lock.core.LockInfo;

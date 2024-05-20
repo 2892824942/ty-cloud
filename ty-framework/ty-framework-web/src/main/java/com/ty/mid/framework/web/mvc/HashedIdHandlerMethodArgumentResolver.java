@@ -60,7 +60,6 @@ public class HashedIdHandlerMethodArgumentResolver implements HandlerMethodArgum
                         log.warn("resolve origin id for [p:{} ,v:{}] fail, because of parameter value decode error!", parameterName, val);
                         throw new FrameworkException("加解密异常");
                     }
-
                 }
             }
             return stringJoiner.toString();

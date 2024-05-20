@@ -55,7 +55,7 @@ public class WebConfig extends AbstractConfig {
     private HashId hashId = new HashId();
     /**
      * 是否开启uri前缀拼接,此参数主要控制所有customApi中的api.prefix
-     * 当为true时:对应包所有的api的uri将会拼上api.prefix(不建议开启,开启后idea搜索无法自动势必此前缀,建议手动在controller上加前缀)
+     * 当为true时:对应包所有的api的uri将会拼上api.prefix(不建议开启,开启后idea搜索无法自动匹配此前缀,建议手动在controller上加前缀)
      * 当为false时:uri将不会拼上api.prefix
      */
     private boolean enableMvcUrlPrefix = false;

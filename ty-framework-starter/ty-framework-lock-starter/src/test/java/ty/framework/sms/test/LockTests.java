@@ -1,14 +1,11 @@
-package ty.framework.lock.test;
+package ty.framework.sms.test;
 
 import com.ty.mid.framework.lock.config.LockConfig;
-import com.ty.mid.framework.lock.decorator.cycle.CycleDetectingLockDecorator;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.integration.support.locks.LockRegistry;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
@@ -16,7 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
