@@ -1,7 +1,6 @@
 package com.ty.mid.framework.web.core.util;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -66,33 +65,33 @@ public class WebUtil {
             }
             return bodyMap;
         }
-        //2.Form-urlencoded表单解析
-        if (ServletUtils.isFormUrlRequest(request)) {
-            String body = ServletUtils.getBody(request);
-            if (StrUtil.isEmpty(body)) {
-                return bodyMap;
-            }
-            String[] split = body.split("&");
-            if (ArrayUtil.isNotEmpty(split)) {
-                //同一组数据
-                for (String s : split) {
-                    String[] innerSplit = s.split("=");
-                    if (innerSplit.length < 1) {
-                        continue;
-                    }
-                    String fieldName = innerSplit[0];
-                    String fieldValue = null;
-                    if (innerSplit.length == 2) {
-                        fieldValue = innerSplit[1];
-                    }
-                    putOrMergeIfPresent(bodyMap, fieldName, fieldValue);
-                }
-            }
-            return bodyMap;
+        //2.Form-urlencoded表单解析,暂时没有找到很好的方式,既可以重新读取,由不至于body写入args时丢失
+//         if (ServletUtils.isFormUrlRequest(request)) {
+//            String body = ServletUtils.getBody(request);
+//            if (StrUtil.isEmpty(body)) {
+//                return bodyMap;
+//            }
+//            String[] split = body.split("&");
+//            if (ArrayUtil.isNotEmpty(split)) {
+//                //同一组数据
+//                for (String s : split) {
+//                    String[] innerSplit = s.split("=");
+//                    if (innerSplit.length < 1) {
+//                        continue;
+//                    }
+//                    String fieldName = innerSplit[0];
+//                    String fieldValue = null;
+//                    if (innerSplit.length == 2) {
+//                        fieldValue = innerSplit[1];
+//                    }
+//                    putOrMergeIfPresent(bodyMap, fieldName, fieldValue);
+//                }
+//            }
+//            return bodyMap;
 
-        }
+//    }
         return bodyMap;
-    }
+}
 
 
     private static void putOrMergeIfPresent(Map<String, Object> bodyMap, String fieldName, String fieldValue) {

@@ -19,8 +19,7 @@ public class CacheRequestBodyFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
-        //尝试很多方式处理form-data数据,这里包装,后面就会报流关闭
-        if (ServletUtils.isJsonRequest(request) || ServletUtils.isFormUrlRequest(request)) {
+        if (ServletUtils.isJsonRequest(request)) {
             filterChain.doFilter(new CacheRequestBodyWrapper(request), response);
         } else {
             filterChain.doFilter(request, response);
