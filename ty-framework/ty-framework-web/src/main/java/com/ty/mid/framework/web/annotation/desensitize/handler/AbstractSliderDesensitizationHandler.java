@@ -5,6 +5,7 @@ import java.lang.annotation.Annotation;
 
 /**
  * 滑动脱敏处理器抽象类，已实现通用的方法 <p>
+ *
  * @author suyouliang
  */
 public abstract class AbstractSliderDesensitizationHandler<S extends Annotation>

@@ -16,7 +16,6 @@ import com.ty.mid.framework.cache.config.CachePlusConfig;
 import com.ty.mid.framework.cache.configuration.base.AbstractRedisCacheConfiguration;
 import com.ty.mid.framework.cache.constant.CachePlusType;
 import com.ty.mid.framework.cache.support.manager.redis.writer.HashRedisCacheWriter;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.cache.CacheManagerCustomizers;
@@ -36,6 +35,7 @@ import java.util.Objects;
 
 /**
  * Redis cache configuration. <p>
+ *
  * @author Stephane Nicoll <p>
  * @author Mark Paluch <p>
  * @author Ryon Day

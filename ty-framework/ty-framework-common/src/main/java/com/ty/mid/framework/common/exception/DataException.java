@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * 数据异常类 <p>
+ *
  * @author suyouliang <p>
  * @createTime 2023-08-14 15:21
  */
@@ -22,7 +23,7 @@ public class DataException extends BizException {
     }
 
     public DataException(String code, String message) {
-        super(code,message);
+        super(code, message);
     }
 
     public DataException(String message) {

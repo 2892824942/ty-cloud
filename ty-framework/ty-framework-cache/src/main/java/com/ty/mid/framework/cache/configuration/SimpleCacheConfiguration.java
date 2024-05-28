@@ -8,7 +8,7 @@
  * distributed under the License is distributed on an "AS IS" BASIS, <p>
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. <p>
  * See the License for the specific language governing permissions and <p>
- * limitations under the License. 
+ * limitations under the License.
  */
 
 package com.ty.mid.framework.cache.configuration;
@@ -26,7 +26,8 @@ import java.util.List;
 
 /**
  * Simplest cache configuration, usually used as a fallback. <p>
- * @author Stephane Nicoll 
+ *
+ * @author Stephane Nicoll
  */
 @AutoConfigureBefore({CacheAutoConfiguration.class})
 @ConditionalOnMissingBean(CacheManager.class)

@@ -10,6 +10,7 @@ import java.util.Map;
 
 /**
  * 类型数据默认值常量类 <p>
+ *
  * @author suyoulinag
  */
 @Getter

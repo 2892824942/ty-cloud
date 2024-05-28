@@ -13,8 +13,9 @@ import java.util.concurrent.locks.Lock;
 
 /**
  * 抽象幂等校验服务 <p>
+ *
  * @author suyouliang <p>
- * @createTime 2023-08-15 14:36 
+ * @createTime 2023-08-15 14:36
  */
 @Slf4j
 public abstract class AbstractIdempotentService implements IdempotentService {

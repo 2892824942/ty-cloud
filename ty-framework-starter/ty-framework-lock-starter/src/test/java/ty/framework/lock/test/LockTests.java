@@ -1,14 +1,11 @@
 package ty.framework.lock.test;
 
 import com.ty.mid.framework.lock.config.LockConfig;
-import com.ty.mid.framework.lock.decorator.cycle.CycleDetectingLockDecorator;
 import lombok.extern.slf4j.Slf4j;
-import org.checkerframework.checker.units.qual.A;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.integration.support.locks.LockRegistry;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
@@ -16,7 +13,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -46,14 +42,15 @@ public class LockTests {
             boolean b = lock.tryLock(2, TimeUnit.SECONDS);
             if (b) {
                 //do your business code
-                log.info("当前lockRegistry:{}, lockConfig:{}",lockRegistry.getClass().getSimpleName(),lockConfig);
+                log.info("当前lockRegistry:{}, lockConfig:{}", lockRegistry.getClass().getSimpleName(), lockConfig);
             }
         } finally {
             lock.unlock();
         }
     }
 
-    /**obtain
+    /**
+     * obtain
      * 同一进程内多线程获取锁测试
      *
      * @throws Exception
@@ -106,6 +103,7 @@ public class LockTests {
         String result = testService.getValue("noSleep");
         assertEquals(result, "success");
     }
+
     /**
      * 测试业务key
      */
@@ -430,7 +428,7 @@ public class LockTests {
         runnable1.run();
 
 
-        Runnable runnable2=() -> {
+        Runnable runnable2 = () -> {
             Lock aaaa = lockRegistry.obtain("aaaa");
             Lock bbbb = lockRegistry.obtain("bbbb");
             try {
@@ -449,7 +447,6 @@ public class LockTests {
         runnable2.run();
 
         Thread.sleep(1000);
-
 
 
     }

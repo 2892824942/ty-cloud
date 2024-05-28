@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 
 /**
  * No-op cache configuration used to disable caching via configuration. <p>
+ *
  * @author Stephane Nicoll
  */
 @ConditionalOnMissingBean(CacheManager.class)

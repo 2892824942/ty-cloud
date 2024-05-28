@@ -14,6 +14,7 @@ import java.io.InputStreamReader;
 
 /**
  * Request Body 缓存 Wrapper <p>
+ *
  * @author suyouliang
  */
 public class CacheRequestBodyWrapper extends HttpServletRequestWrapper {
@@ -46,24 +47,19 @@ public class CacheRequestBodyWrapper extends HttpServletRequestWrapper {
 
             @Override
             public boolean isFinished() {
-                return false;
+                return inputStream.available() == 0;
             }
 
             @Override
             public boolean isReady() {
-                return false;
+                return true;
             }
 
             @Override
             public void setReadListener(ReadListener readListener) {
-            }
-
-            @Override
-            public int available() {
-                return body.length;
+                throw new UnsupportedOperationException();
             }
 
         };
     }
-
 }

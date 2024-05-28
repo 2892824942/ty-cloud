@@ -10,8 +10,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * 业务异常顶级父类 <p>
+ *
  * @author suyouliang <p>
- * @createTime 2023-08-14 15:21 
+ * @createTime 2023-08-14 15:21
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -21,6 +22,7 @@ public class BaseException extends RuntimeException {
     protected String code = GlobalErrorCodeEnum.EXCEPTION.getCode();
 
     protected String message;
+
     public BaseException(@NotNull BaseCode baseCode) {
         super(baseCode.getMessage());
         this.code = baseCode.getCode();

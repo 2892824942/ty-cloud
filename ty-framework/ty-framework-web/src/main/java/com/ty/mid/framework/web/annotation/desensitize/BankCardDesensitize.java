@@ -7,7 +7,8 @@ import java.lang.annotation.*;
 
 /**
  * 银行卡号 <p>
- * @author suyouliang 
+ *
+ * @author suyouliang
  */
 @Documented
 @Target({ElementType.FIELD})

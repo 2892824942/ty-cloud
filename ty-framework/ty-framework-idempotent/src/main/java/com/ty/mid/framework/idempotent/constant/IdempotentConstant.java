@@ -4,7 +4,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @author suyouliang <p>
- * @createTime 2023-08-15 14:40 
+ * @createTime 2023-08-15 14:40
  */
 public interface IdempotentConstant {
 

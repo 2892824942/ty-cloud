@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 
 /**
  * Banner 的自动配置类 <p>
+ *
  * @author suyoulinag
  */
 @ConditionalOnProperty(prefix = "framework.runner", value = "enable", matchIfMissing = true)

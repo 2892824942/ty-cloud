@@ -27,7 +27,7 @@ public class DynamicBeanAutoConfiguration implements ApplicationListener<Context
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         WebConfig webConfig = webConfigProvider.getIfAvailable();
-        if (Objects.isNull(webConfig)){
+        if (Objects.isNull(webConfig)) {
             return;
         }
         Map<String, WebConfig.Api> customApiMap = webConfig.getCustomApi();

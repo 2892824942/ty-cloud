@@ -17,7 +17,8 @@ import java.util.Optional;
 
 /**
  * 由于重写AbstractLambdaWrapper抄过来的类,后续如优化子类链式调用,可优化 <p>
- * @since 1.4.5 
+ *
+ * @since 1.4.5
  */
 @SuppressWarnings("DuplicatedCode")
 public class WrapperUtils {

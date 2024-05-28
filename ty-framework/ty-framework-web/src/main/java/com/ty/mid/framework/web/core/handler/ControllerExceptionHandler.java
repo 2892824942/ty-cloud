@@ -3,7 +3,6 @@ package com.ty.mid.framework.web.core.handler;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.extra.servlet.ServletUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.ty.mid.framework.common.constant.OrderConstant;
 import com.ty.mid.framework.common.exception.BizException;
 import com.ty.mid.framework.common.pojo.BaseResult;
@@ -14,6 +13,7 @@ import com.ty.mid.framework.core.util.servlet.ServletUtils;
 import com.ty.mid.framework.web.core.model.ApiErrorLog;
 import com.ty.mid.framework.web.core.service.ApiLogService;
 import com.ty.mid.framework.web.core.util.WebFrameworkUtils;
+import com.ty.mid.framework.web.core.util.WebUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
@@ -43,6 +43,7 @@ import static com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum.*;
 /**
  * 全局Controller层异常处理器，将 Exception 翻译成 BaseResult + 对应的异常编号 <p>
  * 1.执行在ApiLogFilter之后,定义的异常处理,从业务上说都是可控的,因此,ApiLogFilter会记录访问成功日志,而不会将异常上下文传递.但是log会打印 <p>
+ *
  * @author suyouliang
  */
 @RestControllerAdvice
@@ -98,7 +99,7 @@ public class ControllerExceptionHandler {
 
     /**
      * 处理 SpringMVC 请求参数缺失
-     *
+     * <p>
      * 例如说，接口上设置了 @RequestParam("xx") 参数，结果并未传递 xx 参数
      */
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
@@ -109,7 +110,7 @@ public class ControllerExceptionHandler {
 
     /**
      * 处理 SpringMVC 请求参数类型错误
-     *
+     * <p>
      * 例如说，接口上设置了 @RequestParam("xx") 参数为 Integer，结果传递 xx 参数类型为 String
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
@@ -172,7 +173,7 @@ public class ControllerExceptionHandler {
 
     /**
      * 处理 SpringMVC 请求地址不存在
-     *
+     * <p>
      * 注意，它需要设置如下两个配置项：
      * 1. spring.mvc.throw-exception-if-no-handler-found 为 true
      * 2. spring.mvc.static-path-pattern 为 /statics/**
@@ -185,7 +186,7 @@ public class ControllerExceptionHandler {
 
     /**
      * 处理 SpringMVC 请求方法不正确
-     *
+     * <p>
      * 例如说，A 接口的方法为 GET 方式，结果请求方法为 POST 方式，导致不匹配
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
@@ -205,7 +206,6 @@ public class ControllerExceptionHandler {
 
     /**
      * 处理框架定义业务异常 BizException
-     *
      */
     @ExceptionHandler(value = BizException.class)
     public Result<?> bizException(BizException ex) {
@@ -273,8 +273,7 @@ public class ControllerExceptionHandler {
         errorLog.setRequestUrl(request.getRequestURI());
         Map<String, Object> requestParams = MapUtil.<String, Object>builder()
                 .put("query", ServletUtil.getParamMap(request))
-                .put("body", JsonUtils.parseObject(ServletUtils.getBody(request), new TypeReference<Map<String, Object>>() {
-                })).build();
+                .put("body", WebUtil.getBody(request)).build();
         errorLog.setRequestParams(requestParams);
         errorLog.setRequestMethod(request.getMethod());
         errorLog.setUserAgent(ServletUtils.getUserAgent(request));

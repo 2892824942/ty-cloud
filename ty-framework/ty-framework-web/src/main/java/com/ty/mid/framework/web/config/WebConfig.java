@@ -32,10 +32,10 @@ public class WebConfig extends AbstractConfig {
      * 具体
      *
      * @see WebConfig#enableMvcUrlPrefix
-     *
+     * <p>
      * value:api 具体
      * @see Api
-     *
+     * <p>
      * 开启enableMvcUrlPrefix后,
      */
 
@@ -80,8 +80,8 @@ public class WebConfig extends AbstractConfig {
 
         /**
          * API 前缀，实现所有 Controller API 的统一前缀
-         *
-         *
+         * <p>
+         * <p>
          * 意义：通过该前缀，避免 Swagger、Actuator 意外通过 Nginx 暴露出来给外部，带来安全性问题
          * 这样，Nginx 只需要配置转发到 /api/* 的所有接口即可。
          */
@@ -93,7 +93,7 @@ public class WebConfig extends AbstractConfig {
          * 示例:
          * 1.**.web.**
          * 2.
-         *
+         * <p>
          * 主要目的是，给该 Controller 设置指定的 {@link #prefix}
          */
         @NotEmpty(message = "Controller 所在包不能为空")
@@ -103,7 +103,7 @@ public class WebConfig extends AbstractConfig {
          * 是否开启uri前缀拼接
          * 当为true时:对应包所有的api的uri将会拼上api.prefix
          * 当为false时:uri将不会拼上api.prefix
-         *
+         * <p>
          * 注意:此参数必须在WebConfig中的enableMvcUrlPrefix开启后才会生效
          */
         private boolean enableMvcUrlPrefix = true;
@@ -137,7 +137,7 @@ public class WebConfig extends AbstractConfig {
         /**
          * 而外排除的uri,命中此规则的uri不会进行ApiLog通知
          * 和excludeUri不同,配置此参数保留系统默认的excludeUri,
-         *
+         * <p>
          * 过滤时,以excludeUri+additionalExcludeUri进行过滤
          */
         @NotNull

@@ -73,7 +73,7 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         if (webConfig.getHashId().isEnable()) {
-            registry.addFormatterForFieldAnnotation(new HashedIdFieldFormatter(webConfig)) ;
+            registry.addFormatterForFieldAnnotation(new HashedIdFieldFormatter(webConfig));
         }
 
     }

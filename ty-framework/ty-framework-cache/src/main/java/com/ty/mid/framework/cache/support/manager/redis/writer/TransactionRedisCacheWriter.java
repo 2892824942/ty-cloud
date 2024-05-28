@@ -34,6 +34,7 @@ import java.util.function.Function;
  * operations spanning multiple Redis interactions like {@code putIfAbsent}. The {@literal locking} counterpart prevents <p>
  * command overlap by setting an explicit lock key and checking against presence of this key which leads to additional <p>
  * requests and potential command wait times. <p>
+ *
  * @author Christoph Strobl <p>
  * @author Mark Paluch <p>
  * @since 2.0

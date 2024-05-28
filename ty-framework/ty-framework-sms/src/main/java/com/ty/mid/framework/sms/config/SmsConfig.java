@@ -1,20 +1,10 @@
 package com.ty.mid.framework.sms.config;
 
-import com.ty.mid.framework.common.constant.DomainConstant;
 import com.ty.mid.framework.core.config.AbstractConfig;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
 
 @EqualsAndHashCode(callSuper = true)
 @ConfigurationProperties(SmsConfig.PREFIX)
@@ -33,7 +23,7 @@ public class SmsConfig extends AbstractConfig {
      * 可开启mock的白名单,默认为空,即:所有用户均为白名单
      * 如配置,则仅白名单中的用户使用mock能力,其他正常走厂商发短信(主要用于非生产环境)
      */
-    private String[] whiteList =new String[]{};
+    private String[] whiteList = new String[]{};
 
     /**
      * 开启框架验证验证码能力,开启后

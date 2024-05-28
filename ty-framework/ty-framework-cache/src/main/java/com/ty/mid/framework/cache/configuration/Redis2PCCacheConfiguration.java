@@ -34,7 +34,8 @@ import java.util.Objects;
  * 实现策略: <p>
  * 1.redis写入延迟到事务提交成功后 <p>
  * 2.事务期间,为保持Redis数据可重复读,增加事务期间读锁,读取数据时,先从缓存中读取,如果缓存中不存在,则从Redis中读取,并将读取的数据写入缓存 <p>
- * @author suyoulaing 
+ *
+ * @author suyoulaing
  */
 @ConditionalOnClass(RedisConnectionFactory.class)
 @AutoConfigureAfter(RedissonAutoConfiguration.class)

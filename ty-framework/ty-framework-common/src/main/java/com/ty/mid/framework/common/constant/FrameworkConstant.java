@@ -7,7 +7,7 @@ import java.util.Map;
 
 /**
  * @author suyouliang <p>
- * @createTime 2023-08-15 10:07 
+ * @createTime 2023-08-15 10:07
  */
 public interface FrameworkConstant {
 

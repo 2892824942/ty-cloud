@@ -22,6 +22,7 @@ package com.ty.mid.framework.common.exception.enums;
  * 第四段，3 位，错误码 <p>
  * 不限制规则。 <p>
  * 一般建议，每个模块自增。 <p>
+ *
  * @author suyouliang
  */
 public class ServiceErrorCodeRange {

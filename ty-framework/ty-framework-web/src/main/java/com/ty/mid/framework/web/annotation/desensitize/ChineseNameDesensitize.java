@@ -8,7 +8,8 @@ import java.lang.annotation.*;
 
 /**
  * 中文名 <p>
- * @author suyouliang 
+ *
+ * @author suyouliang
  */
 @Documented
 @Target({ElementType.FIELD})

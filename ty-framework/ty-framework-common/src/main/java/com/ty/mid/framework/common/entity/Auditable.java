@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
- * 审计参数 
+ * 审计参数
  */
 public interface Auditable<T extends Serializable> extends BaseIdDO<T> {
 

@@ -8,8 +8,9 @@ import javax.validation.constraints.NotNull;
 
 /**
  * 框架异常类 <p>
+ *
  * @author suyouliang <p>
- * @createTime 2023-08-14 15:21 
+ * @createTime 2023-08-14 15:21
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -17,8 +18,9 @@ public class FrameworkException extends BaseException {
     public FrameworkException(@NotNull BaseCode baseCode) {
         super(baseCode);
     }
+
     public FrameworkException(String code, String message) {
-        super(code,message);
+        super(code, message);
     }
 
     public FrameworkException() {

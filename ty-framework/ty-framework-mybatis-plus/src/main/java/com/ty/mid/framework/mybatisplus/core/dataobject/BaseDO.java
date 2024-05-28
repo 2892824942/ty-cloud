@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 /**
  * 基础实体对象 <p>
+ *
  * @author suyoulinag
  */
 @Setter

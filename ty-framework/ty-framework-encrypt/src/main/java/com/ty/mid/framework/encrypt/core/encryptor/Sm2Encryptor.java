@@ -1,9 +1,9 @@
 package com.ty.mid.framework.encrypt.core.encryptor;
 
-import com.ty.mid.framework.encrypt.utils.EncryptUtils;
 import com.ty.mid.framework.encrypt.core.EncryptContext;
 import com.ty.mid.framework.encrypt.enumd.AlgorithmType;
 import com.ty.mid.framework.encrypt.enumd.EncodeType;
+import com.ty.mid.framework.encrypt.utils.EncryptUtils;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -52,7 +52,7 @@ public class Sm2Encryptor extends AbstractEncryptor {
     /**
      * 解密
      *
-     * @param value      待加密字符串
+     * @param value 待加密字符串
      */
     @Override
     public String decrypt(String value) {

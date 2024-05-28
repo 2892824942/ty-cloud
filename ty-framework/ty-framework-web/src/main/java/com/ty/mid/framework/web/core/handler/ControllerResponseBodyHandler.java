@@ -5,7 +5,6 @@ import com.ty.mid.framework.common.pojo.Result;
 import com.ty.mid.framework.web.core.filter.ApiAccessLogFilter;
 import com.ty.mid.framework.web.core.util.WebFrameworkUtils;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -21,7 +20,7 @@ import java.util.Objects;
 /**
  * 全局响应结果（ResponseBody）处理器 <p>
  * 目前，GlobalResponseBodyHandler 的主要作用是，记录 Controller 的返回结果， <p>
- * 方便 {@link ApiAccessLogFilter} 记录访问日志 
+ * 方便 {@link ApiAccessLogFilter} 记录访问日志
  */
 @ControllerAdvice
 public class ControllerResponseBodyHandler implements ResponseBodyAdvice<Object> {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -133,6 +133,7 @@
     <dependencyManagement>
         <dependencies>
             <!-- 统一依赖管理 -->
+            <!--springframework.boot bom依赖-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -140,6 +141,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--springframework.cloud bom依赖-->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -147,6 +149,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--alibaba.cloud bom依赖-->
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
@@ -154,6 +157,16 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--hutool bom依赖-->
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-bom</artifactId>
+                <version>${hutool.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- 框架核心framework -->
             <dependency>
                 <groupId>com.ty</groupId>
                 <artifactId>ty-framework</artifactId>
@@ -599,39 +612,6 @@
                 <groupId>io.github.linpeilie</groupId>
                 <artifactId>mapstruct-plus-spring-boot-starter</artifactId>
                 <version>${mapstruct-plus.version}</version>
-            </dependency>
-
-
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-all</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-            <!-- 加解密依赖包 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-crypto</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- hutool核心依赖包 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-core</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-            <!-- hutool json依赖包 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-json</artifactId>
-                <version>${hutool.version}</version>
-            </dependency>
-
-            <!-- hutool 扩展依赖包 -->
-            <dependency>
-                <groupId>cn.hutool</groupId>
-                <artifactId>hutool-extra</artifactId>
-                <version>${hutool.version}</version>
             </dependency>
 
             <!-- 加密包引入 -->

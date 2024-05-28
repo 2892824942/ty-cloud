@@ -12,7 +12,8 @@ import java.util.List;
 
 /**
  * Sa-Token持久层接口(使用框架自带RedisUtils实现 协议统一) <p>
- * @author Lion Li 
+ *
+ * @author Lion Li
  */
 @Slf4j
 public class CacheSaTokenDao implements SaTokenDao {

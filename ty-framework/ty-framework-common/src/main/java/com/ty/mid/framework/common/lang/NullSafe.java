@@ -4,6 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * 为空安全,可以放心传入null及空集合 <p>
+ *
  * @author suyouliang <p>
  * @createTime 2023-08-15 17:50
  */

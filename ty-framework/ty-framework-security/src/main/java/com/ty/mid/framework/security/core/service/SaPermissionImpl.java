@@ -4,12 +4,14 @@ import cn.dev33.satoken.stp.StpInterface;
 import com.ty.mid.framework.common.model.LoginUser;
 import com.ty.mid.framework.security.utils.LoginHelper;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * sa-token 权限管理实现类  <p>
  * 最简单的默认实现,应该根据需要自己实现
- * @author Lion Li 
+ *
+ * @author Lion Li
  */
 public class SaPermissionImpl implements StpInterface {
 

@@ -47,7 +47,7 @@ public class HashedIdHandlerMethodArgumentResolver implements HandlerMethodArgum
         log.info("resolving hashed id, parameter name: {}", parameterName);
         Class<?> parameterType = parameter.getParameterType();
         WebConfig.HashId hashId = webConfig.getHashId();
-        if (parameterType.isAssignableFrom(String.class)) {
+        if (String.class.isAssignableFrom(parameterType)) {
             String val = webRequest.getParameter(parameterName);
             if (StringUtils.isEmpty(val)) {
                 log.warn("resolve origin id for [p:{} ,v:{}] fail, because parameter value is null or empty!", parameterName, val);
@@ -76,12 +76,12 @@ public class HashedIdHandlerMethodArgumentResolver implements HandlerMethodArgum
             return String.valueOf(HashIdUtil.decode(val, hashId.getSalt(), hashId.getMinLength()));
         }
         //数组形式
-        if (parameter.getParameterType().isAssignableFrom(List.class)||parameter.getParameterType().isAssignableFrom(String[].class)){
+        if (List.class.isAssignableFrom(parameter.getParameterType()) || String[].class.isAssignableFrom(parameter.getParameterType())) {
             String[] parameterValues = webRequest.getParameterValues(parameterName);
-            if (ArrayUtil.isNotEmpty(parameterValues)){
-                return Arrays.stream(parameterValues).map(data -> {
-                    return HashIdUtil.decode(data, hashId.getSalt(), hashId.getMinLength());
-                }).collect(Collectors.toList());
+            if (ArrayUtil.isNotEmpty(parameterValues)) {
+                return Arrays.stream(parameterValues)
+                        .map(data -> HashIdUtil.decode(data, hashId.getSalt(), hashId.getMinLength()))
+                        .collect(Collectors.toList());
             }
         }
 

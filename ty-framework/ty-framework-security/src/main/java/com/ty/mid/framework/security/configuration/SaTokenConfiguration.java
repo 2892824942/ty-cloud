@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Bean;
 
 /**
  * Sa-Token 配置 <p>
+ *
  * @author Lion Li
  */
 public class SaTokenConfiguration {

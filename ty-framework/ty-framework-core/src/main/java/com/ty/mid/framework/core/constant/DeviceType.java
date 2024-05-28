@@ -8,7 +8,8 @@ import lombok.Getter;
 /**
  * 设备类型 <p>
  * 针对一套 用户体系 <p>
- * @author Lion Li 
+ *
+ * @author Lion Li
  */
 @Getter
 @AllArgsConstructor
@@ -18,17 +19,17 @@ public enum DeviceType implements KVResp<String, String> {
     /**
      * pc端
      */
-    PC("1","pc端"),
+    PC("1", "pc端"),
 
     /**
      * app端
      */
-    APP("2","app端"),
+    APP("2", "app端"),
 
     /**
      * 小程序端
      */
-    XCX("3","小程序端");
+    XCX("3", "小程序端");
 
     private final String code;
 

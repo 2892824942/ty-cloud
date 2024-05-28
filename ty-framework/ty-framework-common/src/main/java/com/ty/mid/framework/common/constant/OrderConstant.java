@@ -1,7 +1,7 @@
 package com.ty.mid.framework.common.constant;
 
 /**
- * 越小,优先级越高 
+ * 越小,优先级越高
  */
 public interface OrderConstant {
     /**

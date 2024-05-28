@@ -1,14 +1,16 @@
 <!-- TOC -->
+
 * [项目特点](#项目特点)
 * [一:框架集成](#一框架集成)
-  * [1.引入核心依赖](#1引入核心依赖)
-  * [2.配置相关功能](#2配置相关功能)
+    * [1.引入核心依赖](#1引入核心依赖)
+    * [2.配置相关功能](#2配置相关功能)
 * [二:功能介绍](#二功能介绍)
-  * [1.支持路由鉴权及注解鉴权](#1支持路由鉴权及注解鉴权)
-  * [2.全局用户伪装(增强)](#2全局用户伪装增强)
-  * [3.用户审计信息实现](#3用户审计信息实现)
-  * [4.用户角色菜单鉴权](#4用户角色菜单鉴权)
-  * [5.Swagger模块协同配置](#5swagger模块协同配置)
+    * [1.支持路由鉴权及注解鉴权](#1支持路由鉴权及注解鉴权)
+    * [2.全局用户伪装(增强)](#2全局用户伪装增强)
+    * [3.用户审计信息实现](#3用户审计信息实现)
+    * [4.用户角色菜单鉴权](#4用户角色菜单鉴权)
+    * [5.Swagger模块协同配置](#5swagger模块协同配置)
+
 <!-- TOC -->
 开源地址:https://github.com/2892824942/ty-cloud/blob/main/ty-framework/ty-framework-security
 
@@ -54,6 +56,7 @@ framework:
 ```
 
 saToken配置实例
+
 ```yaml
 sa-token:
   tokenName: token
@@ -69,19 +72,24 @@ sa-token:
 # 二:功能介绍
 
 ## 1.支持路由鉴权及注解鉴权
+
 - 通过exclude-pattern配置,可指定无需路由鉴权路径,跳过路由鉴权
 - 通过enable-annotation,可开启或关闭注解鉴权.无需写对应的filter配置
 
 ## 2.全局用户伪装(增强)
-saToken本身的伪装区别: saToken的伪装是请求级别,即开启伪装仅在当前请求内有效(使用lambda则在lambda内有效) 
+
+saToken本身的伪装区别: saToken的伪装是请求级别,即开启伪装仅在当前请求内有效(使用lambda则在lambda内有效)
 本框架增强了伪装,将伪装生命周期扩展到全局(基于Interceptor实现),一旦开启,将在失效内一直有效,不受请求限制
-使用场景示例:知道用户id的情况下 
+使用场景示例:知道用户id的情况下
+
 - 通过自己的账号直接模拟对应用户,去除造token或找token的成本----非生产环境开发测试使用
 - 生产环境紧急救援 部分B端业务,某些特定的bug不好复现,可能存在紧急救援或用户授权登录B端企业账号处理问题的场景
-注意:使用时慎重!!!!必须保证入口私密,不要在线上直接暴露(通过授权,密码登方式),否则后果自负
+  注意:使用时慎重!!!!必须保证入口私密,不要在线上直接暴露(通过授权,密码登方式),否则后果自负
 
 使用:
+
 - 开启全局用户伪装
+
 ```yaml
 framework:
   security:
@@ -90,7 +98,9 @@ framework:
     #token伪装能力白名单,默认:所有用户均为白名单 设置后:则仅设置的用户可使用token伪装能力
     enable-guise-user-ids: 10001
 ```
+
 - 代码调用设置用户A伪装用户即结束伪装
+
 ```java
 package com.framework.demo.demos.web;
 
@@ -145,11 +155,12 @@ public class OpsController {
 ```
 
 ## 3.用户审计信息实现
+
 当集成service模块时,自动实现审计信息,为service模块提供用户登录上下文信息,完成入库审计字段赋值
 
 ## 4.用户角色菜单鉴权
-登录时,初始化LoginUser权限相关信息,则可自动完成用户角色菜单鉴权
 
+登录时,初始化LoginUser权限相关信息,则可自动完成用户角色菜单鉴权
 
 ```java
  package com.framework.demo.demos.web;
@@ -234,6 +245,7 @@ public class LoginController {
 ```
 
 ## 5.Swagger模块协同配置
+
 当saToken配置中的tokenName配置更改后,swagger模块将同步更改,且token位置也会随saToken配置中,readBody,readHead,readCookie配置联动更改
 
 更详细的使用案例,见:https://github.com/2892824942/framework-demo

@@ -14,6 +14,7 @@ public class LocalFactory implements BaseProviderFactory<LocalSmsImpl, LocalConf
 
     /**
      * 获取建造者实例
+     *
      * @return 建造者实例
      */
     public static LocalFactory instance() {

@@ -11,7 +11,8 @@ import java.util.Set;
 
 /**
  * 用户信息 <p>
- * @author ruoyi 
+ *
+ * @author ruoyi
  */
 @Data
 @NoArgsConstructor
@@ -63,6 +64,7 @@ public class LoginUser implements Serializable {
 
     /**
      * 部分场景需要知道当前是否为登录态
+     *
      * @return 是否为有效登录态
      */
     public boolean isDefaultUser() {

@@ -9,7 +9,7 @@ framework:
     cycle-lock-strategy: throwing
     lock-name-prefix: "prefix"
     lock-name-separator: "-"
-    anti-re-lock-msg:  "重复加锁特定异常"
+    anti-re-lock-msg: "重复加锁特定异常"
   zookeeper:
     address: 127.0.0.1:2181 #zookeeper连接地址
     connection-time-out: 10000 #连接超时时间 毫秒

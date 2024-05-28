@@ -23,7 +23,7 @@ import java.util.Map;
 /**
  * 在 MyBatis Plus 的 BaseMapper 的基础上拓展，提供更多的能力 <p>
  * 1. {@link BaseMapper} 为 MyBatis Plus 的基础接口，提供基础的 CRUD 能力 <p>
- * 2.为 MyBatis Plus 的List接口，快速转换Map能力 
+ * 2.为 MyBatis Plus 的List接口，快速转换Map能力
  */
 public interface BaseMapperX<S extends BaseIdDO<ID>, ID extends Serializable> extends BaseMapper<S> {
     /**

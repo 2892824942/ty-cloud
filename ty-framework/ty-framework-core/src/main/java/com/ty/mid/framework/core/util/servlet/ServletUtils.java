@@ -18,6 +18,7 @@ import java.util.Map;
 
 /**
  * 客户端工具类 <p>
+ *
  * @author suyouliang
  */
 public class ServletUtils {
@@ -89,6 +90,14 @@ public class ServletUtils {
 
     public static boolean isJsonRequest(ServletRequest request) {
         return StrUtil.startWithIgnoreCase(request.getContentType(), MediaType.APPLICATION_JSON_VALUE);
+    }
+
+    public static boolean isFormRequest(ServletRequest request) {
+        return StrUtil.startWithIgnoreCase(request.getContentType(), MediaType.MULTIPART_FORM_DATA_VALUE);
+    }
+
+    public static boolean isFormUrlRequest(ServletRequest request) {
+        return StrUtil.startWithIgnoreCase(request.getContentType(), MediaType.APPLICATION_FORM_URLENCODED_VALUE);
     }
 
     public static String getBody(HttpServletRequest request) {

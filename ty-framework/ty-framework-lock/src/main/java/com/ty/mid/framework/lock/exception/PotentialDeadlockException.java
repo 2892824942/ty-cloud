@@ -18,8 +18,9 @@ import static java.util.Objects.requireNonNull;
  *   at ... <p>
  *   at ... <p>
  * </pre> <p>
- *Instances are logged for the {@code Policies.WARN}, and thrown for {@code Policies.THROW}. <p>
- * @since 13.0 
+ * Instances are logged for the {@code Policies.WARN}, and thrown for {@code Policies.THROW}. <p>
+ *
+ * @since 13.0
  */
 public final class PotentialDeadlockException extends ExampleStackTrace {
 

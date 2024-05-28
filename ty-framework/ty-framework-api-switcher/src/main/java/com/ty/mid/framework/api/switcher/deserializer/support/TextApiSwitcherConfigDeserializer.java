@@ -2,8 +2,9 @@ package com.ty.mid.framework.api.switcher.deserializer.support;
 
 /**
  * 基于文本文件的开关配置 <p>
+ *
  * @author suyouliang <p>
- * @createTime 2023-08-14 19:10 
+ * @createTime 2023-08-14 19:10
  */
 public class TextApiSwitcherConfigDeserializer extends AbstractKeyValueApiSwitcherConfigDeserializer {
     public TextApiSwitcherConfigDeserializer() {

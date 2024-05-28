@@ -15,8 +15,9 @@ import java.util.stream.Collectors;
 
 /**
  * 基于键值对配置的反序列化器 <p>
+ *
  * @author suyouliang <p>
- * @createTime 2023-08-14 18:25 
+ * @createTime 2023-08-14 18:25
  */
 public class AbstractKeyValueApiSwitcherConfigDeserializer extends AbstractApiSwitcherConfigDeserializer {
 

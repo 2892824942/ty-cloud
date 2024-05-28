@@ -22,6 +22,7 @@ import java.util.Objects;
 
 /**
  * General cache condition used with all cache configuration classes. <p>
+ *
  * @author Stephane Nicoll <p>
  * @author Phillip Webb <p>
  * @author Madhura Bhave

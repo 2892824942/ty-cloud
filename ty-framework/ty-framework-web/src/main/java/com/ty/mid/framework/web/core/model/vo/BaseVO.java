@@ -17,8 +17,10 @@ public abstract class BaseVO implements Auditable<Long>, Serializable {
     @HashedId
     private Long id;
     @Schema(description = "创建者id")
+    @HashedId
     private Long creator;
     @Schema(description = " 更新者id")
+    @HashedId
     private Long updater;
     @Schema(description = "创建时间")
     private LocalDateTime createTime = LocalDateTime.now();

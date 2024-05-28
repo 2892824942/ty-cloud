@@ -5,7 +5,6 @@ import com.ty.mid.framework.cache.service.SimpleCacheTestService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
 @SpringBootTest(classes = CacheTestApplication.class)

@@ -10,8 +10,9 @@ import javax.validation.constraints.NotNull;
 /**
  * 业务异常顶级父类 <p>
  * 继承此类的接口返回的错误信息将直接通过全局异常处理抛给用户,使用时需区分 <p>
+ *
  * @author suyouliang <p>
- * @createTime 2023-08-14 15:21 
+ * @createTime 2023-08-14 15:21
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
@@ -21,8 +22,9 @@ public class BizException extends BaseException {
     public BizException(@NotNull BaseCode baseCode) {
         super(baseCode);
     }
+
     public BizException(String code, String message) {
-        super(code,message);
+        super(code, message);
     }
 
     public BizException(String message) {

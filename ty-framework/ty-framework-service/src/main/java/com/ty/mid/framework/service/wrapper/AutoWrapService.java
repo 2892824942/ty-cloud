@@ -81,7 +81,6 @@ public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>
      * 与Service定义一致时使用
      * 具体使用按个人习惯
      *
-     *
      * @param dataPage DO实体的分页参数
      * @return
      */
@@ -93,7 +92,6 @@ public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>
      * 将DO实体的分页参数转换为目标DTO分页参数,与Service定义不一致时使用
      * BaseAutoConvert#covertPage(com.ty.mid.framework.common.pojo.PageResult, java.util.function.Function)
      * 具体使用按个人习惯
-     *
      *
      * @param dataPage DO实体的分页参数
      * @return
@@ -149,6 +147,19 @@ public abstract class AutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>
 
     public List<T> selectListDTO() {
         return convert2DTO(super.selectList());
+    }
+
+
+    public List<T> selectListByIdsDTO(Collection<?> ids) {
+        return convert2DTO(super.selectListByIds(ids));
+    }
+
+    public Map<Long, T> selectMapByIdsDTO(Collection<?> ids) {
+        return IterUtil.toMap(selectListByIdsDTO(ids), BaseIdDO::getId);
+    }
+
+    public <K> Map<K, T> selectMapByIdsDTO(Collection<?> ids, SFunction<T, K> keyField) {
+        return IterUtil.toMap(selectListByIdsDTO(ids), keyField);
     }
 
     public Map<Long, T> selectMapDTO() {

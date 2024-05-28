@@ -13,7 +13,8 @@ import java.util.Arrays;
 
 /**
  * 过滤 API 请求的过滤器 <p>
- * @author suyouliang 
+ *
+ * @author suyouliang
  */
 @RequiredArgsConstructor
 public abstract class ApiRequestFilter extends OncePerRequestFilter {

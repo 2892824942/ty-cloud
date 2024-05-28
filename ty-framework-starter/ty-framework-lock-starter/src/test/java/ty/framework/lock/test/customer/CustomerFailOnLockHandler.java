@@ -1,7 +1,7 @@
 package ty.framework.lock.test.customer;
 
-import com.ty.mid.framework.lock.handler.lock.FailOnLockCustomerHandler;
 import com.ty.mid.framework.lock.core.LockInfo;
+import com.ty.mid.framework.lock.handler.lock.FailOnLockCustomerHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 

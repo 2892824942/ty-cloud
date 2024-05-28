@@ -7,7 +7,8 @@ import java.lang.annotation.Annotation;
 
 /**
  * {@link SliderDesensitize} 的脱敏处理器 <p>
- * @author suyouliang 
+ *
+ * @author suyouliang
  */
 public class DefaultSliderDesensitizationHandle<S extends Annotation> extends AbstractSliderDesensitizationHandler<S> {
 }

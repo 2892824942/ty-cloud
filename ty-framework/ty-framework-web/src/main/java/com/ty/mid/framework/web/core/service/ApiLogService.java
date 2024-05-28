@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 
 /**
  * API 访问日志 Framework Service 接口 <p>
- * @author suyouliang 
+ *
+ * @author suyouliang
  */
 @NoArgsConstructor
 public class ApiLogService {

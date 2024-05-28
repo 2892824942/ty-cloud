@@ -14,7 +14,8 @@ import static java.util.Arrays.asList;
 
 /**
  * Collection 工具类 <p>
- * @author suyoulinag 
+ *
+ * @author suyoulinag
  */
 public class CollectionUtils {
 

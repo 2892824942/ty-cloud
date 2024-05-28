@@ -17,7 +17,7 @@ import java.util.Set;
  *   at ... <p>
  *   at ... <p>
  *   at com...MyClass.someMethodThatAcquiresLockB(MyClass.java:123) <p>
- * </pre> 
+ * </pre>
  */
 public class ExampleStackTrace extends IllegalStateException {
 

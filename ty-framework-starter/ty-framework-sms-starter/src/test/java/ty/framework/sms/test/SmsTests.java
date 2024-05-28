@@ -1,6 +1,5 @@
 package ty.framework.sms.test;
 
-import com.ty.mid.framework.core.spring.SpringContextHelper;
 import com.ty.mid.framework.sms.local.LocalConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

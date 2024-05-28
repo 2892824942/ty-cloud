@@ -68,6 +68,7 @@ public class MybatisAutoConfiguration {
 
     /**
      * 加密拦截器
+     *
      * @param encryptorManager
      * @param encryptorConfig
      * @return
@@ -77,8 +78,10 @@ public class MybatisAutoConfiguration {
     public MybatisEncryptInterceptor mybatisEncryptInterceptor(EncryptorManager encryptorManager, EncryptorConfig encryptorConfig) {
         return new MybatisEncryptInterceptor(encryptorManager, encryptorConfig);
     }
+
     /**
      * 解密拦截器
+     *
      * @param encryptorManager
      * @param encryptorConfig
      * @return

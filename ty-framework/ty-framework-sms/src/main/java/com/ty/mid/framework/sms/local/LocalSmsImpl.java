@@ -45,14 +45,15 @@ public class LocalSmsImpl implements SmsBlend {
     public SmsResponse sendMessage(String phone, String message) {
         log.info("send message: phone={}, message={}", phone, message);
         return getResponse(new JSONObject()
-            .set("phone", phone)
-            .set("message", message));
+                .set("phone", phone)
+                .set("message", message));
     }
 
     /**
-     *  sendMessage
+     * sendMessage
      * <p>说明：发送固定消息模板多模板参数短信
-     * @param  phone 接收短信的手机号
+     *
+     * @param phone    接收短信的手机号
      * @param messages 模板内容
      * @author :Wind
      */
@@ -60,8 +61,8 @@ public class LocalSmsImpl implements SmsBlend {
     public SmsResponse sendMessage(String phone, LinkedHashMap<String, String> messages) {
         log.info("send message: phone={}, messages={}", phone, messages);
         return getResponse(new JSONObject()
-            .set("phone", phone)
-            .set("messages", new JSONObject(messages)));
+                .set("phone", phone)
+                .set("messages", new JSONObject(messages)));
     }
 
     /**
@@ -76,9 +77,9 @@ public class LocalSmsImpl implements SmsBlend {
     public SmsResponse sendMessage(String phone, String templateId, LinkedHashMap<String, String> messages) {
         log.info("send message: phone={}, templateId={}, messages={}", phone, templateId, messages);
         return getResponse(new JSONObject()
-            .set("phone", phone)
-            .set("templateId", templateId)
-            .set("messages", new JSONObject(messages)));
+                .set("phone", phone)
+                .set("templateId", templateId)
+                .set("messages", new JSONObject(messages)));
     }
 
     /**
@@ -91,8 +92,8 @@ public class LocalSmsImpl implements SmsBlend {
     public SmsResponse massTexting(List<String> phones, String message) {
         log.info("mass texting: phones={}, message={}", phones, message);
         return getResponse(new JSONObject()
-            .set("phones", phones)
-            .set("message", message));
+                .set("phones", phones)
+                .set("message", message));
     }
 
     /**
@@ -105,9 +106,9 @@ public class LocalSmsImpl implements SmsBlend {
     public SmsResponse massTexting(List<String> phones, String templateId, LinkedHashMap<String, String> messages) {
         log.info("mass texting: phones={}, templateId={}, messages={}", phones, templateId, messages);
         return getResponse(new JSONObject()
-            .set("phones", phones)
-            .set("templateId", templateId)
-            .set("messages", new JSONObject(messages)));
+                .set("phones", phones)
+                .set("templateId", templateId)
+                .set("messages", new JSONObject(messages)));
     }
 
     /**
@@ -124,8 +125,8 @@ public class LocalSmsImpl implements SmsBlend {
         log.info("send message asynchronously: phone={}, message={}", phone, message);
         // do nothing
         callBack.callBack(getResponse(new JSONObject()
-            .set("phone", phone)
-            .set("message", message)));
+                .set("phone", phone)
+                .set("message", message)));
     }
 
     /**
@@ -156,9 +157,9 @@ public class LocalSmsImpl implements SmsBlend {
         log.info("send message asynchronously: phone={}, templateId={}, messages={}", phone, templateId, messages);
         // do nothing
         callBack.callBack(getResponse(new JSONObject()
-            .set("phone", phone)
-            .set("templateId", templateId)
-            .set("messages", new JSONObject(messages))));
+                .set("phone", phone)
+                .set("templateId", templateId)
+                .set("messages", new JSONObject(messages))));
     }
 
     /**
@@ -237,7 +238,7 @@ public class LocalSmsImpl implements SmsBlend {
      *
      * @param resJson      厂商的返回信息
      * @author :Wind
-    * */
+     * */
     private SmsResponse getResponse(JSONObject resJson) {
         SmsResponse smsResponse = new SmsResponse();
         smsResponse.setSuccess(true);

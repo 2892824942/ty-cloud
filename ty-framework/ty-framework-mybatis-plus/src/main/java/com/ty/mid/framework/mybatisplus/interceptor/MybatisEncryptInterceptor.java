@@ -4,11 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
+import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import com.ty.mid.framework.encrypt.core.EncryptContext;
 import com.ty.mid.framework.encrypt.core.EncryptorManager;
 import com.ty.mid.framework.encrypt.enumd.AlgorithmType;
 import com.ty.mid.framework.encrypt.enumd.EncodeType;
-import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -30,9 +30,9 @@ import java.util.*;
  */
 @Slf4j
 @Intercepts({@Signature(
-    type = ParameterHandler.class,
-    method = "setParameters",
-    args = {PreparedStatement.class})
+        type = ParameterHandler.class,
+        method = "setParameters",
+        args = {PreparedStatement.class})
 })
 @AllArgsConstructor
 public class MybatisEncryptInterceptor implements Interceptor {
@@ -73,7 +73,7 @@ public class MybatisEncryptInterceptor implements Interceptor {
         }
         if (sourceObject instanceof List<?>) {
             List<?> sourceList = (List<?>) sourceObject;
-            if(CollUtil.isEmpty(sourceList)) {
+            if (CollUtil.isEmpty(sourceList)) {
                 return;
             }
             // 判断第一个元素是否含有注解。如果没有直接返回，提高效率

@@ -17,7 +17,7 @@ import java.util.concurrent.TimeUnit;
  * @date 2022/03/26 <p>
  * Content :加锁注解 <p>
  * 存在本类定义，且lockConfig存在同样定义时，本类定义优先级更高 <p>
- * 当使用空值时，则使用全局的lockConfig设定的值 
+ * 当使用空值时，则使用全局的lockConfig设定的值
  */
 @Target(value = {ElementType.METHOD, ElementType.TYPE})
 @Retention(value = RetentionPolicy.RUNTIME)

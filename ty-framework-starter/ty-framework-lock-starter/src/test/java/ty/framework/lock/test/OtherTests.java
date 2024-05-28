@@ -3,7 +3,6 @@ package ty.framework.lock.test;
 import com.google.common.util.concurrent.CycleDetectingLockFactory;
 import com.ty.mid.framework.lock.core.LockInfo;
 import com.ty.mid.framework.lock.decorator.cycle.CycleDetectingLockDecorator;
-import com.ty.mid.framework.lock.decorator.cycle.LockGraphNode;
 import com.ty.mid.framework.lock.lock.ZkLock;
 import com.ty.mid.framework.lock.strategy.CycleLockStrategy;
 import lombok.extern.slf4j.Slf4j;
@@ -50,9 +49,9 @@ public class OtherTests {
         try {
             aaaa.lock();
             bbbb.lock();
-        }catch (Exception e){
+        } catch (Exception e) {
             throw e;
-        }finally {
+        } finally {
             aaaa.unlock();
             bbbb.unlock();
         }
@@ -60,9 +59,9 @@ public class OtherTests {
         try {
             bbbb.lock();
             aaaa.lock();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             bbbb.unlock();
             aaaa.unlock();
         }
@@ -83,7 +82,7 @@ public class OtherTests {
 
         Runnable runnable1 = () -> {
             Lock aaaa = new CycleDetectingLockDecorator(new ReentrantLock(), lockInfoA);
-            Lock bbbb = new CycleDetectingLockDecorator(new ReentrantLock(),lockInfoB);
+            Lock bbbb = new CycleDetectingLockDecorator(new ReentrantLock(), lockInfoB);
             try {
                 aaaa.lock();
                 bbbb.lock();
@@ -98,9 +97,9 @@ public class OtherTests {
         runnable1.run();
 
 
-        Runnable runnable2=() -> {
+        Runnable runnable2 = () -> {
             Lock aaaa = new CycleDetectingLockDecorator(new ReentrantLock(), lockInfoA);
-            Lock bbbb = new CycleDetectingLockDecorator(new ReentrantLock(),lockInfoB);
+            Lock bbbb = new CycleDetectingLockDecorator(new ReentrantLock(), lockInfoB);
             try {
                 bbbb.lock();
                 aaaa.lock();
@@ -117,7 +116,6 @@ public class OtherTests {
         runnable2.run();
 
         Thread.sleep(1000);
-
 
 
     }

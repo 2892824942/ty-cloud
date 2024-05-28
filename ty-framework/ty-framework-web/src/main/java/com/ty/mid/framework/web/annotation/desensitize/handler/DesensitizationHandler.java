@@ -10,7 +10,8 @@ import java.lang.annotation.Annotation;
 
 /**
  * 脱敏处理器接口 <p>
- * @author suyouliang 
+ *
+ * @author suyouliang
  */
 public interface DesensitizationHandler<S extends Annotation> {
 

@@ -18,7 +18,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * 可缓存service的定义 
+ * 可缓存service的定义
  */
 @SuppressWarnings("unchecked")
 public interface AutoWrapper<S extends BaseDO, T extends BaseIdDO<Long>> {

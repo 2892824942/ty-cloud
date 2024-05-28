@@ -21,6 +21,7 @@ import javax.annotation.Resource;
 
 /**
  * 权限安全配置 <p>
+ *
  * @author Lion Li
  */
 @EnableConfigurationProperties(SecurityConfig.class)
@@ -45,7 +46,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
                     .notMatch(DomainConstant.System.DEFAULT_EXCLUDE_URI)
                     .check(r -> StpUtil.checkLogin());
         }).isAnnotation(securityConfig.isEnableAnnotation())).addPathPatterns("/**");
-        if (securityConfig.isEnableGuise()){
+        if (securityConfig.isEnableGuise()) {
             //全局用户伪装
             registry.addInterceptor(new UserGuiseInterceptor(securityConfig));
         }

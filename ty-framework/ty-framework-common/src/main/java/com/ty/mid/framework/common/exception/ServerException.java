@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 import javax.validation.constraints.NotNull;
 
 /**
- * 服务器异常 Exception 
+ * 服务器异常 Exception
  */
 @Data
 @EqualsAndHashCode(callSuper = true)

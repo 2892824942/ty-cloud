@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 /**
  * 业务异常类 <p>
+ *
  * @author suyouliang <p>
  * @createTime 2023-08-14 15:21
  */
@@ -21,7 +22,7 @@ public class ParamException extends BizException {
     }
 
     public ParamException(String code, String message) {
-        super(code,message);
+        super(code, message);
     }
 
     public ParamException(String message) {

@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
  * 一:抽象的带缓存service，实现自动缓存数据的功能 <p>
  * 1.缓存Map对象 <p>
  * 2.缓存使用JCache api,支持key集合查询及删除 <p>
+ *
  * @link com.ty.mid.framework.service.cache.support.DefaultServiceCacheLoader <p>
  * -如果缓存相关业务需要强一致性,切勿使用此方式,参考缓存模块-Redis2PCCacheManager <p>
  * @see CacheAutoWrapService#jCacheCacheManager <p>
@@ -40,7 +41,7 @@ import java.util.stream.Collectors;
  * 使用说明: <p>
  * -如果缓存相关业务需要缓存即刻生效,需要手动干预缓存(建议直接删除)已达到增删改后自动更新缓存的目的 <p>
  * -如果缓存相关业务不需要即刻生效,可设置缓存更新时间或者通过cache加载管理器统一处理 <p>
- * 二:集成了自动装载Service 
+ * 二:集成了自动装载Service
  */
 @Slf4j
 public abstract class CacheAutoWrapService<S extends BaseDO, T extends BaseIdDO<Long>, M extends BaseMapperX<S, Long>> extends AutoWrapService<S, T, M> implements BaseCacheService<S, T> {

@@ -15,6 +15,7 @@ import java.util.List;
 
 /**
  * List<String> 的类型转换器实现类，对应数据库的 varchar 类型 <p>
+ *
  * @author suyoulinag <p>
  * @since 2022 3/23 12:50:15
  */

@@ -5,7 +5,8 @@ import java.sql.DriverManager;
 
 /**
  * JDBC 工具类 <p>
- * @author suyoulinag 
+ *
+ * @author suyoulinag
  */
 public class JdbcUtils {
 

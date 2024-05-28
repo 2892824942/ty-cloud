@@ -3,12 +3,13 @@ package com.ty.mid.framework.mybatisplus.interceptor;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
+import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import com.ty.mid.framework.encrypt.core.EncryptContext;
 import com.ty.mid.framework.encrypt.core.EncryptorManager;
 import com.ty.mid.framework.encrypt.enumd.AlgorithmType;
 import com.ty.mid.framework.encrypt.enumd.EncodeType;
-import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +17,6 @@ import org.apache.ibatis.executor.resultset.ResultSetHandler;
 import org.apache.ibatis.plugin.*;
 
 import java.lang.reflect.Field;
-import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.*;
 
@@ -28,9 +28,9 @@ import java.util.*;
  */
 @Slf4j
 @Intercepts({@Signature(
-    type = ResultSetHandler.class,
-    method = "handleResultSets",
-    args = {Statement.class})
+        type = ResultSetHandler.class,
+        method = "handleResultSets",
+        args = {Statement.class})
 })
 @AllArgsConstructor
 public class MybatisDecryptInterceptor implements Interceptor {
@@ -64,7 +64,7 @@ public class MybatisDecryptInterceptor implements Interceptor {
         }
         if (sourceObject instanceof List<?>) {
             List<?> sourceList = (List<?>) sourceObject;
-            if(CollUtil.isEmpty(sourceList)) {
+            if (CollUtil.isEmpty(sourceList)) {
                 return;
             }
             // 判断第一个元素是否含有注解。如果没有直接返回，提高效率
@@ -93,7 +93,8 @@ public class MybatisDecryptInterceptor implements Interceptor {
      * @return 加密后结果
      */
     private String decryptField(String value, Field field) {
-        if (ObjectUtil.isNull(value)) {
+        //为null或空字符均不处理
+        if (StrUtil.isEmpty(value)) {
             return null;
         }
         EncryptField encryptField = field.getAnnotation(EncryptField.class);

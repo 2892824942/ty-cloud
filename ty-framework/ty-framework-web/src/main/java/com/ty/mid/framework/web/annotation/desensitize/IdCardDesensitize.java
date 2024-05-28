@@ -7,7 +7,8 @@ import java.lang.annotation.*;
 
 /**
  * 身份证 <p>
- * @author suyouliang 
+ *
+ * @author suyouliang
  */
 @Documented
 @Target({ElementType.FIELD})

@@ -1,10 +1,10 @@
 package com.ty.mid.framework.mybatisplus.core.handler;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
+import com.ty.mid.framework.common.audit.AuditorInfoResolver;
 import com.ty.mid.framework.common.entity.Auditable;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.core.util.ThreadUtils;
-import com.ty.mid.framework.common.audit.AuditorInfoResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 

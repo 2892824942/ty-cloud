@@ -4,6 +4,7 @@ import com.ty.mid.framework.common.exception.FrameworkException;
 
 /**
  * api 开关初始化异常 <p>
+ *
  * @author suyouliang <p>
  * @createTime 2023-08-14 16:50
  */

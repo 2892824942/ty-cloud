@@ -15,7 +15,7 @@
         加密模块
     </description>
 
-	<dependencies>
+    <dependencies>
         <dependency>
             <groupId>com.ty</groupId>
             <artifactId>ty-framework-core</artifactId>

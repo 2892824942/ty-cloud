@@ -1,6 +1,5 @@
 package com.ty.mid.framework.web.mvc;
 
-import cn.hutool.core.util.ReflectUtil;
 import com.ty.mid.framework.common.util.HashIdUtil;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
 import com.ty.mid.framework.web.annotation.desensitize.HashedId;
@@ -11,13 +10,13 @@ import org.springframework.format.AnnotationFormatterFactory;
 import org.springframework.format.Parser;
 import org.springframework.format.Printer;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
  * 对于不经过序列化,入参和出参情况下HashId注解处理
  * 如直接使用Param请求
  * 注:方法注入时已经判断开启Hashed能力,所以方法直接进行数据操作
+ * 目前可以处理集合类,Long基本类型,数组等
  */
 @Data
 @NoArgsConstructor

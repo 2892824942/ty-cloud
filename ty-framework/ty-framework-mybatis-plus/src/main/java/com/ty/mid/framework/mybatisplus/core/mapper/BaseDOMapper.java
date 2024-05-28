@@ -3,7 +3,6 @@ package com.ty.mid.framework.mybatisplus.core.mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.ty.mid.framework.mybatisplus.core.dataobject.BaseDO;
 import org.apache.ibatis.annotations.Mapper;
-import org.mybatis.spring.annotation.MapperScan;
 
 /**
  * 在使用存在父类的泛型的Lambda表达式时会报错： <p>
@@ -23,7 +22,7 @@ import org.mybatis.spring.annotation.MapperScan;
  * 但是没有单独缓存父类的信息，所以{@code COLUMN_CACHE_MAP}中没有相关缓存，就报错了。 <p>
  * 因此我们单独为{@link BaseDO}添加一个的Mapper类，这样他就会缓存该类的信息了。 <p>
  * 另外一个解决方案是给相关Wrapper指定泛型类型，告诉mp让他加载子类的字段信息，也可以解决该问题： <p>
- * 使用{@link com.baomidou.mybatisplus.core.conditions.AbstractWrapper#setEntityClass(Class)} 
+ * 使用{@link com.baomidou.mybatisplus.core.conditions.AbstractWrapper#setEntityClass(Class)}
  */
 @Mapper
 public interface BaseDOMapper extends BaseMapper<BaseDO> {

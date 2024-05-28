@@ -17,11 +17,10 @@ import net.sf.jsqlparser.schema.Table;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
- * MyBatis 工具类 
+ * MyBatis 工具类
  */
 public class MyBatisUtils {
 
@@ -34,7 +33,7 @@ public class MyBatisUtils {
 
         // 排序字段:默认降序排列
         if (!CollectionUtil.isEmpty(orderFields)) {
-            page.addOrder(orderFields.stream().map(sortingField -> StrUtil.equals(SortParam.ORDER_ASC,sortingField.getOrder(),true) ?
+            page.addOrder(orderFields.stream().map(sortingField -> StrUtil.equals(SortParam.ORDER_ASC, sortingField.getOrder(), true) ?
                             OrderItem.asc(sortingField.getField()) : OrderItem.desc(sortingField.getField()))
                     .collect(Collectors.toList()));
         }
@@ -57,7 +56,7 @@ public class MyBatisUtils {
 
     /**
      * 获得 Table 对应的表名
-     *
+     * <p>
      * 兼容 MySQL 转义表名 `t_xxx`
      *
      * @param table 表

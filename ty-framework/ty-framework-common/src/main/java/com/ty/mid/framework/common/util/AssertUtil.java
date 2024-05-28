@@ -190,7 +190,7 @@ public class AssertUtil {
      * 数据应在范围内
      */
     public static void in(String data, Iterable<?> dataIterator, String errorMessage) {
-        in(data, dataIterator,DEFAULT_ERROR_CODE, errorMessage);
+        in(data, dataIterator, DEFAULT_ERROR_CODE, errorMessage);
     }
 
     /**

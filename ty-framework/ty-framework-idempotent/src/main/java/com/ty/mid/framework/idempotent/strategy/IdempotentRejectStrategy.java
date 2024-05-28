@@ -2,8 +2,9 @@ package com.ty.mid.framework.idempotent.strategy;
 
 /**
  * 幂等拒绝策略 <p>
+ *
  * @author suyouliang <p>
- * @createTime 2023-08-15 14:22 
+ * @createTime 2023-08-15 14:22
  */
 public enum IdempotentRejectStrategy {
 

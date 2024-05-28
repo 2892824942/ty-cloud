@@ -3,8 +3,6 @@ package com.ty.mid.framework.web.core.filter;
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.StrUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum;
 import com.ty.mid.framework.common.pojo.BaseResult;
 import com.ty.mid.framework.common.util.JsonUtils;
@@ -14,6 +12,7 @@ import com.ty.mid.framework.web.config.WebConfig;
 import com.ty.mid.framework.web.core.model.ApiAccessLog;
 import com.ty.mid.framework.web.core.service.ApiLogService;
 import com.ty.mid.framework.web.core.util.WebFrameworkUtils;
+import com.ty.mid.framework.web.core.util.WebUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
@@ -24,13 +23,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
 import java.util.Map;
 
 
 /**
  * API 访问日志 Filter <p>
- * @author suyouliang 
+ *
+ * @author suyouliang
  */
 @Slf4j
 public class ApiAccessLogFilter extends ApiRequestFilter {
@@ -53,11 +52,7 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
         LocalDateTime beginTime = LocalDateTime.now();
         // 提前获得参数，避免 XssFilter 过滤处理
         Map<String, String> queryString = ServletUtils.getParamMap(request);
-        //解析出的requestBody中有很多\r\n以及空字符,这里处理
-        Map<String, Object> bodyMap = StrUtil.isNotBlank(ServletUtils.getBody(request))
-                ? JsonUtils.parseObject(ServletUtils.getBody(request), new TypeReference<Map<String, Object>>() {})
-                : Collections.emptyMap();
-
+        Map<String, Object> bodyMap = WebUtil.getBody(request);
         try {
             // 继续过滤器
             filterChain.doFilter(request, response);
@@ -70,8 +65,8 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
         }
     }
 
-    private void createApiAccessLog(HttpServletRequest request, LocalDateTime beginTime,
-                                    Map<String, String> queryString, Map<String, Object> requestBody, Exception ex) {
+    public void createApiAccessLog(HttpServletRequest request, LocalDateTime beginTime,
+                                   Map<String, String> queryString, Map<String, Object> requestBody, Exception ex) {
         ApiAccessLog accessLog = new ApiAccessLog();
         try {
             this.buildApiAccessLogDTO(accessLog, request, beginTime, queryString, requestBody, ex);
@@ -103,7 +98,7 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
         accessLog.setTraceId(TracerUtils.getTraceId());
         accessLog.setApplicationName(applicationName);
         accessLog.setRequestUrl(request.getRequestURI());
-
+        //query是直接获取的request.paramMap参数,此参数通过param,form-data表单(body),form-urlencoded表单(body)等方式传递,所以具体参数需要根据不同的方式分析
         Map<String, Object> requestParams = MapUtil.<String, Object>builder().put("query", queryString).put("body", requestBody).build();
         accessLog.setRequestParams(requestParams);
         accessLog.setRequestMethod(request.getMethod());
