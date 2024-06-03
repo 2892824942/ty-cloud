@@ -37,6 +37,11 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-ui</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ty</groupId>
+            <artifactId>ty-framework-encrypt</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
     </dependencies>
 </project>

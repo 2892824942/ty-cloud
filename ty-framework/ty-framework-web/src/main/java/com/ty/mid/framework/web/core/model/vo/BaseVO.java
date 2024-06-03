@@ -1,7 +1,7 @@
 package com.ty.mid.framework.web.core.model.vo;
 
 import com.ty.mid.framework.common.entity.Auditable;
-import com.ty.mid.framework.web.annotation.desensitize.HashedId;
+import com.ty.mid.framework.encrypt.annotation.HashedId;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 

@@ -1,6 +1,9 @@
 package com.ty.mid.framework.encrypt.enumd;
 
 import com.ty.mid.framework.encrypt.core.encryptor.*;
+import com.ty.mid.framework.encrypt.core.encryptor.common.*;
+import com.ty.mid.framework.encrypt.core.encryptor.desensitize.handler.DefaultRegexDesensitizeEncryptor;
+import com.ty.mid.framework.encrypt.core.encryptor.hashedid.HashedIdEncryptor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -42,7 +45,24 @@ public enum AlgorithmType {
     /**
      * sm4
      */
-    SM4(Sm4Encryptor.class);
+    SM4(Sm4Encryptor.class),
+    /**
+     * HashId
+     */
+    HASHED_ID(HashedIdEncryptor .class),
+
+    /**
+     * 区间脱敏
+     */
+   REGEX_DESENSITIZE(DefaultRegexDesensitizeEncryptor.class),
+
+    /**
+     * 滑动脱敏
+     */
+    SLIDER_DESENSITIZE(DefaultRegexDesensitizeEncryptor.class),
+
+
+    ;
 
     private final Class<? extends AbstractEncryptor> clazz;
 }

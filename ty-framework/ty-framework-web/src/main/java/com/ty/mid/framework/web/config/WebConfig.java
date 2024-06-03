@@ -50,10 +50,6 @@ public class WebConfig extends AbstractConfig {
     private Xss xss = new Xss();
 
     /**
-     * hashId配置
-     */
-    private HashId hashId = new HashId();
-    /**
      * 是否开启uri前缀拼接,此参数主要控制所有customApi中的api.prefix
      * 当为true时:对应包所有的api的uri将会拼上api.prefix(不建议开启,开启后idea搜索无法自动匹配此前缀,建议手动在controller上加前缀)
      * 当为false时:uri将不会拼上api.prefix
@@ -158,27 +154,6 @@ public class WebConfig extends AbstractConfig {
          * 需要排除的 URL，默认为空
          */
         private List<String> excludeUrls = Collections.emptyList();
-
-    }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class HashId {
-
-        /**
-         * 是否开启，默认为 true
-         */
-        private boolean enable = true;
-        /**
-         * 自定义盐
-         */
-        private String salt = "helloWorld123";
-
-        /**
-         * 最小长度
-         */
-        private int minLength = 8;
 
     }
 

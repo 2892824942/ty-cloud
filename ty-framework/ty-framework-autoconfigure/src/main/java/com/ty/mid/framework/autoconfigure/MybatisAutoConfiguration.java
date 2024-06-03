@@ -7,12 +7,13 @@ import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerIntercept
 import com.ty.mid.framework.common.audit.AuditorInfoResolver;
 import com.ty.mid.framework.common.audit.DefaultLongAuditorInfoResolver;
 import com.ty.mid.framework.encrypt.config.EncryptorConfig;
-import com.ty.mid.framework.encrypt.core.EncryptorManager;
+import com.ty.mid.framework.encrypt.core.manager.EncryptorManager;
 import com.ty.mid.framework.mybatisplus.core.handler.AuditorMetaObjectHandler;
 import com.ty.mid.framework.mybatisplus.interceptor.MybatisDecryptInterceptor;
 import com.ty.mid.framework.mybatisplus.interceptor.MybatisEncryptInterceptor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -27,7 +28,6 @@ import java.util.Iterator;
  */
 
 @MapperScan("com.ty.mid.framework.mybatisplus.core.mapper")
-@EnableConfigurationProperties(EncryptorConfig.class)
 public class MybatisAutoConfiguration {
 
     @Bean
@@ -70,26 +70,25 @@ public class MybatisAutoConfiguration {
      * 加密拦截器
      *
      * @param encryptorManager
-     * @param encryptorConfig
      * @return
      */
     @Bean
+    @ConditionalOnBean()
     @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
-    public MybatisEncryptInterceptor mybatisEncryptInterceptor(EncryptorManager encryptorManager, EncryptorConfig encryptorConfig) {
-        return new MybatisEncryptInterceptor(encryptorManager, encryptorConfig);
+    public MybatisEncryptInterceptor mybatisEncryptInterceptor(EncryptorManager encryptorManager) {
+        return new MybatisEncryptInterceptor(encryptorManager);
     }
 
     /**
      * 解密拦截器
      *
      * @param encryptorManager
-     * @param encryptorConfig
      * @return
      */
     @Bean
     @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
-    public MybatisDecryptInterceptor mybatisDecryptInterceptor(EncryptorManager encryptorManager, EncryptorConfig encryptorConfig) {
-        return new MybatisDecryptInterceptor(encryptorManager, encryptorConfig);
+    public MybatisDecryptInterceptor mybatisDecryptInterceptor(EncryptorManager encryptorManager) {
+        return new MybatisDecryptInterceptor(encryptorManager);
     }
 
 }

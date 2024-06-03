@@ -1,9 +1,11 @@
 package com.ty.mid.framework.encrypt.config;
 
-import com.ty.mid.framework.encrypt.core.EncryptorManager;
+import com.ty.mid.framework.encrypt.annotation.EncryptField;
+import com.ty.mid.framework.encrypt.core.manager.*;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 
 /**
  * 加解密配置
@@ -16,8 +18,19 @@ import org.springframework.context.annotation.Bean;
 public class EncryptorAutoConfiguration {
 
     @Bean
-    public EncryptorManager encryptorManager() {
-        return new EncryptorManager();
+    @Primary
+    public CommonEncryptorManager commonEncryptorManager(EncryptorConfig encryptorConfig) {
+        return new CommonEncryptorManager(encryptorConfig);
+    }
+
+    @Bean
+    public DesensitizeEncryptorManager desensitizeEncryptorManager(EncryptorConfig encryptorConfig) {
+        return new DesensitizeEncryptorManager(encryptorConfig);
+    }
+
+    @Bean
+    public HashIdEncryptorManager hashIdEncryptorManager(EncryptorConfig encryptorConfig) {
+        return new HashIdEncryptorManager(encryptorConfig);
     }
 
 

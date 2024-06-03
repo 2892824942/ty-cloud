@@ -12,8 +12,9 @@ import java.lang.annotation.*;
  */
 @Documented
 @Inherited
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
+@EncryptField
 public @interface EncryptField {
 
     /**

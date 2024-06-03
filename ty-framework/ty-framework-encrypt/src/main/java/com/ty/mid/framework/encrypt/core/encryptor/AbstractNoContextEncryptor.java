@@ -1,8 +1,6 @@
 package com.ty.mid.framework.encrypt.core.encryptor;
 
 import com.ty.mid.framework.encrypt.core.context.EncryptContext;
-import com.ty.mid.framework.encrypt.core.IEncryptor;
-import lombok.NoArgsConstructor;
 
 /**
  * 所有加密执行者的基类
@@ -10,10 +8,10 @@ import lombok.NoArgsConstructor;
  * @author suyouliang
  * @version 4.6.0
  */
-@NoArgsConstructor
-public abstract class AbstractEncryptor<T extends EncryptContext> implements IEncryptor {
+public abstract class AbstractNoContextEncryptor extends AbstractEncryptor<EncryptContext> {
 
-    public AbstractEncryptor(T context) {
+    public AbstractNoContextEncryptor() {
+        super(null);
         // 用户配置校验与配置注入
     }
 

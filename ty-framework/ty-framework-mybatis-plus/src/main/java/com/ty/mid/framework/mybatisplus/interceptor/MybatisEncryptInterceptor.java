@@ -5,8 +5,8 @@ import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
 import com.ty.mid.framework.encrypt.config.EncryptorConfig;
-import com.ty.mid.framework.encrypt.core.EncryptContext;
-import com.ty.mid.framework.encrypt.core.EncryptorManager;
+import com.ty.mid.framework.encrypt.core.context.EncryptContext;
+import com.ty.mid.framework.encrypt.core.manager.EncryptorManager;
 import com.ty.mid.framework.encrypt.enumd.AlgorithmType;
 import com.ty.mid.framework.encrypt.enumd.EncodeType;
 import lombok.AllArgsConstructor;
@@ -38,7 +38,6 @@ import java.util.*;
 public class MybatisEncryptInterceptor implements Interceptor {
 
     private final EncryptorManager encryptorManager;
-    private final EncryptorConfig defaultProperties;
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -52,68 +51,12 @@ public class MybatisEncryptInterceptor implements Interceptor {
             ParameterHandler parameterHandler = (ParameterHandler) target;
             Object parameterObject = parameterHandler.getParameterObject();
             if (ObjectUtil.isNotNull(parameterObject) && !(parameterObject instanceof String)) {
-                this.encryptHandler(parameterObject);
+                encryptorManager.encryptHandler(parameterObject);
             }
         }
         return target;
     }
 
-    /**
-     * 加密对象
-     *
-     * @param sourceObject 待加密对象
-     */
-    private void encryptHandler(Object sourceObject) {
-        if (ObjectUtil.isNull(sourceObject)) {
-            return;
-        }
-        if (sourceObject instanceof Map<?, ?>) {
-            new HashSet<>(((Map<?, ?>) sourceObject).values()).forEach(this::encryptHandler);
-            return;
-        }
-        if (sourceObject instanceof List<?>) {
-            List<?> sourceList = (List<?>) sourceObject;
-            if (CollUtil.isEmpty(sourceList)) {
-                return;
-            }
-            // 判断第一个元素是否含有注解。如果没有直接返回，提高效率
-            Object firstItem = sourceList.get(0);
-            if (ObjectUtil.isNull(firstItem) || CollUtil.isEmpty(encryptorManager.getFieldCache(firstItem.getClass()))) {
-                return;
-            }
-            ((List<?>) sourceObject).forEach(this::encryptHandler);
-            return;
-        }
-        Set<Field> fields = encryptorManager.getFieldCache(sourceObject.getClass());
-        try {
-            for (Field field : fields) {
-                field.set(sourceObject, this.encryptField(Convert.toStr(field.get(sourceObject)), field));
-            }
-        } catch (Exception e) {
-            log.error("处理加密字段时出错", e);
-        }
-    }
-
-    /**
-     * 字段值进行加密。通过字段的批注注册新的加密算法
-     *
-     * @param value 待加密的值
-     * @param field 待加密字段
-     * @return 加密后结果
-     */
-    private String encryptField(String value, Field field) {
-        if (ObjectUtil.isNull(value)) {
-            return null;
-        }
-        EncryptField encryptField = field.getAnnotation(EncryptField.class);
-        EncryptContext encryptContext = new EncryptContext();
-        encryptContext.setAlgorithm(encryptField.algorithm() == AlgorithmType.DEFAULT ? defaultProperties.getAlgorithm() : encryptField.algorithm());
-        encryptContext.setEncode(encryptField.encode() == EncodeType.DEFAULT ? defaultProperties.getEncode() : encryptField.encode());
-        encryptContext.setPassword(StringUtils.isBlank(encryptField.password()) ? defaultProperties.getPassword() : encryptField.password());
-        encryptContext.setPrivateKey(StringUtils.isBlank(encryptField.privateKey()) ? defaultProperties.getPrivateKey() : encryptField.privateKey());
-        encryptContext.setPublicKey(StringUtils.isBlank(encryptField.publicKey()) ? defaultProperties.getPublicKey() : encryptField.publicKey());
-        return this.encryptorManager.encrypt(value, encryptContext);
-    }
 
 
     @Override

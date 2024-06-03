@@ -1,7 +1,7 @@
 package com.ty.mid.framework.web.core.model.vo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ty.mid.framework.web.annotation.desensitize.HashedId;
+import com.ty.mid.framework.encrypt.annotation.HashedId;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

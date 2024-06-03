@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 全局异常处理器,优先级高 <p>
+ * 安全模块相关全局异常处理器,优先级高 <p>
  *
  * @author Lion Li
  */

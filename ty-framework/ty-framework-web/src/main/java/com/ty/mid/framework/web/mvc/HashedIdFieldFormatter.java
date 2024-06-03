@@ -2,8 +2,8 @@ package com.ty.mid.framework.web.mvc;
 
 import com.ty.mid.framework.common.util.HashIdUtil;
 import com.ty.mid.framework.common.util.collection.MiscUtils;
-import com.ty.mid.framework.web.annotation.desensitize.HashedId;
-import com.ty.mid.framework.web.config.WebConfig;
+import com.ty.mid.framework.encrypt.annotation.HashedId;
+import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.AnnotationFormatterFactory;
@@ -22,10 +22,10 @@ import java.util.Set;
 @NoArgsConstructor
 public class HashedIdFieldFormatter implements AnnotationFormatterFactory<HashedId> {
 
-    private WebConfig webConfig;
+    private EncryptorConfig encryptorConfig;
 
-    public HashedIdFieldFormatter(WebConfig webConfig) {
-        this.webConfig = webConfig;
+    public HashedIdFieldFormatter(EncryptorConfig encryptorConfig) {
+        this.encryptorConfig = encryptorConfig;
     }
 
 
@@ -37,13 +37,13 @@ public class HashedIdFieldFormatter implements AnnotationFormatterFactory<Hashed
     @Override
 
     public Printer<?> getPrinter(HashedId annotation, Class<?> fieldType) {
-        WebConfig.HashId hashId = webConfig.getHashId();
+        EncryptorConfig.HashId hashId = encryptorConfig.getHashId();
         return (Printer<Long>) (object, locale) -> HashIdUtil.encode(object, hashId.getSalt(), hashId.getMinLength());
     }
 
     @Override
     public Parser<?> getParser(HashedId annotation, Class<?> fieldType) {
-        WebConfig.HashId hashId = webConfig.getHashId();
+        EncryptorConfig.HashId hashId = encryptorConfig.getHashId();
         return (text, locale) -> HashIdUtil.decode(text, hashId.getSalt(), hashId.getMinLength());
     }
 }

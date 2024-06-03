@@ -3,7 +3,8 @@ package com.ty.mid.framework.web.mvc;
 import cn.hutool.core.util.ArrayUtil;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.HashIdUtil;
-import com.ty.mid.framework.web.annotation.desensitize.HashedId;
+import com.ty.mid.framework.encrypt.annotation.HashedId;
+import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import com.ty.mid.framework.web.config.WebConfig;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,10 +28,10 @@ import java.util.stream.Collectors;
 @Slf4j
 @NoArgsConstructor
 public class HashedIdHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
-    private WebConfig webConfig;
+    private EncryptorConfig encryptorConfig;
 
-    public HashedIdHandlerMethodArgumentResolver(WebConfig webConfig) {
-        this.webConfig = webConfig;
+    public HashedIdHandlerMethodArgumentResolver(EncryptorConfig encryptorConfig) {
+        this.encryptorConfig = encryptorConfig;
     }
 
     @Override
@@ -46,7 +47,7 @@ public class HashedIdHandlerMethodArgumentResolver implements HandlerMethodArgum
         }
         log.info("resolving hashed id, parameter name: {}", parameterName);
         Class<?> parameterType = parameter.getParameterType();
-        WebConfig.HashId hashId = webConfig.getHashId();
+        EncryptorConfig.HashId hashId = encryptorConfig.getHashId();
         if (String.class.isAssignableFrom(parameterType)) {
             String val = webRequest.getParameter(parameterName);
             if (StringUtils.isEmpty(val)) {
