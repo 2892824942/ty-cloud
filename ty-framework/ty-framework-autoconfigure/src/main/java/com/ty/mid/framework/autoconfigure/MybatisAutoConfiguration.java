@@ -73,7 +73,7 @@ public class MybatisAutoConfiguration {
      * @return
      */
     @Bean
-    @ConditionalOnBean()
+    @ConditionalOnBean(EncryptorConfig.class)
     @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
     public MybatisEncryptInterceptor mybatisEncryptInterceptor(EncryptorManager encryptorManager) {
         return new MybatisEncryptInterceptor(encryptorManager);
@@ -86,6 +86,7 @@ public class MybatisAutoConfiguration {
      * @return
      */
     @Bean
+    @ConditionalOnBean(EncryptorConfig.class)
     @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
     public MybatisDecryptInterceptor mybatisDecryptInterceptor(EncryptorManager encryptorManager) {
         return new MybatisDecryptInterceptor(encryptorManager);

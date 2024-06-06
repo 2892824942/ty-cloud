@@ -69,7 +69,7 @@ public abstract class AbstractEncryptorManager<T extends Annotation> extends Enc
     public abstract String doEncryptField(String value, Field field);
 
     /**
-     * 字段值进行加密。通过字段的批注注册新的加密算法
+     * 字段路由,根据字段注解,路由到对应的加密器管理者
      *
      * @param field 待加密字段
      * @return 加密后结果

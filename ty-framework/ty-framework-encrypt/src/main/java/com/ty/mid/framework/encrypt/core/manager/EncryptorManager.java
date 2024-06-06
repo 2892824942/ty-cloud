@@ -45,34 +45,25 @@ public abstract class EncryptorManager {
     Map<Class<?>, Set<Field>> fieldCache = new ConcurrentHashMap<>();
 
     /**
-     * 获取类加密字段缓存
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param field 待加密字段
+     * @return 加密后结果
      */
-    public Set<Field> getFieldCache(Class<?> sourceClazz) {
-        return fieldCache.computeIfAbsent(sourceClazz, clazz -> {
-            Field[] declaredFields = clazz.getDeclaredFields();
-            Set<Field> fieldSet = Arrays.stream(declaredFields)
-                    .filter(field -> Objects.nonNull(AnnotationUtils.findAnnotation(field, EncryptField.class)))
-                    .collect(Collectors.toSet());
-            for (Field field : fieldSet) {
-                field.setAccessible(true);
-            }
-            return fieldSet;
-        });
-    }
+    public abstract String decryptField(String value, Field field);
+
 
     /**
-     * 注册加密执行者到缓存
+     * 字段值进行加密。通过字段的批注注册新的加密算法
      *
-     * @param commonEncryptContext 加密执行者需要的相关配置参数
+     * @param value 待加密的值
+     * @param field 待加密字段
+     * @return 加密后结果
      */
-    public IEncryptor registAndGetEncryptor(EncryptContext commonEncryptContext) {
-        if (encryptorMap.containsKey(commonEncryptContext)) {
-            return encryptorMap.get(commonEncryptContext);
-        }
-        IEncryptor encryptor = ReflectUtil.newInstance(commonEncryptContext.getAlgorithm().getClazz(), commonEncryptContext);
-        encryptorMap.put(commonEncryptContext, encryptor);
-        return encryptor;
-    }
+    public abstract String encryptField(String value, Field field);
+
+
 
     /**
      * 移除缓存中的加密执行者
@@ -178,25 +169,35 @@ public abstract class EncryptorManager {
         }
     }
 
+    /**
+     * 获取类加密字段缓存
+     */
+    protected Set<Field> getFieldCache(Class<?> sourceClazz) {
+        return fieldCache.computeIfAbsent(sourceClazz, clazz -> {
+            Field[] declaredFields = clazz.getDeclaredFields();
+            Set<Field> fieldSet = Arrays.stream(declaredFields)
+                    .filter(field -> Objects.nonNull(AnnotationUtils.findAnnotation(field, EncryptField.class)))
+                    .collect(Collectors.toSet());
+            for (Field field : fieldSet) {
+                field.setAccessible(true);
+            }
+            return fieldSet;
+        });
+    }
 
     /**
-     * 字段值进行加密。通过字段的批注注册新的加密算法
+     * 注册加密执行者到缓存
      *
-     * @param value 待加密的值
-     * @param field 待加密字段
-     * @return 加密后结果
+     * @param commonEncryptContext 加密执行者需要的相关配置参数
      */
-    public abstract String decryptField(String value, Field field);
-
-
-    /**
-     * 字段值进行加密。通过字段的批注注册新的加密算法
-     *
-     * @param value 待加密的值
-     * @param field 待加密字段
-     * @return 加密后结果
-     */
-    public abstract String encryptField(String value, Field field);
+    private IEncryptor registAndGetEncryptor(EncryptContext commonEncryptContext) {
+        if (encryptorMap.containsKey(commonEncryptContext)) {
+            return encryptorMap.get(commonEncryptContext);
+        }
+        IEncryptor encryptor = ReflectUtil.newInstance(commonEncryptContext.getAlgorithm().getClazz(), commonEncryptContext);
+        encryptorMap.put(commonEncryptContext, encryptor);
+        return encryptor;
+    }
 
 
 }

@@ -26,7 +26,7 @@ public class EncryptorConfig extends AbstractConfig {
     /**
      * 加解密总开关
      */
-    private Boolean enable;
+    private Boolean enable = true;
 
     /**
      * 默认算法
@@ -51,7 +51,7 @@ public class EncryptorConfig extends AbstractConfig {
     /**
      * 加密盐,HashId
      */
-    private HashId hashId=new HashId();
+    private HashId hashId = new HashId();
 
     /**
      * 编码方式，base64/hex
@@ -65,7 +65,7 @@ public class EncryptorConfig extends AbstractConfig {
     public static class HashId {
 
         /**
-         * 是否开启，默认为 true
+         * 是否开启，默认为 false
          */
         private boolean enable = false;
         /**
