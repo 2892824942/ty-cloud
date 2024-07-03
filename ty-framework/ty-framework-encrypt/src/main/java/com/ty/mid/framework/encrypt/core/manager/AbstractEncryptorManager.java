@@ -6,8 +6,8 @@ import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.encrypt.annotation.Desensitize;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
 import com.ty.mid.framework.encrypt.config.EncryptorConfig;
+import com.ty.mid.framework.encrypt.core.encryptor.desensitize.AbstractDesensitizeEncryptor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -31,6 +31,10 @@ public abstract class AbstractEncryptorManager<T extends Annotation> extends Enc
 
     protected Map<Class<?>, AbstractEncryptorManager<T>> resolverMap;
 
+    public AbstractEncryptorManager(EncryptorConfig defaultProperties) {
+        super(defaultProperties);
+    }
+
     @PostConstruct
     public void init() {
         encryptorManagerList.add(this);
@@ -41,12 +45,8 @@ public abstract class AbstractEncryptorManager<T extends Annotation> extends Enc
         }, Function.identity(), (a, b) -> a));
     }
 
-    public AbstractEncryptorManager(EncryptorConfig defaultProperties) {
-        super(defaultProperties);
-    }
-
     /**
-     * 字段值进行加密。通过字段的批注注册新的加密算法
+     * 字段值进行解密。通过字段的批注注册新的加密算法
      *
      * @param value 待加密的值
      * @param field 待加密字段
@@ -58,6 +58,13 @@ public abstract class AbstractEncryptorManager<T extends Annotation> extends Enc
         return route.doDecryptField(value, field);
     }
 
+    /**
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param field 待加密字段
+     * @return 加密后结果
+     */
     @Override
     public String encryptField(String value, Field field) {
         AbstractEncryptorManager<T> route = route(field);
@@ -78,13 +85,24 @@ public abstract class AbstractEncryptorManager<T extends Annotation> extends Enc
 
         Annotation[] annotations = field.getAnnotations();
         Assert.notEmpty(annotations, "属性注解不存在");
-        //加密注解暂时只支持同时标注一个
-        Optional<Annotation> targetAnnotation = Arrays.stream(field.getAnnotations()).filter(annotation -> annotation.annotationType().isAnnotationPresent(EncryptField.class)).findFirst();
+        //加密注解暂时只支持同时标注一个,可以是EncryptField注解,或者以EncryptField为元注解的注解
+        Optional<Annotation> targetAnnotation = Arrays.stream(field.getAnnotations())
+                .filter(annotation -> annotation.annotationType().isAnnotationPresent(EncryptField.class) ||
+                        annotation.annotationType().isAssignableFrom(EncryptField.class))
+                .findFirst();
         Assert.isTrue(targetAnnotation.isPresent(), "{}未找到加密注解定义", field.getName());
         Annotation annotation = targetAnnotation.get();
         if (annotation.annotationType().isAnnotationPresent(Desensitize.class)) {
             return resolverMap.get(Desensitize.class);
         }
+        //使用通用方式,通用方式目前支持所有的加密,首先看是否是单向加密的实现,即:AbstractDesensitizeEncryptor的子类
+        if (annotation.annotationType().isAssignableFrom(EncryptField.class)) {
+            EncryptField encryptFieldAnnotation = (EncryptField) annotation;
+            if (AbstractDesensitizeEncryptor.class.isAssignableFrom(encryptFieldAnnotation.algorithm().getClazz())) {
+                return resolverMap.get(Desensitize.class);
+            }
+        }
+        //使用普通方式
         AbstractEncryptorManager<T> encryptorManager = resolverMap.get(annotation.annotationType());
         if (Objects.nonNull(encryptorManager)) {
             return encryptorManager;

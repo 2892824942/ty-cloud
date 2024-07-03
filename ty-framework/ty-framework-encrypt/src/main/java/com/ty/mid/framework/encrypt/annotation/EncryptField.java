@@ -1,5 +1,6 @@
 package com.ty.mid.framework.encrypt.annotation;
 
+import com.ty.mid.framework.encrypt.core.encryptor.desensitize.handler.DesensitizationHandler;
 import com.ty.mid.framework.encrypt.enumd.AlgorithmType;
 import com.ty.mid.framework.encrypt.enumd.EncodeType;
 
@@ -14,7 +15,6 @@ import java.lang.annotation.*;
 @Inherited
 @Target({ElementType.FIELD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@EncryptField
 public @interface EncryptField {
 
     /**
@@ -41,5 +41,12 @@ public @interface EncryptField {
      * 编码方式。对加密算法为BASE64的不起作用
      */
     EncodeType encode() default EncodeType.DEFAULT;
+
+    /**
+     * 当algorithm指定为AlgorithmType.REGEX_DESENSITIZE或AlgorithmType.SLIDER_DESENSITIZE时必须指定这个字段.
+     * 不推荐使用这种方式.但考虑有人喜欢使用统一的注解,方便查询保留了
+     * 推荐直接使用脱敏注解,如@PasswordDesensitize,@MobileDesensitize等
+     */
+    DesensitizationHandler.DesensitizeEnum desensitizeType() default DesensitizationHandler.DesensitizeEnum.DEFAULT;
 
 }

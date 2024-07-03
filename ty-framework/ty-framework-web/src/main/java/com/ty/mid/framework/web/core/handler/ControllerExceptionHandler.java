@@ -17,6 +17,7 @@ import com.ty.mid.framework.web.core.util.WebUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
@@ -92,6 +93,10 @@ public class ControllerExceptionHandler {
 
         if (ex instanceof BizException) {
             return httpRequestMethodNotSupportedExceptionHandler((HttpRequestMethodNotSupportedException) ex);
+        }
+
+        if (ex instanceof HttpMessageNotReadableException) {
+            return noHttpMessageNotReadableException((HttpMessageNotReadableException) ex);
         }
 
         return defaultExceptionHandler(request, ex);
@@ -182,6 +187,16 @@ public class ControllerExceptionHandler {
     public Result<?> noHandlerFoundExceptionHandler(NoHandlerFoundException ex) {
         log.warn("[noHandlerFoundExceptionHandler]", ex);
         return BaseResult.fail(NOT_FOUND.getCode(), String.format("请求地址不存在:%s", ex.getRequestURL()));
+    }
+
+    /**
+     * 处理 SpringMVC Json 请求Body不存在
+     * <p>
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public Result<?> noHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+        log.warn("[noHandlerFoundExceptionHandler]", ex);
+        return BaseResult.fail(BAD_REQUEST.getCode(), "请求Body不存在");
     }
 
     /**

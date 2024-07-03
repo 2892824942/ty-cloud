@@ -1,8 +1,9 @@
 package com.ty.mid.framework.encrypt.enumd;
 
-import com.ty.mid.framework.encrypt.core.encryptor.*;
+import com.ty.mid.framework.encrypt.core.encryptor.AbstractEncryptor;
 import com.ty.mid.framework.encrypt.core.encryptor.common.*;
 import com.ty.mid.framework.encrypt.core.encryptor.desensitize.handler.DefaultRegexDesensitizeEncryptor;
+import com.ty.mid.framework.encrypt.core.encryptor.desensitize.handler.DefaultSliderDesensitizationEncryptor;
 import com.ty.mid.framework.encrypt.core.encryptor.hashedid.HashedIdEncryptor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -49,17 +50,17 @@ public enum AlgorithmType {
     /**
      * HashId
      */
-    HASHED_ID(HashedIdEncryptor .class),
+    HASHED_ID(HashedIdEncryptor.class),
 
     /**
      * 区间脱敏
      */
-   REGEX_DESENSITIZE(DefaultRegexDesensitizeEncryptor.class),
+    REGEX_DESENSITIZE(DefaultRegexDesensitizeEncryptor.class),
 
     /**
      * 滑动脱敏
      */
-    SLIDER_DESENSITIZE(DefaultRegexDesensitizeEncryptor.class),
+    SLIDER_DESENSITIZE(DefaultSliderDesensitizationEncryptor.class),
 
 
     ;

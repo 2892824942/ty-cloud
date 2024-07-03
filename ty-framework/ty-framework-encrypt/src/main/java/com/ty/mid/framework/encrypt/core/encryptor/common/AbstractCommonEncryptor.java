@@ -1,8 +1,6 @@
 package com.ty.mid.framework.encrypt.core.encryptor.common;
 
-import com.ty.mid.framework.encrypt.core.IEncryptor;
 import com.ty.mid.framework.encrypt.core.context.CommonEncryptContext;
-import com.ty.mid.framework.encrypt.core.context.EncryptContext;
 import com.ty.mid.framework.encrypt.core.encryptor.AbstractEncryptor;
 
 /**

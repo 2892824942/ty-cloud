@@ -1,6 +1,5 @@
 package com.ty.mid.framework.encrypt.core.context;
 
-import com.ty.mid.framework.encrypt.enumd.EncodeType;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

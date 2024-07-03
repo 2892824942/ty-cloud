@@ -1,18 +1,14 @@
 package com.ty.mid.framework.encrypt.core.manager;
 
-import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
-import com.ty.mid.framework.common.util.SafeGetUtil;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
 import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import com.ty.mid.framework.encrypt.core.context.CommonEncryptContext;
 import com.ty.mid.framework.encrypt.enumd.AlgorithmType;
 import com.ty.mid.framework.encrypt.enumd.EncodeType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.annotation.AnnotationUtils;
 
 import java.lang.reflect.Field;
-import java.util.Optional;
 
 /**
  * 加密管理类
@@ -51,12 +47,12 @@ public class CommonEncryptorManager extends AbstractEncryptorManager<EncryptFiel
             return null;
         }
         CommonEncryptContext encryptContext = initEncryptContext(field);
-        return this.decrypt(value, encryptContext);
+        return this.encrypt(value, encryptContext);
     }
 
-    private CommonEncryptContext initEncryptContext(Field field){
+    private CommonEncryptContext initEncryptContext(Field field) {
 
-        EncryptField annotation = field.getAnnotation( EncryptField.class);
+        EncryptField annotation = field.getAnnotation(EncryptField.class);
         CommonEncryptContext encryptContext = new CommonEncryptContext();
         encryptContext.setAlgorithm(annotation.algorithm() == AlgorithmType.DEFAULT ? defaultProperties.getAlgorithm() : annotation.algorithm());
         encryptContext.setEncode(annotation.encode() == EncodeType.DEFAULT ? defaultProperties.getEncode() : annotation.encode());

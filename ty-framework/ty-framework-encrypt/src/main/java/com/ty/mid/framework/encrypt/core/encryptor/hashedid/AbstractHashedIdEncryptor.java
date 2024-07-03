@@ -1,6 +1,5 @@
 package com.ty.mid.framework.encrypt.core.encryptor.hashedid;
 
-import com.ty.mid.framework.encrypt.core.context.CommonEncryptContext;
 import com.ty.mid.framework.encrypt.core.context.HashIdEncryptContext;
 import com.ty.mid.framework.encrypt.core.encryptor.AbstractEncryptor;
 

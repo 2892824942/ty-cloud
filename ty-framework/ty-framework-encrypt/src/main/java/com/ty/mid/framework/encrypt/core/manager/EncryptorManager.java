@@ -4,20 +4,14 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.ReflectUtil;
-import cn.hutool.core.util.StrUtil;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
 import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import com.ty.mid.framework.encrypt.core.IEncryptor;
-import com.ty.mid.framework.encrypt.core.context.CommonEncryptContext;
 import com.ty.mid.framework.encrypt.core.context.EncryptContext;
-import com.ty.mid.framework.encrypt.enumd.AlgorithmType;
-import com.ty.mid.framework.encrypt.enumd.EncodeType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.annotation.AnnotationUtils;
 
-import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -64,7 +58,6 @@ public abstract class EncryptorManager {
     public abstract String encryptField(String value, Field field);
 
 
-
     /**
      * 移除缓存中的加密执行者
      *
@@ -88,7 +81,7 @@ public abstract class EncryptorManager {
     /**
      * 根据配置进行解密
      *
-     * @param value          待解密的值
+     * @param value                待解密的值
      * @param commonEncryptContext 加密相关的配置信息
      */
     public String decrypt(String value, EncryptContext commonEncryptContext) {
@@ -125,7 +118,16 @@ public abstract class EncryptorManager {
         Set<Field> fields = this.getFieldCache(sourceObject.getClass());
         try {
             for (Field field : fields) {
-                field.set(sourceObject, this.encryptField(Convert.toStr(field.get(sourceObject)), field));
+                Object fieldValue = field.get(sourceObject);
+                //兼容多个字符,通过","拼接的场景
+                if (fieldValue instanceof List<?>) {
+                    List<?> resultList = ((List<?>) fieldValue).stream()
+                            .map(dataItem -> this.encryptField(Convert.toStr(fieldValue), field))
+                            .collect(Collectors.toList());
+                    field.set(sourceObject, resultList);
+                    return;
+                }
+                field.set(sourceObject, this.encryptField(Convert.toStr(fieldValue), field));
             }
         } catch (Exception e) {
             log.error("处理加密字段时出错", e);
@@ -162,6 +164,15 @@ public abstract class EncryptorManager {
         Set<Field> fields = this.getFieldCache(sourceObject.getClass());
         try {
             for (Field field : fields) {
+                Object fieldValue = field.get(sourceObject);
+                //兼容多个字符,通过","拼接的场景
+                if (fieldValue instanceof List<?>) {
+                    List<?> resultList = ((List<?>) fieldValue).stream()
+                            .map(dataItem -> this.decryptField(Convert.toStr(dataItem), field))
+                            .collect(Collectors.toList());
+                    field.set(sourceObject, resultList);
+                    continue;
+                }
                 field.set(sourceObject, this.decryptField(Convert.toStr(field.get(sourceObject)), field));
             }
         } catch (Exception e) {

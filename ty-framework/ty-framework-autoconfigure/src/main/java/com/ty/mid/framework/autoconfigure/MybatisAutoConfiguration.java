@@ -58,7 +58,7 @@ public class MybatisAutoConfiguration {
     }
 
     /**
-     * 新版
+     * 乐观锁插件
      */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor(MybatisPlusInterceptor mybatisPlusInterceptor) {
@@ -73,7 +73,6 @@ public class MybatisAutoConfiguration {
      * @return
      */
     @Bean
-    @ConditionalOnBean(EncryptorConfig.class)
     @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
     public MybatisEncryptInterceptor mybatisEncryptInterceptor(EncryptorManager encryptorManager) {
         return new MybatisEncryptInterceptor(encryptorManager);
@@ -86,7 +85,6 @@ public class MybatisAutoConfiguration {
      * @return
      */
     @Bean
-    @ConditionalOnBean(EncryptorConfig.class)
     @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
     public MybatisDecryptInterceptor mybatisDecryptInterceptor(EncryptorManager encryptorManager) {
         return new MybatisDecryptInterceptor(encryptorManager);

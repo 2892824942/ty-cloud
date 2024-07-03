@@ -20,10 +20,6 @@ import java.lang.annotation.Annotation;
 @NoArgsConstructor
 public abstract class AbstractDesensitizeEncryptor<S extends Annotation> extends AbstractEncryptor<DesensitizeEncryptContext> implements DesensitizationHandler<S> {
 
-    public void setContext(DesensitizeEncryptContext context) {
-        this.context = context;
-    }
-
     /**
      * 脱敏
      */
@@ -35,6 +31,9 @@ public abstract class AbstractDesensitizeEncryptor<S extends Annotation> extends
         // 用户配置校验与配置注入
     }
 
+    public void setContext(DesensitizeEncryptContext context) {
+        this.context = context;
+    }
 
     @Override
     public AlgorithmType algorithm() {
