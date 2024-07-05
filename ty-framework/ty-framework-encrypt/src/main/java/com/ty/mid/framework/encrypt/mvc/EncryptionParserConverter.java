@@ -12,12 +12,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+
 /**
  * 对于不经过序列化,入参和出参情况下解密处理
  * 如直接使用Param请求
  * 注:
  * 1.目前可以处理集合类,Long基本类型,数组等
- *
+ * <p>
  * 2.对于嵌套注解兼容,目前HashedId注解测试无问题,对于EncryptField注解及其子注解同样生效,由于EncryptField注解使用繁琐,暂时不支持param标注,
  * 理论上,开启param标注权限,同样可以支持
  */

@@ -73,7 +73,6 @@ public class DesensitizeEncryptorManager extends AbstractEncryptorManager<Desens
     }
 
 
-
     private DesensitizeEncryptContext initEncryptContext(Field field) {
         Annotation targetAnnotation = Arrays.stream(field.getAnnotations())
                 .filter(annotation -> annotation.annotationType().isAnnotationPresent(Desensitize.class) ||

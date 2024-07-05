@@ -62,7 +62,7 @@ public abstract class EncryptorManager {
     /**
      * 字段值进行加密。通过字段的批注注册新的加密算法
      *
-     * @param value 待加密的值
+     * @param value      待加密的值
      * @param annotation 待加密字段注解
      * @return 加密后结果
      */
@@ -71,12 +71,11 @@ public abstract class EncryptorManager {
     /**
      * 字段值进行加密。通过字段的批注注册新的加密算法
      *
-     * @param value 待加密的值
+     * @param value      待加密的值
      * @param annotation 待加密字段注解
      * @return 加密后结果
      */
     public abstract List<String> encrypt(Collection<?> value, Annotation annotation);
-
 
 
     /**
@@ -100,7 +99,7 @@ public abstract class EncryptorManager {
     /**
      * 字段值进行加密。通过字段的批注注册新的加密算法
      *
-     * @param value 待加密的值
+     * @param value      待加密的值
      * @param annotation 待加密字段注解
      * @return 加密后结果
      */
@@ -110,12 +109,11 @@ public abstract class EncryptorManager {
     /**
      * 字段值进行加密。通过字段的批注注册新的加密算法
      *
-     * @param value 待加密的值
+     * @param value      待加密的值
      * @param annotation 待加密字段注解
      * @return 加密后结果
      */
     public abstract List<String> decrypt(Collection<?> value, Annotation annotation);
-
 
 
     /**

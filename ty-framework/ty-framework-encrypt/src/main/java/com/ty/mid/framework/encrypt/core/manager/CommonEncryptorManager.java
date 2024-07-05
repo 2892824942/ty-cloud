@@ -26,7 +26,6 @@ public class CommonEncryptorManager extends AbstractEncryptorManager<EncryptFiel
     }
 
 
-
     @Override
     public String doEncryptField(String value, Field field) {
         //为null或空字符均不处理

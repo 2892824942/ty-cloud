@@ -35,7 +35,7 @@ public class HashIdEncryptorManager extends AbstractEncryptorManager<HashedId> {
      */
     @Override
     public String doDecryptField(String value, Field field) {
-        if (skipHandle(value)){
+        if (skipHandle(value)) {
             return value;
         }
         HashIdEncryptContext context = doInitEncryptContext();
@@ -44,7 +44,7 @@ public class HashIdEncryptorManager extends AbstractEncryptorManager<HashedId> {
 
     @Override
     public String doDecrypt(String value, Annotation annotation) {
-        if (skipHandle(value)){
+        if (skipHandle(value)) {
             return value;
         }
         HashIdEncryptContext context = doInitEncryptContext();
@@ -53,7 +53,7 @@ public class HashIdEncryptorManager extends AbstractEncryptorManager<HashedId> {
 
     @Override
     public String doEncryptField(String value, Field field) {
-        if (skipHandle(value)){
+        if (skipHandle(value)) {
             return value;
         }
 
@@ -63,14 +63,14 @@ public class HashIdEncryptorManager extends AbstractEncryptorManager<HashedId> {
 
     @Override
     public String doEncrypt(String value, Annotation annotation) {
-        if (skipHandle(value)){
+        if (skipHandle(value)) {
             return value;
         }
         HashIdEncryptContext context = doInitEncryptContext();
         return this.encrypt(value, context);
     }
 
-    private boolean skipHandle(String value){
+    private boolean skipHandle(String value) {
         //为null或空字符均不处理
         if (StrUtil.isEmpty(value)) {
             return Boolean.TRUE;

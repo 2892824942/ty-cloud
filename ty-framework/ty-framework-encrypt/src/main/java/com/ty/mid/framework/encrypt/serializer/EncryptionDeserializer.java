@@ -12,7 +12,6 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
 import com.ty.mid.framework.common.exception.FrameworkException;
-import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
 import com.ty.mid.framework.encrypt.core.manager.CommonEncryptorManager;

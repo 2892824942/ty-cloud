@@ -3,11 +3,7 @@ package com.ty.mid.framework.encrypt.mvc;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ArrayUtil;
 import com.ty.mid.framework.common.exception.FrameworkException;
-import com.ty.mid.framework.common.util.HashIdUtil;
-import com.ty.mid.framework.encrypt.annotation.Desensitize;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
-import com.ty.mid.framework.encrypt.annotation.HashedId;
-import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import com.ty.mid.framework.encrypt.core.manager.EncryptorManager;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,6 +29,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 public class EncryptionHandlerMethodArgumentResolver implements HandlerMethodArgumentResolver {
     EncryptorManager encryptorManager;
+
     public EncryptionHandlerMethodArgumentResolver(EncryptorManager encryptorManager) {
         this.encryptorManager = encryptorManager;
     }
@@ -42,7 +39,7 @@ public class EncryptionHandlerMethodArgumentResolver implements HandlerMethodArg
         //TODO 加缓存优化下?
         Annotation[] parameterAnnotations = parameter.getParameterAnnotations();
         return Arrays.stream(parameterAnnotations).anyMatch(annotation -> annotation.annotationType().isAnnotationPresent(EncryptField.class) ||
-                            annotation.annotationType().isAssignableFrom(EncryptField.class));
+                annotation.annotationType().isAssignableFrom(EncryptField.class));
     }
 
     @Override
@@ -54,7 +51,7 @@ public class EncryptionHandlerMethodArgumentResolver implements HandlerMethodArg
         Annotation[] parameterAnnotations = parameter.getParameterAnnotations();
         Optional<Annotation> encryptAnnotationOpt = Arrays.stream(parameterAnnotations).filter(annotation -> annotation.annotationType().isAnnotationPresent(EncryptField.class) ||
                 annotation.annotationType().isAssignableFrom(EncryptField.class)).findFirst();
-        if (!encryptAnnotationOpt.isPresent()){
+        if (!encryptAnnotationOpt.isPresent()) {
             throw new FrameworkException("未找到有效的加密注解");
         }
         Annotation annotation = encryptAnnotationOpt.get();
@@ -72,7 +69,7 @@ public class EncryptionHandlerMethodArgumentResolver implements HandlerMethodArg
                 String[] split = val.split(",");
                 List<String> list = Arrays.asList(split);
                 List<String> decryptValueList = encryptorManager.decrypt(list, annotation);
-                if (CollUtil.isEmpty(decryptValueList)){
+                if (CollUtil.isEmpty(decryptValueList)) {
                     return val;
                 }
                 decryptValueList.forEach(stringJoiner::add);
@@ -86,7 +83,7 @@ public class EncryptionHandlerMethodArgumentResolver implements HandlerMethodArg
             String[] parameterValues = webRequest.getParameterValues(parameterName);
             if (ArrayUtil.isNotEmpty(parameterValues)) {
                 return Arrays.stream(parameterValues)
-                        .map(data ->   encryptorManager.decrypt(data, annotation))
+                        .map(data -> encryptorManager.decrypt(data, annotation))
                         .collect(Collectors.toList());
             }
         }
