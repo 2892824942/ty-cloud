@@ -11,15 +11,18 @@ import com.ty.mid.framework.encrypt.core.manager.EncryptorManager;
 import com.ty.mid.framework.mybatisplus.core.handler.AuditorMetaObjectHandler;
 import com.ty.mid.framework.mybatisplus.interceptor.MybatisDecryptInterceptor;
 import com.ty.mid.framework.mybatisplus.interceptor.MybatisEncryptInterceptor;
+import lombok.RequiredArgsConstructor;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 import java.util.Iterator;
+import java.util.Objects;
 
 /**
  * MyBaits 配置类 <p>
@@ -29,6 +32,7 @@ import java.util.Iterator;
 
 @MapperScan("com.ty.mid.framework.mybatisplus.core.mapper")
 public class MybatisAutoConfiguration {
+
 
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
@@ -64,30 +68,6 @@ public class MybatisAutoConfiguration {
     public MybatisPlusInterceptor mybatisPlusInterceptor(MybatisPlusInterceptor mybatisPlusInterceptor) {
         mybatisPlusInterceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
         return mybatisPlusInterceptor;
-    }
-
-    /**
-     * 加密拦截器
-     *
-     * @param encryptorManager
-     * @return
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
-    public MybatisEncryptInterceptor mybatisEncryptInterceptor(EncryptorManager encryptorManager) {
-        return new MybatisEncryptInterceptor(encryptorManager);
-    }
-
-    /**
-     * 解密拦截器
-     *
-     * @param encryptorManager
-     * @return
-     */
-    @Bean
-    @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")
-    public MybatisDecryptInterceptor mybatisDecryptInterceptor(EncryptorManager encryptorManager) {
-        return new MybatisDecryptInterceptor(encryptorManager);
     }
 
 }

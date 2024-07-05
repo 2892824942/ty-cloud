@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotationUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,15 +39,6 @@ public abstract class EncryptorManager {
      */
     Map<Class<?>, Set<Field>> fieldCache = new ConcurrentHashMap<>();
 
-    /**
-     * 字段值进行加密。通过字段的批注注册新的加密算法
-     *
-     * @param value 待加密的值
-     * @param field 待加密字段
-     * @return 加密后结果
-     */
-    public abstract String decryptField(String value, Field field);
-
 
     /**
      * 字段值进行加密。通过字段的批注注册新的加密算法
@@ -56,6 +48,74 @@ public abstract class EncryptorManager {
      * @return 加密后结果
      */
     public abstract String encryptField(String value, Field field);
+
+    /**
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param field 待加密字段
+     * @return 加密后结果
+     */
+    public abstract List<String> encryptField(Collection<?> value, Field field);
+
+
+    /**
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param annotation 待加密字段注解
+     * @return 加密后结果
+     */
+    public abstract String encrypt(String value, Annotation annotation);
+
+    /**
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param annotation 待加密字段注解
+     * @return 加密后结果
+     */
+    public abstract List<String> encrypt(Collection<?> value, Annotation annotation);
+
+
+
+    /**
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param field 待加密字段
+     * @return 加密后结果
+     */
+    public abstract String decryptField(String value, Field field);
+
+    /**
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param field 待加密字段
+     * @return 加密后结果
+     */
+    public abstract List<String> decryptField(Collection<?> value, Field field);
+
+    /**
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param annotation 待加密字段注解
+     * @return 加密后结果
+     */
+    public abstract String decrypt(String value, Annotation annotation);
+
+
+    /**
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param annotation 待加密字段注解
+     * @return 加密后结果
+     */
+    public abstract List<String> decrypt(Collection<?> value, Annotation annotation);
+
 
 
     /**
@@ -122,7 +182,7 @@ public abstract class EncryptorManager {
                 //兼容多个字符,通过","拼接的场景
                 if (fieldValue instanceof List<?>) {
                     List<?> resultList = ((List<?>) fieldValue).stream()
-                            .map(dataItem -> this.encryptField(Convert.toStr(fieldValue), field))
+                            .map(dataItem -> this.encryptField(Convert.toStr(dataItem), field))
                             .collect(Collectors.toList());
                     field.set(sourceObject, resultList);
                     return;

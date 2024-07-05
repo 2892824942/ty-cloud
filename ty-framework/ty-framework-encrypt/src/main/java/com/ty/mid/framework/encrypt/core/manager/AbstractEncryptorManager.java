@@ -58,6 +58,44 @@ public abstract class AbstractEncryptorManager<T extends Annotation> extends Enc
         return route.doDecryptField(value, field);
     }
 
+    @Override
+    public List<String> decryptField(Collection<?> value, Field field) {
+        //兼容多个字符,通过","拼接的场景
+        Collection<String> collectionValue = GenericsUtil.check2Collection(value);
+        return collectionValue.stream()
+                .map(dataItem -> {
+                    AbstractEncryptorManager<T> route = route(field);
+                    return route.doDecryptField(dataItem, field);
+                }).collect(Collectors.toList());
+
+    }
+
+    @Override
+    public List<String> decrypt(Collection<?> value, Annotation annotation) {
+        //兼容多个字符,通过","拼接的场景
+        Collection<String> collectionValue = GenericsUtil.check2Collection(value);
+        return collectionValue.stream()
+                .map(dataItem -> {
+                    AbstractEncryptorManager<T> route = doRoute(annotation);
+                    return route.decrypt(dataItem, annotation);
+                }).collect(Collectors.toList());
+
+    }
+
+    @Override
+    public String decrypt(String value, Annotation annotation) {
+        AbstractEncryptorManager<T> encryptorManager = doRoute(annotation);
+        return encryptorManager.doDecrypt(value, annotation);
+    }
+
+
+    @Override
+    public String encrypt(String value, Annotation annotation) {
+        AbstractEncryptorManager<T> encryptorManager = doRoute(annotation);
+        return encryptorManager.doEncrypt(value, annotation);
+    }
+
+
     /**
      * 字段值进行加密。通过字段的批注注册新的加密算法
      *
@@ -71,9 +109,44 @@ public abstract class AbstractEncryptorManager<T extends Annotation> extends Enc
         return route.doEncryptField(value, field);
     }
 
+    /**
+     * 字段值进行加密。通过字段的批注注册新的加密算法
+     *
+     * @param value 待加密的值
+     * @param field 待加密字段
+     * @return 加密后结果
+     */
+    @Override
+    public List<String> encryptField(Collection<?> value, Field field) {
+        Collection<String> collectionValue = GenericsUtil.check2Collection(value);
+        //兼容多个字符,通过","拼接的场景
+        return collectionValue.stream()
+                .map(dataItem -> {
+                    AbstractEncryptorManager<T> route = route(field);
+                    return route.doEncryptField(dataItem, field);
+                }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> encrypt(Collection<?> value, Annotation annotation) {
+        Collection<String> collectionValue = GenericsUtil.check2Collection(value);
+        //兼容多个字符,通过","拼接的场景
+        return collectionValue.stream()
+                .map(dataItem -> {
+                    AbstractEncryptorManager<T> route = doRoute(annotation);
+                    return route.doEncrypt(dataItem, annotation);
+                }).collect(Collectors.toList());
+    }
+
+
     public abstract String doDecryptField(String value, Field field);
 
+    public abstract String doDecrypt(String value, Annotation annotation);
+
     public abstract String doEncryptField(String value, Field field);
+
+
+    public abstract String doEncrypt(String value, Annotation annotation);
 
     /**
      * 字段路由,根据字段注解,路由到对应的加密器管理者
@@ -92,6 +165,17 @@ public abstract class AbstractEncryptorManager<T extends Annotation> extends Enc
                 .findFirst();
         Assert.isTrue(targetAnnotation.isPresent(), "{}未找到加密注解定义", field.getName());
         Annotation annotation = targetAnnotation.get();
+        return doRoute(annotation);
+
+    }
+
+    /**
+     * 字段路由,根据字段注解,路由到对应的加密器管理者
+     *
+     * @param annotation 待加密字段的annotation
+     * @return 加密后结果
+     */
+    public AbstractEncryptorManager<T> doRoute(Annotation annotation) {
         if (annotation.annotationType().isAnnotationPresent(Desensitize.class)) {
             return resolverMap.get(Desensitize.class);
         }

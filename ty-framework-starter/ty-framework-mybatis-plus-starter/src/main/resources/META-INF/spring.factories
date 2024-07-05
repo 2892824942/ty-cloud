@@ -1,2 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.ty.mid.framework.autoconfigure.MybatisAutoConfiguration
+com.ty.mid.framework.autoconfigure.MybatisAutoConfiguration,\
+com.ty.mid.framework.autoconfigure.MybatisEncryptionConfiguration

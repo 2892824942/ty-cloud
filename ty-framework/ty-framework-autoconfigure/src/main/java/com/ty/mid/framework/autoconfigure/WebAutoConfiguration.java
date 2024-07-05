@@ -2,7 +2,8 @@ package com.ty.mid.framework.autoconfigure;
 
 import com.ty.mid.framework.common.constant.WebFilterOrderEnum;
 import com.ty.mid.framework.core.bus.EventPublisher;
-import com.ty.mid.framework.encrypt.config.EncryptorConfig;
+import com.ty.mid.framework.encrypt.core.manager.EncryptorManager;
+import com.ty.mid.framework.encrypt.mvc.HashIdFormatter;
 import com.ty.mid.framework.web.config.WebConfig;
 import com.ty.mid.framework.web.core.filter.ApiAccessLogFilter;
 import com.ty.mid.framework.web.core.filter.CacheRequestBodyFilter;
@@ -11,8 +12,8 @@ import com.ty.mid.framework.web.core.handler.ControllerExceptionHandler;
 import com.ty.mid.framework.web.core.handler.ControllerResponseBodyHandler;
 import com.ty.mid.framework.web.core.service.ApiLogService;
 import com.ty.mid.framework.web.core.util.WebUtil;
-import com.ty.mid.framework.web.mvc.HashedIdFieldFormatter;
-import com.ty.mid.framework.web.mvc.HashedIdHandlerMethodArgumentResolver;
+import com.ty.mid.framework.encrypt.mvc.EncryptionParserConverter;
+import com.ty.mid.framework.encrypt.mvc.EncryptionHandlerMethodArgumentResolver;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,7 +48,6 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
 
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher(".");
     private final WebConfig webConfig;
-    private final ObjectProvider<EncryptorConfig> encryptorConfigObjectProvider;
     /**
      * 应用名
      */
@@ -65,25 +65,6 @@ public class WebAutoConfiguration implements WebMvcConfigurer {
         }
         //为定义的每个API设置前缀
         customApi.forEach((k, v) -> configurePathMatch(configurer, v));
-    }
-
-    @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
-        EncryptorConfig encryptorConfig = encryptorConfigObjectProvider.getIfAvailable();
-        if (Objects.isNull(encryptorConfig)) {
-            return;
-        }
-        resolvers.add(new HashedIdHandlerMethodArgumentResolver(encryptorConfig));
-    }
-
-    @Override
-    public void addFormatters(FormatterRegistry registry) {
-        EncryptorConfig encryptorConfig = encryptorConfigObjectProvider.getIfAvailable();
-        if (Objects.isNull(encryptorConfig)) {
-            return;
-        }
-        registry.addFormatterForFieldAnnotation(new HashedIdFieldFormatter(encryptorConfig));
-
     }
 
     /**

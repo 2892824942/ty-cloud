@@ -1,5 +1,9 @@
 package com.ty.mid.framework.encrypt.serializer;
 
+import cn.hutool.core.annotation.AnnotationUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.BeanProperty;
@@ -9,19 +13,19 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.deser.ContextualDeserializer;
 import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.GenericsUtil;
-import com.ty.mid.framework.common.util.HashIdUtil;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
-import com.ty.mid.framework.encrypt.config.EncryptorConfig;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.extern.slf4j.Slf4j;
+import com.ty.mid.framework.encrypt.annotation.EncryptField;
+import com.ty.mid.framework.encrypt.core.manager.CommonEncryptorManager;
+import lombok.Getter;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.lang.reflect.Field;
 import java.util.Collection;
-import java.util.List;
+
 
 /**
+ * 解密序列化器
+ * 作用:序列化过程中,解密标注了加解密注解的字段
  * Json数据入参处理
  * 注:支持
  * 1.String入参,其中:支持以,拼接多个入参,最终转换为String
@@ -29,30 +33,40 @@ import java.util.List;
  * <p>
  * 说明:可以将一种的,拼接直接转换为List,但是这种方式会导致api显示的参数为List,而前端需要传String,对于这种让人误解的操作带来的后果,远比此类带来的价值大,
  * 这里不支持这种web传参场景,更改字段类型的操作.
+ *
+ * @author suyouliang
  */
-@EqualsAndHashCode(callSuper = true)
-@Data
-@Slf4j
-public class HashedIdJsonDeserializer extends JsonDeserializer<Object> implements ContextualDeserializer {
-    private EncryptorConfig.HashId hashIdConfig = SpringContextHelper.getBean(EncryptorConfig.class).getHashId();
+@Getter
+@SuppressWarnings("rawtypes")
+public class EncryptionDeserializer extends JsonDeserializer<Object> implements ContextualDeserializer {
+    private final CommonEncryptorManager encryptorManager = SpringContextHelper.getBean(CommonEncryptorManager.class);
+
     private Class<?> paramType;
     private String paramName;
 
     @Override
     public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-
         if (p.hasToken(JsonToken.VALUE_STRING)) {
-            if (!hashIdConfig.isEnable()) {
-                return p.getText();
-            }
             String text = p.getText().trim();
-            return HashIdUtil.decodeString(text, paramName, hashIdConfig.getSalt(), hashIdConfig.getMinLength());
+            if (StrUtil.isBlank(text)) {
+                return text;
+            }
+            // 获取序列化字段
+            Field field = getField(p);
+            // 自定义处理器
+            EncryptField[] annotations = AnnotationUtil.getCombinationAnnotations(field, EncryptField.class);
+            if (ArrayUtil.isEmpty(annotations)) {
+                return text;
+            }
+            return encryptorManager.decryptField(text, field);
         }
         //支持集合序列化
         if (p.currentToken().equals(JsonToken.START_ARRAY)) {
-            List<?> dataList = p.readValueAs(ArrayList.class);
-            Class<? extends Collection<Long>> paramHandleClass = GenericsUtil.cast2Class(paramType);
-            return HashIdUtil.decodeCollection(dataList, paramName, paramHandleClass, hashIdConfig.getSalt(), hashIdConfig.getMinLength());
+            Collection<?> dataList = p.readValueAs(Collection.class);
+            // 获取序列化字段
+            Field field = getField(p);
+
+            return encryptorManager.decryptField(dataList, field);
         }
         throw new FrameworkException("反序列化暂只支持String及List<Long>形式![HashedId]");
 
@@ -64,5 +78,17 @@ public class HashedIdJsonDeserializer extends JsonDeserializer<Object> implement
         this.paramType = property.getType().getRawClass();
         this.paramName = property.getFullName().getSimpleName();
         return this;
+    }
+
+    /**
+     * 获取字段
+     *
+     * @param p JsonParser
+     * @return 字段
+     */
+    private Field getField(JsonParser p) {
+        Object currentValue = p.getCurrentValue();
+        Class<?> currentValueClass = currentValue.getClass();
+        return ReflectUtil.getField(currentValueClass, paramName);
     }
 }

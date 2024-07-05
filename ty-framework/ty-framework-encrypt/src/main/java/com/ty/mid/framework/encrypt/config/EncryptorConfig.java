@@ -26,7 +26,7 @@ public class EncryptorConfig extends AbstractConfig {
     /**
      * 加解密总开关
      */
-    private Boolean enable = true;
+    private Boolean enable = false;
 
     /**
      * 默认算法

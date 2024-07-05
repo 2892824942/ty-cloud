@@ -95,10 +95,6 @@ public class ControllerExceptionHandler {
             return httpRequestMethodNotSupportedExceptionHandler((HttpRequestMethodNotSupportedException) ex);
         }
 
-        if (ex instanceof HttpMessageNotReadableException) {
-            return noHttpMessageNotReadableException((HttpMessageNotReadableException) ex);
-        }
-
         return defaultExceptionHandler(request, ex);
     }
 
@@ -187,16 +183,6 @@ public class ControllerExceptionHandler {
     public Result<?> noHandlerFoundExceptionHandler(NoHandlerFoundException ex) {
         log.warn("[noHandlerFoundExceptionHandler]", ex);
         return BaseResult.fail(NOT_FOUND.getCode(), String.format("请求地址不存在:%s", ex.getRequestURL()));
-    }
-
-    /**
-     * 处理 SpringMVC Json 请求Body不存在
-     * <p>
-     */
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public Result<?> noHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        log.warn("[noHandlerFoundExceptionHandler]", ex);
-        return BaseResult.fail(BAD_REQUEST.getCode(), "请求Body不存在");
     }
 
     /**

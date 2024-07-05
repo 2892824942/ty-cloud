@@ -8,6 +8,7 @@ import com.ty.mid.framework.encrypt.core.context.HashIdEncryptContext;
 import com.ty.mid.framework.encrypt.enumd.AlgorithmType;
 import lombok.extern.slf4j.Slf4j;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Objects;
 
@@ -34,31 +35,56 @@ public class HashIdEncryptorManager extends AbstractEncryptorManager<HashedId> {
      */
     @Override
     public String doDecryptField(String value, Field field) {
-        //为null或空字符均不处理
-        if (StrUtil.isEmpty(value)) {
-            return null;
+        if (skipHandle(value)){
+            return value;
         }
-        HashIdEncryptContext context = initEncryptContext(field);
+        HashIdEncryptContext context = doInitEncryptContext();
+        return this.decrypt(value, context);
+    }
+
+    @Override
+    public String doDecrypt(String value, Annotation annotation) {
+        if (skipHandle(value)){
+            return value;
+        }
+        HashIdEncryptContext context = doInitEncryptContext();
         return this.decrypt(value, context);
     }
 
     @Override
     public String doEncryptField(String value, Field field) {
+        if (skipHandle(value)){
+            return value;
+        }
+
+        HashIdEncryptContext context = doInitEncryptContext();
+        return this.encrypt(value, context);
+    }
+
+    @Override
+    public String doEncrypt(String value, Annotation annotation) {
+        if (skipHandle(value)){
+            return value;
+        }
+        HashIdEncryptContext context = doInitEncryptContext();
+        return this.encrypt(value, context);
+    }
+
+    private boolean skipHandle(String value){
         //为null或空字符均不处理
         if (StrUtil.isEmpty(value)) {
-            return null;
+            return Boolean.TRUE;
         }
         EncryptorConfig.HashId hashId = defaultProperties.getHashId();
 
         if (Objects.isNull(hashId) || !hashId.isEnable()) {
-            return value;
+            return Boolean.TRUE;
         }
-
-        HashIdEncryptContext context = initEncryptContext(field);
-        return this.encrypt(value, context);
+        return Boolean.FALSE;
     }
 
-    private HashIdEncryptContext initEncryptContext(Field field) {
+
+    private HashIdEncryptContext doInitEncryptContext() {
         EncryptorConfig.HashId hashId = defaultProperties.getHashId();
         HashIdEncryptContext context = new HashIdEncryptContext();
         context.setSalt(SafeGetUtil.getOrDefault(hashId.getSalt(), context.getSalt()));
