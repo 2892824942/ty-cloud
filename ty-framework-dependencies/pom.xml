@@ -33,6 +33,7 @@
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <mybatis-plus-generator.version>3.5.5</mybatis-plus-generator.version>
         <mybatis-spring.version>2.1.1</mybatis-spring.version>
+        <mybatis.version>3.5.15</mybatis.version>
 
         <dynamic-datasource.version>3.6.1</dynamic-datasource.version>
         <mybatis-plus-join-boot-starter.version>1.4.8.1</mybatis-plus-join-boot-starter.version>
@@ -358,6 +359,13 @@
                 <artifactId>mybatis-spring</artifactId>
                 <version>${mybatis-spring.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.mybatis</groupId>
+                <artifactId>mybatis</artifactId>
+                <version>${mybatis.version}</version>
+            </dependency>
+
 
 
             <dependency>

@@ -1,7 +1,9 @@
-package com.ty.mid.framework.encrypt.config;
+package com.ty.mid.framework.autoconfigure;
 
+import com.ty.mid.framework.encrypt.config.EncryptorConfig;
 import com.ty.mid.framework.encrypt.core.manager.CommonEncryptorManager;
 import com.ty.mid.framework.encrypt.core.manager.DesensitizeEncryptorManager;
+import com.ty.mid.framework.encrypt.core.manager.EncryptorManager;
 import com.ty.mid.framework.encrypt.core.manager.HashIdEncryptorManager;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -20,7 +22,7 @@ public class EncryptorAutoConfiguration {
 
     @Bean
     @Primary
-    public CommonEncryptorManager commonEncryptorManager(EncryptorConfig encryptorConfig) {
+    public EncryptorManager commonEncryptorManager(EncryptorConfig encryptorConfig) {
         return new CommonEncryptorManager(encryptorConfig);
     }
 

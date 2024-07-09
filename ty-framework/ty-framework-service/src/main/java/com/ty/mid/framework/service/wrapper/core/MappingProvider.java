@@ -1,6 +1,7 @@
 package com.ty.mid.framework.service.wrapper.core;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.map.MapUtil;
 import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
@@ -131,7 +132,12 @@ public class MappingProvider {
                         if (CollUtil.isEmpty(keyCollection)) {
                             continue;
                         }
-                        List<Object> realDate = keyCollection.stream().map(dataMap::get).filter(Objects::nonNull).collect(Collectors.toList());
+                        //转换dataMap key类型,解决key为Long,get方法传String时取不到值的问题,这里认为只要toString一致就是对应的映射值
+                        Map<String, Object> stringObjectHashMap = new HashMap<>();
+                        dataMap.forEach((k,v)->{
+                            stringObjectHashMap.put(Convert.toStr(k), v);
+                        });
+                        List<Object> realDate = keyCollection.stream().map(key -> stringObjectHashMap.get(Convert.toStr(key))).filter(Objects::nonNull).collect(Collectors.toList());
                         handleAbstractNameDTOList(realDate);
                         MappingProvider.setTargetField(target, targetField, realDate);
                     }

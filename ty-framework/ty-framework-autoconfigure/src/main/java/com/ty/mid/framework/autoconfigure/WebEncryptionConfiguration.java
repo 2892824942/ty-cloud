@@ -6,6 +6,7 @@ import com.ty.mid.framework.encrypt.mvc.EncryptionHandlerMethodArgumentResolver;
 import com.ty.mid.framework.encrypt.mvc.EncryptionParserConverter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 @RequiredArgsConstructor
+@AutoConfigureAfter(EncryptorAutoConfiguration.class)
 @ConditionalOnClass(EncryptorManager.class)
 @ConditionalOnBean(EncryptorManager.class)
 @ConditionalOnProperty(prefix = EncryptorConfig.PREFIX, name = "enable", havingValue = "true")

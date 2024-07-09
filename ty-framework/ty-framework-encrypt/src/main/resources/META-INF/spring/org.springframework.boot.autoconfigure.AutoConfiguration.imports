@@ -1,1 +1,1 @@
-com.ty.mid.framework.encrypt.config.EncryptorAutoConfiguration
+com.ty.mid.framework.autoconfigure.EncryptorAutoConfiguration
