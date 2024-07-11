@@ -22,7 +22,7 @@ spring:
     database: 0
     host: 121.40.156.55
     port: 6379
-    password: '7g4QmjBwDU'
+    password: '123456'
     timeout: 1200
     pool:
       max-active: 8
