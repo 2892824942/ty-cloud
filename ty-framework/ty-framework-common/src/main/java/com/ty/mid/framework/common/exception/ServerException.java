@@ -3,13 +3,14 @@ package com.ty.mid.framework.common.exception;
 import com.ty.mid.framework.common.constant.BaseCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 
 /**
  * 服务器异常 Exception
  */
-@Data
+@Getter
 @EqualsAndHashCode(callSuper = true)
 public final class ServerException extends BizException {
 

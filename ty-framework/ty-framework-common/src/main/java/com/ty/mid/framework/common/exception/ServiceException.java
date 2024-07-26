@@ -3,16 +3,16 @@ package com.ty.mid.framework.common.exception;
 import com.ty.mid.framework.common.constant.BaseCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 
 /**
  * 业务逻辑异常 Exception
  */
-@Data
+@Getter
 @EqualsAndHashCode(callSuper = true)
 public final class ServiceException extends BizException {
-
 
     /**
      * 空构造方法，避免反序列化问题

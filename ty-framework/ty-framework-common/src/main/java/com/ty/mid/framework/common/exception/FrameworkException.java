@@ -3,6 +3,8 @@ package com.ty.mid.framework.common.exception;
 import com.ty.mid.framework.common.constant.BaseCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
@@ -13,7 +15,7 @@ import javax.validation.constraints.NotNull;
  * @createTime 2023-08-14 15:21
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 public class FrameworkException extends BaseException {
     public FrameworkException(@NotNull BaseCode baseCode) {
         super(baseCode);

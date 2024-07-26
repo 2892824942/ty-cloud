@@ -5,6 +5,7 @@ import com.ty.mid.framework.common.exception.enums.GlobalErrorCodeEnum;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
 
@@ -15,7 +16,7 @@ import javax.validation.constraints.NotNull;
  * @createTime 2023-08-14 15:21
  */
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
 @Builder
 public class BaseException extends RuntimeException {
 
@@ -59,5 +60,4 @@ public class BaseException extends RuntimeException {
         super(message, cause, enableSuppression, writableStackTrace);
         this.message = message;
     }
-
 }

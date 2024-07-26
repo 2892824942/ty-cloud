@@ -16,7 +16,7 @@ import org.springframework.core.type.AnnotationMetadata;
 import java.util.Map;
 
 /**
- * 用来根据配置动态像spring容器中添加bean,暂时留着
+ * 用来根据配置动态向spring容器中添加bean,暂时留着
  */
 public class EnvDynamicBeanRegister implements ImportBeanDefinitionRegistrar, EnvironmentPostProcessor {
     private ConfigurableEnvironment environment;

@@ -10,6 +10,7 @@
     <artifactId>ty-framework-starter</artifactId>
     <packaging>pom</packaging>
     <modules>
+        <module>ty-framework-log-starter</module>
         <module>ty-framework-sms-starter</module>
         <module>ty-framework-cache-starter</module>
         <module>ty-framework-idempotent-starter</module>

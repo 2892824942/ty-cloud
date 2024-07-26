@@ -22,7 +22,7 @@ public class SpringContextHelper implements ApplicationContextAware {
     private static ConfigurableEnvironment env;
 
     /**
-     * 根据类型获取bean
+     * 根据类型获取bean,如果bean不存在会报错
      *
      * @param clazz
      * @param <T>
@@ -32,8 +32,50 @@ public class SpringContextHelper implements ApplicationContextAware {
         return context.getBean(clazz);
     }
 
+
+    /**
+     * 根据类型获取bean,如果bean不存在不会报错,但会返回null
+     *
+     * @param clazz
+     * @param <T>
+     * @return
+     */
+    public static <T> T getBeanSafety(@NonNull Class<T> clazz) {
+        try {
+            return context.getBean(clazz);
+        } catch (BeansException e) {
+            //ignore
+            return null;
+        }
+    }
+
+    /**
+     * 是否存在bean
+     *
+     * @param name bean的名称
+     * @return
+     */
+    public static boolean containsBean(@NonNull String name) {
+        return context.containsBean(name);
+    }
+
     public static <T> T getBean(@NonNull String name, @NonNull Class<T> requireType) {
         return context.getBean(name, requireType);
+    }
+
+    /**
+     * 据类型获取bean,如果bean不存在不会报错,但会返回null
+     *
+     * @param name bean名称
+     * @param requireType 类型
+     */
+    public static <T> T getBeanSafety(@NonNull String name, @NonNull Class<T> requireType) {
+        try {
+            return context.getBean(name, requireType);
+        } catch (BeansException e) {
+            //ignore
+            return null;
+        }
     }
 
     public static <T> Map<String, T> getBeansOfType(Class<T> clazz) {

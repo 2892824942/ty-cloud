@@ -15,11 +15,13 @@ import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
 import com.ty.mid.framework.encrypt.core.manager.CommonEncryptorManager;
+import com.ty.mid.framework.encrypt.core.manager.EncryptorManager;
 import lombok.Getter;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.Objects;
 
 
 /**
@@ -38,13 +40,16 @@ import java.util.Collection;
 @Getter
 @SuppressWarnings("rawtypes")
 public class EncryptionDeserializer extends JsonDeserializer<Object> implements ContextualDeserializer {
-    private final CommonEncryptorManager encryptorManager = SpringContextHelper.getBean(CommonEncryptorManager.class);
-
+    EncryptorManager encryptorManager = SpringContextHelper.getBeanSafety(EncryptorManager.class);
     private Class<?> paramType;
     private String paramName;
 
     @Override
     public Object deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
+        if (Objects.isNull(encryptorManager)){
+            //依赖了加密模块,但是关闭了加密功能,直接跳过
+            return p.getCurrentValue();
+        }
         if (p.hasToken(JsonToken.VALUE_STRING)) {
             String text = p.getText().trim();
             if (StrUtil.isBlank(text)) {

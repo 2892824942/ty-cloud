@@ -1,0 +1,4 @@
+# 和具体模块无关的配置
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.ty.mid.framework.autoconfigure.AsyncAutoConfiguration,\
+  com.ty.mid.framework.autoconfigure.EventBusAutoConfiguration

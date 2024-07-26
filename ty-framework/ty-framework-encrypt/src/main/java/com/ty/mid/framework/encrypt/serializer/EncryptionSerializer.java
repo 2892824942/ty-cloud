@@ -12,7 +12,7 @@ import com.ty.mid.framework.common.exception.FrameworkException;
 import com.ty.mid.framework.common.util.GenericsUtil;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
 import com.ty.mid.framework.encrypt.annotation.EncryptField;
-import com.ty.mid.framework.encrypt.core.manager.CommonEncryptorManager;
+import com.ty.mid.framework.encrypt.core.manager.EncryptorManager;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,7 +33,7 @@ import java.util.Objects;
 @SuppressWarnings("rawtypes")
 public class EncryptionSerializer extends StdSerializer<Object> {
 
-    private final CommonEncryptorManager encryptorManager = SpringContextHelper.getBean(CommonEncryptorManager.class);
+    EncryptorManager encryptorManager = SpringContextHelper.getBeanSafety(EncryptorManager.class);
 
     protected EncryptionSerializer() {
         super(Object.class);
@@ -44,6 +44,11 @@ public class EncryptionSerializer extends StdSerializer<Object> {
     public void serialize(Object value, JsonGenerator gen, SerializerProvider serializerProvider) throws IOException {
         if (Objects.isNull(value)) {
             gen.writeNull();
+            return;
+        }
+        if (Objects.isNull(encryptorManager)) {
+            //依赖了加密模块,但是关闭了加密功能,直接跳过
+            gen.writeObject(value);
             return;
         }
         // 获取序列化字段
