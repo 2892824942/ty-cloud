@@ -4,10 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
 import com.ty.mid.framework.web.core.listener.DefaultApiErrorLogListener;
-import com.ty.mid.framework.web.core.listener.DefaultApiLogListener;
+import com.ty.mid.framework.web.core.listener.DefaultApiAccessLogListener;
 import com.ty.mid.framework.web.core.model.event.ApiAccessLogEvent;
 import com.ty.mid.framework.web.core.model.event.ApiErrorLogEvent;
 import com.ty.mid.framework.web.core.service.ApiLogService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
@@ -23,6 +24,7 @@ import java.util.Objects;
 /**
  * spring环境准备完成时执行
  */
+@Slf4j
 public class ApplicationPreparedListener implements ApplicationListener<ApplicationPreparedEvent> {
 
 
@@ -75,14 +77,15 @@ public class ApplicationPreparedListener implements ApplicationListener<Applicat
         ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
 
         if (CollUtil.isEmpty(apiAccessLogApplicationListener)) {
-            beanFactory.registerSingleton(DefaultApiLogListener.class.getSimpleName(), new DefaultApiLogListener());
-            Method onApiAccessLogEventMethod = ReflectUtil.getMethod(DefaultApiLogListener.class, "onApiAccessLogEvent", ApiAccessLogEvent.class);
-            ApplicationListener<?> defaultApiAccessLogListener = listenerFactory.createApplicationListener(DefaultApiLogListener.class.getSimpleName(), ApiAccessLogEvent.class, onApiAccessLogEventMethod);
+            beanFactory.registerSingleton(DefaultApiAccessLogListener.class.getSimpleName(), new DefaultApiAccessLogListener());
+            Method onApiAccessLogEventMethod = ReflectUtil.getMethod(DefaultApiAccessLogListener.class, "onApiAccessLogEvent", ApiAccessLogEvent.class);
+            ApplicationListener<?> defaultApiAccessLogListener = listenerFactory.createApplicationListener(DefaultApiAccessLogListener.class.getSimpleName(), ApiAccessLogEvent.class, onApiAccessLogEventMethod);
             //动态注册默认的监听处理器
             ApplicationListenerMethodAdapter applicationListenerMethodAdapter = (ApplicationListenerMethodAdapter) defaultApiAccessLogListener;
 
             ReflectUtil.invoke(applicationListenerMethodAdapter, "init", applicationContext, ReflectUtil.getFieldValue(eventListenerMethodProcessor, "evaluator"));
             applicationContext.addApplicationListener(defaultApiAccessLogListener);
+            log.info("DefaultApiAccessLogListener加载成功,如需更改,可使用SpringBoot @EventListener注解自定义ApiAccessLogEvent的监听器以覆盖默认");
         }
 
         if (CollUtil.isEmpty(apiErrorLogApplicationListener)) {
@@ -93,6 +96,7 @@ public class ApplicationPreparedListener implements ApplicationListener<Applicat
             ApplicationListenerMethodAdapter applicationListenerMethodAdapter = (ApplicationListenerMethodAdapter) defaultApiErrorLogListener;
             ReflectUtil.invoke(applicationListenerMethodAdapter, "init", applicationContext, ReflectUtil.getFieldValue(eventListenerMethodProcessor, "evaluator"));
             applicationContext.addApplicationListener(defaultApiErrorLogListener);
+            log.info("DefaultApiErrorLogListener加载成功,如需更改,可使用SpringBoot @EventListener注解自定义ApiErrorLogEvent的监听器以覆盖默认");
         }
     }
 
