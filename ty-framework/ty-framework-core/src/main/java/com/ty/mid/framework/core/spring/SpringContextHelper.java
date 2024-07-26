@@ -1,18 +1,28 @@
 package com.ty.mid.framework.core.spring;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.ReflectUtil;
 import com.ty.mid.framework.common.lang.NonNull;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.AbstractApplicationEventMulticaster;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class SpringContextHelper implements ApplicationContextAware {
@@ -50,6 +60,32 @@ public class SpringContextHelper implements ApplicationContextAware {
     }
 
     /**
+     * 获取系统定义的,支持某个特定事件的ApplicationListener集合
+     * 此方法支持Spring的ApplicationEvent以及自定义的Event
+     *
+     * @param eventClass event class
+     * @return List<ApplicationListener < ?>>
+     */
+    public static List<ApplicationListener<?>> getApplicationListener(Class<?> eventClass) {
+        Map<String, AbstractApplicationEventMulticaster> beansOfTypeMap = SpringContextHelper.getBeansOfType(AbstractApplicationEventMulticaster.class);
+        if (CollUtil.isEmpty(beansOfTypeMap)) {
+            return null;
+        }
+        return beansOfTypeMap.values().stream().map(abstractApplicationEventMulticaster -> {
+            Method getApplicationListenersMethod = ReflectUtil.getMethod(AbstractApplicationEventMulticaster.class, "getApplicationListeners");
+            Collection<ApplicationListener<?>> applicationListeners = ReflectUtil.invoke(abstractApplicationEventMulticaster, getApplicationListenersMethod);
+            if (CollUtil.isEmpty(applicationListeners)) {
+                return null;
+            }
+            return applicationListeners.stream().filter(applicationListener -> {
+                Method supportsEventMethod = ReflectUtil.getMethod(AbstractApplicationEventMulticaster.class, "supportsEvent", ApplicationListener.class, ResolvableType.class, Class.class);
+                return ReflectUtil.invoke(abstractApplicationEventMulticaster, supportsEventMethod, applicationListener, ResolvableType.forClass(eventClass), eventClass);
+            }).filter(Objects::nonNull).collect(Collectors.toList());
+
+        }).filter(Objects::nonNull).flatMap(Collection::stream).collect(Collectors.toList());
+    }
+
+    /**
      * 是否存在bean
      *
      * @param name bean的名称
@@ -66,7 +102,7 @@ public class SpringContextHelper implements ApplicationContextAware {
     /**
      * 据类型获取bean,如果bean不存在不会报错,但会返回null
      *
-     * @param name bean名称
+     * @param name        bean名称
      * @param requireType 类型
      */
     public static <T> T getBeanSafety(@NonNull String name, @NonNull Class<T> requireType) {

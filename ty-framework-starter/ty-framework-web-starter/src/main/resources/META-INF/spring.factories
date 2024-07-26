@@ -4,5 +4,6 @@ org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
   com.ty.mid.framework.autoconfigure.WebEncryptionConfiguration,\
   com.ty.mid.framework.autoconfigure.RunnerAutoConfiguration,\
   com.ty.mid.framework.autoconfigure.DynamicBeanAutoConfiguration,\
+  com.ty.mid.framework.autoconfigure.ApplicationPreparedListener,\
   com.ty.mid.framework.autoconfigure.JacksonAutoConfiguration,\
   com.ty.mid.framework.autoconfigure.XssAutoConfiguration
