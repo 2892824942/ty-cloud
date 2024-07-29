@@ -1,12 +1,9 @@
 package com.ty.mid.framework.autoconfigure;
 
 
-import com.ty.mid.framework.core.spring.SpringContextHelper;
 import com.ty.mid.framework.web.ApplicationRunnerLauncher;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 /**
@@ -15,20 +12,8 @@ import org.springframework.context.annotation.Bean;
  * @author suyoulinag
  */
 @ConditionalOnProperty(prefix = "framework.runner", value = "enable", matchIfMissing = true)
+@RequiredArgsConstructor
 public class RunnerAutoConfiguration {
-    @Autowired
-    private ApplicationContext applicationContext;
-
-    @Autowired
-    private
-
-    @Bean
-    @ConditionalOnMissingBean
-    SpringContextHelper springContextHelper() {
-        SpringContextHelper helper = new SpringContextHelper();
-        helper.setApplicationContext(applicationContext);
-        return helper;
-    }
 
     @Bean
     public ApplicationRunnerLauncher bannerApplicationRunner() {

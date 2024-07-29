@@ -3,8 +3,8 @@ package com.ty.mid.framework.autoconfigure;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ReflectUtil;
 import com.ty.mid.framework.core.spring.SpringContextHelper;
-import com.ty.mid.framework.web.core.listener.DefaultApiErrorLogListener;
 import com.ty.mid.framework.web.core.listener.DefaultApiAccessLogListener;
+import com.ty.mid.framework.web.core.listener.DefaultApiErrorLogListener;
 import com.ty.mid.framework.web.core.model.event.ApiAccessLogEvent;
 import com.ty.mid.framework.web.core.model.event.ApiErrorLogEvent;
 import com.ty.mid.framework.web.core.service.ApiLogService;
@@ -41,7 +41,7 @@ public class ApplicationPreparedListener implements ApplicationListener<Applicat
      * <p>由于ConfigurableApplicationContext只提供了SpringEvent事件监听器的添加api,没有暴露自定义的Event监听器的添加api,
      * <p>这里使用反射模拟自定义的Event监听器初始化过程,动态添加
      *
-     *
+     * @param applicationContext applicationContext
      * @see EventListenerMethodProcessor#processBean(String, Class)
      * <p>
      * 关于监听器加载问题:
@@ -55,7 +55,6 @@ public class ApplicationPreparedListener implements ApplicationListener<Applicat
      * <p>1.默认日志处理增加开关控制暴露给用户,DefaultLogListener始终会加载,关闭开关后仅处理逻辑不执行
      * <p>2.先正常加载DefaultLogListener,在ApplicationContext准备完成时,检查相关Event是否存在其他定义的监听器,如果有,删除默认的监听器(通过AbstractApplicationEventMulticaster)
      * //TODO 考虑到大量反射对于版本过度依赖,更换版本很容易不兼容,后续根据情况考虑是否使用2方式,先加在删,api受版本更改影响较少
-     * @param applicationContext applicationContext
      */
     private void configDefaultApiLogListener(ConfigurableApplicationContext applicationContext) {
         ApiLogService apiLogService = SpringContextHelper.getBeanSafety(ApiLogService.class);
@@ -85,7 +84,7 @@ public class ApplicationPreparedListener implements ApplicationListener<Applicat
 
             ReflectUtil.invoke(applicationListenerMethodAdapter, "init", applicationContext, ReflectUtil.getFieldValue(eventListenerMethodProcessor, "evaluator"));
             applicationContext.addApplicationListener(defaultApiAccessLogListener);
-            log.info("DefaultApiAccessLogListener加载成功,如需更改,可使用SpringBoot @EventListener注解自定义ApiAccessLogEvent的监听器以覆盖默认");
+            log.info("[init] DefaultApiAccessLogListener,使用SpringBoot @EventListener注解自定义ApiAccessLogEvent的监听器可覆盖默认");
         }
 
         if (CollUtil.isEmpty(apiErrorLogApplicationListener)) {
@@ -96,7 +95,7 @@ public class ApplicationPreparedListener implements ApplicationListener<Applicat
             ApplicationListenerMethodAdapter applicationListenerMethodAdapter = (ApplicationListenerMethodAdapter) defaultApiErrorLogListener;
             ReflectUtil.invoke(applicationListenerMethodAdapter, "init", applicationContext, ReflectUtil.getFieldValue(eventListenerMethodProcessor, "evaluator"));
             applicationContext.addApplicationListener(defaultApiErrorLogListener);
-            log.info("DefaultApiErrorLogListener加载成功,如需更改,可使用SpringBoot @EventListener注解自定义ApiErrorLogEvent的监听器以覆盖默认");
+            log.info("[init] DefaultApiErrorLogListener,使用SpringBoot @EventListener注解自定义ApiErrorLogEvent的监听器可覆盖默认");
         }
     }
 

@@ -67,7 +67,7 @@ public class JacksonAutoConfiguration {
 
         // 2. 设置 objectMapper 到 JsonUtils {
         JsonUtils.init(CollUtil.getFirst(objectMappers));
-        log.info("[init][序列化配置初始化成功]");
+        log.info("[init] Jackson(De)Serializer");
         return new JsonUtils();
     }
 
