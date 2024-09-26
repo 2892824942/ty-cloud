@@ -14,6 +14,7 @@ Spring Cloud Alibaba集成框架
 - [Web组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-web)
 - [Service组件](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-service)
 - [Security框架](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-security)
+- [加密框架](https://github.com/2892824942/ty-cloud/tree/main/ty-framework/ty-framework-encrypt)
 
 后续计划:
 
